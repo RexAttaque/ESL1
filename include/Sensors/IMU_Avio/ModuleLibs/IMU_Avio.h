@@ -5,7 +5,7 @@
 #include <Sensors/IMU_Avio/InterfaceLib/Adafruit_BNO055.h>
 #include <Sensors/IMU_Avio/InterfaceLib/utility/imumaths.h>
 
-const uint8_t IMU_varAmount = 12;
+const uint8_t IMU_varAmount = 12; //a_x,a_y,a_z,theta,phi,psy,theta_point,phi_point,psy_point,m_x,m_y,m_z (m/s^2 ; rad ; rad/s ; microT)
 
 class IMU_Avio {
   private :
