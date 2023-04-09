@@ -9,7 +9,7 @@ GPS_Avio* GPS_Avio_array;
 
 const uint8_t GPS_varAmount = 3; //x,y,z (cm)
 
-class GPS_Avio : public Base_Sensor<float> {
+class GPS_Avio : public Base_Sensor<long> {
   private :
     ublox_gen9 GPS;
   
@@ -17,5 +17,5 @@ class GPS_Avio : public Base_Sensor<float> {
   
     GPS_Avio(HardwareSerial HWSerial);
 
-    float* getMeas();
+    long* getMeas();
 };
