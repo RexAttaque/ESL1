@@ -362,6 +362,16 @@ void Adafruit_BNO055::getCalibration(uint8_t *sys, uint8_t *gyro,
 }
 
 /*!
+ *  @brief  Gets current calibration state.  Each value should be a uint8_t
+ *          pointer and it will be set to 0 if not calibrated and 3 if
+ *          fully calibrated.
+ *          See section 34.3.54
+ */
+uint8_t Adafruit_BNO055::getRawCalibration() {
+  return read8(BNO055_CALIB_STAT_ADDR);
+}
+
+/*!
  *  @brief  Gets the temperature in degrees celsius
  *  @return temperature in degrees celsius
  */

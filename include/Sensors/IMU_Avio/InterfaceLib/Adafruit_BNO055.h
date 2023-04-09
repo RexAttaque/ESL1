@@ -294,6 +294,7 @@ public:
                        uint8_t *system_error);
   void getCalibration(uint8_t *system, uint8_t *gyro, uint8_t *accel,
                       uint8_t *mag);
+  uint8_t getRawCalibration();
 
   imu::Vector<3> getVector(adafruit_vector_type_t vector_type);
   double* getArray(adafruit_vector_type_t vector_type);
