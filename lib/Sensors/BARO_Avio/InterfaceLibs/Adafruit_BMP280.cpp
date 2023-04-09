@@ -28,51 +28,6 @@
  */
 Adafruit_BMP280::Adafruit_BMP280(TwoWire *theWire) {
   _wire = theWire;
-  temp_sensor = new Adafruit_BMP280_Temp(this);
-  pressure_sensor = new Adafruit_BMP280_Pressure(this);
-}
-
-/*!
- * @brief  BMP280 constructor using hardware SPI
- * @param  cspin
- *         cs pin number
- * @param  theSPI
- *         optional SPI object
- */
-Adafruit_BMP280::Adafruit_BMP280(int8_t cspin, SPIClass *theSPI) {
-  spi_dev = new Adafruit_SPIDevice(cspin, 1000000, SPI_BITORDER_MSBFIRST,
-                                   SPI_MODE0, theSPI);
-  temp_sensor = new Adafruit_BMP280_Temp(this);
-  pressure_sensor = new Adafruit_BMP280_Pressure(this);
-}
-
-/*!
- * @brief  BMP280 constructor using bitbang SPI
- * @param  cspin
- *         The pin to use for CS/SSEL.
- * @param  mosipin
- *         The pin to use for MOSI.
- * @param  misopin
- *         The pin to use for MISO.
- * @param  sckpin
- *         The pin to use for SCK.
- */
-Adafruit_BMP280::Adafruit_BMP280(int8_t cspin, int8_t mosipin, int8_t misopin,
-                                 int8_t sckpin) {
-  spi_dev = new Adafruit_SPIDevice(cspin, sckpin, misopin, mosipin);
-  temp_sensor = new Adafruit_BMP280_Temp(this);
-  pressure_sensor = new Adafruit_BMP280_Pressure(this);
-}
-
-Adafruit_BMP280::~Adafruit_BMP280(void) {
-  if (spi_dev)
-    delete spi_dev;
-  if (i2c_dev)
-    delete i2c_dev;
-  if (temp_sensor)
-    delete temp_sensor;
-  if (pressure_sensor)
-    delete pressure_sensor;
 }
 
 /*!
@@ -324,36 +279,6 @@ float Adafruit_BMP280::readAltitude(float seaLevelhPa) {
 }
 
 /*!
- * Calculates the pressure at sea level (QNH) from the specified altitude,
- * and atmospheric pressure (QFE).
- * @param  altitude      Altitude in m
- * @param  atmospheric   Atmospheric pressure in hPa
- * @return The approximate pressure in hPa
- */
-float Adafruit_BMP280::seaLevelForAltitude(float altitude, float atmospheric) {
-  // Equation taken from BMP180 datasheet (page 17):
-  // http://www.adafruit.com/datasheets/BST-BMP180-DS000-09.pdf
-
-  // Note that using the equation from wikipedia can give bad results
-  // at high altitude.  See this thread for more information:
-  // http://forums.adafruit.com/viewtopic.php?f=22&t=58064
-  return atmospheric / pow(1.0 - (altitude / 44330.0), 5.255);
-}
-
-/*!
-    @brief  calculates the boiling point  of water by a given pressure
-    @param pressure pressure in hPa
-    @return temperature in °C
-*/
-
-float Adafruit_BMP280::waterBoilingPoint(float pressure) {
-  // Magnusformular for calculation of the boiling point of water at a given
-  // pressure
-  return (234.175 * log(pressure / 6.1078)) /
-         (17.08085 - log(pressure / 6.1078));
-}
-
-/*!
     @brief  Take a new measurement (only possible in forced mode)
     @return true if successful, otherwise false
  */
@@ -382,112 +307,9 @@ void Adafruit_BMP280::reset(void) {
 }
 
 /*!
- *   Returns Sensor ID for diagnostics
- *   @returns 0x61 for BME680, 0x60 for BME280, 0x56, 0x57, 0x58 for BMP280
- */
-uint8_t Adafruit_BMP280::sensorID(void) { return _sensorID; };
-
-/*!
     @brief  Gets the most recent sensor event from the hardware status register.
     @return Sensor status as a byte.
  */
 uint8_t Adafruit_BMP280::getStatus(void) {
   return read8(BMP280_REGISTER_STATUS);
-}
-
-/*!
-    @brief  Gets an Adafruit Unified Sensor object for the temp sensor component
-    @return Adafruit_Sensor pointer to temperature sensor
- */
-Adafruit_Sensor *Adafruit_BMP280::getTemperatureSensor(void) {
-  return temp_sensor;
-}
-
-/*!
-    @brief  Gets an Adafruit Unified Sensor object for the pressure sensor
-   component
-    @return Adafruit_Sensor pointer to pressure sensor
- */
-Adafruit_Sensor *Adafruit_BMP280::getPressureSensor(void) {
-  return pressure_sensor;
-}
-
-/**************************************************************************/
-/*!
-    @brief  Gets the sensor_t data for the BMP280's temperature sensor
-*/
-/**************************************************************************/
-void Adafruit_BMP280_Temp::getSensor(sensor_t *sensor) {
-  /* Clear the sensor_t object */
-  memset(sensor, 0, sizeof(sensor_t));
-
-  /* Insert the sensor name in the fixed length char array */
-  strncpy(sensor->name, "BMP280", sizeof(sensor->name) - 1);
-  sensor->name[sizeof(sensor->name) - 1] = 0;
-  sensor->version = 1;
-  sensor->sensor_id = _sensorID;
-  sensor->type = SENSOR_TYPE_AMBIENT_TEMPERATURE;
-  sensor->min_delay = 0;
-  sensor->min_value = -40.0; /* Temperature range -40 ~ +85 C  */
-  sensor->max_value = +85.0;
-  sensor->resolution = 0.01; /*  0.01 C */
-}
-
-/**************************************************************************/
-/*!
-    @brief  Gets the temperature as a standard sensor event
-    @param  event Sensor event object that will be populated
-    @returns True
-*/
-/**************************************************************************/
-bool Adafruit_BMP280_Temp::getEvent(sensors_event_t *event) {
-  /* Clear the event */
-  memset(event, 0, sizeof(sensors_event_t));
-
-  event->version = sizeof(sensors_event_t);
-  event->sensor_id = _sensorID;
-  event->type = SENSOR_TYPE_AMBIENT_TEMPERATURE;
-  event->timestamp = millis();
-  event->temperature = _theBMP280->readTemperature();
-  return true;
-}
-
-/**************************************************************************/
-/*!
-    @brief  Gets the sensor_t data for the BMP280's pressure sensor
-*/
-/**************************************************************************/
-void Adafruit_BMP280_Pressure::getSensor(sensor_t *sensor) {
-  /* Clear the sensor_t object */
-  memset(sensor, 0, sizeof(sensor_t));
-
-  /* Insert the sensor name in the fixed length char array */
-  strncpy(sensor->name, "BMP280", sizeof(sensor->name) - 1);
-  sensor->name[sizeof(sensor->name) - 1] = 0;
-  sensor->version = 1;
-  sensor->sensor_id = _sensorID;
-  sensor->type = SENSOR_TYPE_PRESSURE;
-  sensor->min_delay = 0;
-  sensor->min_value = 300.0; /* 300 ~ 1100 hPa  */
-  sensor->max_value = 1100.0;
-  sensor->resolution = 0.012; /* 0.12 hPa relative */
-}
-
-/**************************************************************************/
-/*!
-    @brief  Gets the pressure as a standard sensor event
-    @param  event Sensor event object that will be populated
-    @returns True
-*/
-/**************************************************************************/
-bool Adafruit_BMP280_Pressure::getEvent(sensors_event_t *event) {
-  /* Clear the event */
-  memset(event, 0, sizeof(sensors_event_t));
-
-  event->version = sizeof(sensors_event_t);
-  event->sensor_id = _sensorID;
-  event->type = SENSOR_TYPE_PRESSURE;
-  event->timestamp = millis();
-  event->pressure = _theBMP280->readPressure() / 100; // convert Pa to hPa
-  return true;
 }
