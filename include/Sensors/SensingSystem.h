@@ -29,15 +29,15 @@ class SensingSystem {
 
     SensingSystem();
 
-    float* getIMUs_Avio_meas();
+    float* getIMUs_Avio_meas(int scalingFactor);
 
     uint8_t getIMUs_Avio_rl_amount();
 
-    long* getGPSs_Avio_meas();
+    long* getGPSs_Avio_meas(int scalingFactor);
 
     uint8_t getGPSs_Avio_rl_amount();
 
-    float* getBAROs_Avio_meas();
+    float* getBAROs_Avio_meas(int scalingFactor);
 
     uint8_t getBAROs_Avio_rl_amount();
 };

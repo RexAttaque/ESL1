@@ -12,8 +12,9 @@ class SensingSystem {
     {
     }
 
-    float* getIMUs_Avio_meas()
+    float* getIMUs_Avio_meas(int scalingFactor)
     {
+      return IMUs_Avio.poll_process_data(scalingFactor);
     }
 
     uint8_t getIMUs_Avio_rl_amount()
@@ -21,8 +22,9 @@ class SensingSystem {
       return IMUs_Avio.get_real_amount();
     }
 
-    long* getGPSs_Avio_meas()
+    long* getGPSs_Avio_meas(int scalingFactor)
     {
+      return GPSs_Avio.poll_process_data(scalingFactor);
     }
 
     uint8_t getGPSs_Avio_rl_amount()
@@ -30,8 +32,9 @@ class SensingSystem {
       return GPSs_Avio.get_real_amount();
     }
 
-    float* getBAROs_Avio_meas()
+    float* getBAROs_Avio_meas(int scalingFactor)
     {
+      return BAROs_Avio.poll_process_data(scalingFactor);
     }
 
     uint8_t getBAROs_Avio_rl_amount()
