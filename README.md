@@ -6,10 +6,17 @@ The main goal is to provide accurate position and particularily altitude data vi
 Structure is as follows :
 
 -> Adafruit BNO055 IMUs, Ublox Gen9 GPS, Adafruit BMP280 Baro sensors 
+
 -> IMU, GPS, BARO objects 
+
 -> Sensors object 
--> EGI (Embedded GPS/INS, a Kalman filter algorithm) 
+
+-> EGI (Embedded GPS/INS, a Kalman filter algorithm)
+
 => Navigation solution
+
 => Relayed to the ground via telemetry
+
 => Altitude computation/timer for parachute deployement
+
 => Backup GSM module to transmit position upon landing
