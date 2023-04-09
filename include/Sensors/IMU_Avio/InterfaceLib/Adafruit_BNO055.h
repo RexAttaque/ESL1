@@ -25,6 +25,7 @@
 #include "Arduino.h"
 
 #include "utility/imumaths.h"
+#include <Adafruit_Unified_Sensor/Adafruit_Sensor.h>
 #include <Adafruit_BusIO/Adafruit_I2CDevice.h>
 #include <Adafruit_BusIO/Adafruit_SPIDevice.h>
 
