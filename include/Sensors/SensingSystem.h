@@ -6,7 +6,7 @@
 #include <Sensors/BARO_Avio/ModuleLibs/BARO_Avio.h>
 class SensingSystem {
   private :
-    Sensors<IMU_Avio,float> IMUs_Avio;
+    Sensors<IMU_Avio,double> IMUs_Avio;
     Sensors<GPS_Avio,long> GPSs_Avio;
     Sensors<BARO_Avio,float> BAROs_Avio;
   
@@ -14,7 +14,7 @@ class SensingSystem {
 
     SensingSystem();
 
-    Sensors<IMU_Avio,float>* getIMUs_Avio();
+    Sensors<IMU_Avio,double>* getIMUs_Avio();
     uint8_t getIMUs_Avio_rl_amount();
 
     Sensors<GPS_Avio,long>* getGPSs_Avio(); 
@@ -24,7 +24,7 @@ class SensingSystem {
     uint8_t getBAROs_Avio_rl_amount();
     
     //get the measurements at CG for use in the Kalman (that includes backup altitude computation from BARO data)
-    float* getIMUs_CG_meas(int scalingFactor); //Data combination from the entire sensing system to obtain IMU data at CG for use in the Kalman filter
+    double* getIMUs_CG_meas(int scalingFactor); //Data combination from the entire sensing system to obtain IMU data at CG for use in the Kalman filter
     long* getGPSs_meas(int scalingFactor); //Data combination from the entire sensing system to obtain GPS data for use in the Kalman filter
     float* getBAROs_meas(int scalingFactor); //Data combination from the entire sensing system to obtain BARO data for use in the Kalman filter (as backup altitude computation)
 };

@@ -1,10 +1,10 @@
 #include <Sensors/SensingSystem.h>
 
-SensingSystem::SensingSystem():IMUs_Avio(Sensors<IMU_Avio,float>(IMU_Avio_array,qty_IMU_Avio)),GPSs_Avio(Sensors<GPS_Avio,long>(GPS_Avio_array,qty_GPS_Avio)),BAROs_Avio(Sensors<BARO_Avio,float>(BARO_Avio_array,qty_BARO_Avio))
+SensingSystem::SensingSystem():IMUs_Avio(Sensors<IMU_Avio,double>(IMU_Avio_array,qty_IMU_Avio)),GPSs_Avio(Sensors<GPS_Avio,long>(GPS_Avio_array,qty_GPS_Avio)),BAROs_Avio(Sensors<BARO_Avio,float>(BARO_Avio_array,qty_BARO_Avio))
 {
 }
 
-Sensors<IMU_Avio, float> *SensingSystem::getIMUs_Avio()
+Sensors<IMU_Avio, double> *SensingSystem::getIMUs_Avio()
 {
   return &IMUs_Avio;
 }
@@ -37,7 +37,7 @@ uint8_t SensingSystem::getBAROs_Avio_rl_amount()
 }
 
 
-float* SensingSystem::getIMUs_CG_meas(int scalingFactor)
+double* SensingSystem::getIMUs_CG_meas(int scalingFactor)
 {
   return IMUs_Avio.poll_process_ave_data(scalingFactor);
 }

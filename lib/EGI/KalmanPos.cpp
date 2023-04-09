@@ -116,7 +116,7 @@ void EGI_obj::updateF(bool stepChange, double newTimeStep)
 //altitude - WGS84 altitude or baro if GPS and IMU fail (cm)
 NavSolution EGI_obj::getNavSolution()
 {
-  float* IMUpdata = EGI_components->getIMUs_CG_meas(100);
+  double* IMUpdata = EGI_components->getIMUs_CG_meas(100);
   uint8_t IMUs_rl_amount = EGI_components->getIMUs_Avio_rl_amount();
           
   //if polling one set of measurements failed, discard it, if all failed, switch to GPS only, if all GPS fail, switch to barometric altitude, if that fails, switch to time based    
