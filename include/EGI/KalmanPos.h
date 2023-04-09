@@ -120,10 +120,11 @@ class EGI_obj {
 
   public :
 
+    //SensorSys, SensingSystem* : pointer to the object containing the entirety of the sensors on board
     //IMU_refreshRate, Hz : refresh rate of the IMU that will be used
     //GPS_refreshRate, Hz : refresh rate of the GPS that will be used
     //VarUpd, bool : specifies wether or not the covariance matrices will be updated during flight or not (experimental)
-    EGI_obj(uint8_t IMU_refreshRate, uint8_t GPS_refreshRate, bool VarUpd);
+    EGI_obj(SensingSystem* SensorSys, uint8_t IMU_refreshRate, uint8_t GPS_refreshRate, bool VarUpd);
     
     //function to initialize the kalman filter (covariance matrices, refresh rate values, delta_t etc.). Must be run after all other sensors are initialized and ready since this uses them.
     //returns the time that the loop() function running the kalman filter must not exceed if initialized succesfully, otherwise 0
@@ -134,16 +135,8 @@ class EGI_obj {
     //newTimeStep, seconds : time step used to compute the F matrix (may vary in flight)
     void updateF(bool stepChange, double newTimeStep);
     
-    //getNavSolution provides time since launch, IMU acceleration, IMU euler angles, GPS position, Kalman filter position, BARO altitude, altitude (source may change depending on failures), IMU status, GPS status, BARO status
-    //
-    //IMU, array of IMU objects
-    //IMU_amount, number of IMUs in the array IMU
-    //GPS, array of GPS objects
-    //GPS_amount, number of GPSs in the array GPS
-    //BARO, array of barometer objects
-    //BARO_amount, number of BAROs in the array BARO
-    //
-    //Returns (index specified at the beginning) :
+    //getNavSolution provides time since launch, Kalman filter position, altitude (source may change depending on failures for altitude)
+    //Returns
     //_time - Time since launch (seconds)
     //x - Kalman ECEF Position x (cm)
     //y - Kalman ECEF Position y (cm)

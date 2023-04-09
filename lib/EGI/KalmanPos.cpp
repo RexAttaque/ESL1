@@ -4,7 +4,7 @@ class EGI_obj {
   private:
 
     NavSolution KalmanOutput;
-    SensingSystem EGI_components;
+    SensingSystem* EGI_components;
   
     uint8_t refresh_IMU; //Hz, IMU refresh rate
     unsigned long time_IMU; //microseconds between each IMU refresh
@@ -109,7 +109,7 @@ class EGI_obj {
     //IMU_refreshRate, Hz : refresh rate of the IMU that will be used
     //GPS_refreshRate, Hz : refresh rate of the GPS that will be used
     //VarUpd, bool : specifies wether or not the covariance matrices will be updated during flight or not (experimental)
-    EGI_obj(uint8_t IMU_refreshRate, uint8_t GPS_refreshRate, bool VarUpd) : refresh_IMU(IMU_refreshRate), refresh_GPS(GPS_refreshRate), allowVarUpd(VarUpd)
+    EGI_obj(SensingSystem* SensorSys, uint8_t IMU_refreshRate, uint8_t GPS_refreshRate, bool VarUpd) : EGI_components(SensorSys),refresh_IMU(IMU_refreshRate),refresh_GPS(GPS_refreshRate),allowVarUpd(VarUpd)
     {
       time_IMU = pow(10,6)/refresh_IMU; //microseconds between each IMU refresh
       pred_Steps = refresh_IMU/refresh_GPS; //Number of time steps (loops) between each estimation of the kalman filter, otherwise simply predict (dead reckoning)
@@ -222,8 +222,8 @@ class EGI_obj {
     //altitude - WGS84 altitude or baro if GPS and IMU fail (cm)
     NavSolution getNavSolution()
     {
-      float* IMUpdata = EGI_components.getIMUs_Avio_meas(100);
-      uint8_t IMUs_rl_amount = EGI_components.getIMUs_Avio_rl_amount();
+      float* IMUpdata = EGI_components->getIMUs_CG_meas(100);
+      uint8_t IMUs_rl_amount = EGI_components->getIMUs_Avio_rl_amount();
               
       //if polling one set of measurements failed, discard it, if all failed, switch to GPS only, if all GPS fail, switch to barometric altitude, if that fails, switch to time based    
       if(IMUs_rl_amount > 0)
@@ -259,7 +259,7 @@ class EGI_obj {
           }
         }
         
-        //IMU measurement drift correction (before or after the voting step) 
+        //IMU measurement drift correction
       }
       else
       {
@@ -270,8 +270,8 @@ class EGI_obj {
       if(StepCount%pred_Steps == 0 && StepCount !=0)
       { 
         //GPS measurement recovery
-        long* posECEF = EGI_components.getGPSs_Avio_meas(1);
-        uint8_t GPSs_rl_amount = EGI_components.getGPSs_Avio_rl_amount();
+        long* posECEF = EGI_components->getGPSs_meas(1);
+        uint8_t GPSs_rl_amount = EGI_components->getGPSs_Avio_rl_amount();
 
           //into the measurement vector for position
     
@@ -344,8 +344,8 @@ class EGI_obj {
       //Barometric altitude computation
       if(IMU_failure && GPS_failure)
       {
-        float* BAROpdata = EGI_components.getBAROs_Avio_meas(1);
-        uint8_t BAROs_rl_amount = EGI_components.getBAROs_Avio_rl_amount();
+        float* BAROpdata = EGI_components->getBAROs_meas(1);
+        uint8_t BAROs_rl_amount = EGI_components->getBAROs_Avio_rl_amount();
         
         if(BAROs_rl_amount > 0)
         {

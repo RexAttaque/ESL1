@@ -27,10 +27,14 @@ template <class S, class T> class Sensors {
 
     T** get_data();
 
+    T* get_pdata();
+
+    uint32_t get_failure_flags();
+
     uint8_t get_real_amount();
 
     //method to poll data from all sensors (stored in _data) and process it (stored in _pdata)
     //data is multiplied by "factor" before being stored in _pdata
     //returns _pdata
-    T* poll_process_data(int factor);
+    T* poll_process_ave_data(int factor);
 };

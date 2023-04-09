@@ -5,7 +5,8 @@
 #include <EGI/KalmanPos.h>
 #include <Sensors/SensingSystem.h>
 
-EGI_obj EGI_Avio = EGI_obj(100, 25, true); //EGI - Embedded GPS/IMU, kalman filter algorithm for data fusion between IMU and GPS etc.
+SensingSystem SensorsSystem = SensingSystem(); //Sensing system which ensures combination and pre-processing of all sensor data, see header file for sensor declaration, type, combination technique etc.
+EGI_obj EGI_Avio = EGI_obj(&SensorsSystem, 100, 25, true); //EGI - Embedded GPS/IMU, kalman filter algorithm for data fusion between IMU and GPS etc. with backup BARO altitude calculation
 
 unsigned long start_clk; //time at timer start
 unsigned long end_clk; //time at timer stop

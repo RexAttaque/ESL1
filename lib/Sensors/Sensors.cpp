@@ -55,15 +55,25 @@ template <class S, class T> class Sensors {
       return _data;
     }
 
+    T* get_pdata()
+    {
+      return _pdata;
+    }
+
+    uint32_t get_failure_flags()
+    {
+      return _flags;
+    }
+
     uint8_t get_real_amount()
     {
       return _real_amount;
     }
 
-    //method to poll data from all sensors (stored in _data) and process it (stored in _pdata)
+    //method to poll data from all sensors (stored in _data) and process it (stored in _pdata) using an average across working sensors
     //data is multiplied by "factor" before being stored in _pdata
     //returns _pdata
-    T* poll_process_data(int factor){
+    T* poll_process_ave_data(int factor){
 
       //reset indicators and the amount of sensors currently in operation
       this._flags = 0;

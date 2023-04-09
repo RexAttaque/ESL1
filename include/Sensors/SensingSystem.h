@@ -21,23 +21,25 @@ BARO_Avio* BARO_Avio_array;
 
 class SensingSystem {
   private :
-    Sensors<Adafruit_BNO055,float> IMUs_Avio;
-    Sensors<ublox_gen9,float> GPSs_Avio;
-    Sensors<Adafruit_BMP280,float> BAROs_Avio;
+    Sensors<IMU_Avio,float> IMUs_Avio;
+    Sensors<GPS_Avio,float> GPSs_Avio;
+    Sensors<BARO_Avio,float> BAROs_Avio;
   
   public :
 
     SensingSystem();
 
-    float* getIMUs_Avio_meas(int scalingFactor);
-
+    Sensors<IMU_Avio,float>* getIMUs_Avio();
     uint8_t getIMUs_Avio_rl_amount();
 
-    long* getGPSs_Avio_meas(int scalingFactor);
-
+    Sensors<GPS_Avio,float>* getGPSs_Avio(); 
     uint8_t getGPSs_Avio_rl_amount();
 
-    float* getBAROs_Avio_meas(int scalingFactor);
-
+    Sensors<BARO_Avio,float> getBAROs_Avio();
     uint8_t getBAROs_Avio_rl_amount();
+    
+    //get the measurements at CG for use in the Kalman (that includes backup altitude computation from BARO data)
+    float* getIMUs_CG_meas(int scalingFactor); //Data combination from the entire sensing system to obtain IMU data at CG for use in the Kalman filter
+    long* getGPSs_meas(int scalingFactor); //Data combination from the entire sensing system to obtain GPS data for use in the Kalman filter
+    float* getBAROs_meas(int scalingFactor); //Data combination from the entire sensing system to obtain BARO data for use in the Kalman filter (as backup altitude computation)
 };
