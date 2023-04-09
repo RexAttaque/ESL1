@@ -7,6 +7,8 @@ Structure is as follows :
 
 -> Adafruit BNO055 IMUs, Ublox Gen9 GPS, Adafruit BMP280 Baro sensors (and their respective interface librairies to acquire measurements)
 
+-> Common base for all sensors (array of measurements, size of the array (# of measurands))
+
 -> IMU, GPS, BARO objects (IMU_Avio, GPS_Avio and BARO_Avio objects, with "Avio" indicating their location, the goal is to format measurements into a universal array format) 
 
 -> Sensors object (Sensors object, the goal is to combine the data from all sensors of one type (IMU_Avio for example which for ESL1 consists of 2 IMUs))
