@@ -1,4 +1,4 @@
-# ESL1_master
+# ESL1
 
 Code Repository for the ESO ESL1 (ESTACA Space Launcher) Student Rocket.
 The main goal is to provide accurate position and particularily altitude data via sensor fusion, to ensure parachute deployement at the proper altitude and tracking of the rocket
