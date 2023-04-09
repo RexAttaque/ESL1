@@ -41,9 +41,13 @@ void loop() {
 
   NavSolution Nav_Data = EGI_Avio.getNavSolution();
 
+  //check sensor failures to know if time should be used instead of altitude
+
   //if altimeter or time criteria is reached, deploy parachutes
 
   //relay information
+
+  //relay informatio via GSM near the end of flight
   
   //check clock and delay accordingly
   end_clk = micros();

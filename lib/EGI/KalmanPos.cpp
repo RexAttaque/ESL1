@@ -222,7 +222,7 @@ class EGI_obj {
     //altitude - WGS84 altitude or baro if GPS and IMU fail (cm)
     NavSolution getNavSolution()
     {
-      float* IMUpdata = EGI_components.getIMUs_Avio_meas();
+      float* IMUpdata = EGI_components.getIMUs_Avio_meas(100);
       uint8_t IMUs_rl_amount = EGI_components.getIMUs_Avio_rl_amount();
               
       //if polling one set of measurements failed, discard it, if all failed, switch to GPS only, if all GPS fail, switch to barometric altitude, if that fails, switch to time based    
@@ -270,7 +270,7 @@ class EGI_obj {
       if(StepCount%pred_Steps == 0 && StepCount !=0)
       { 
         //GPS measurement recovery
-        long* posECEF = EGI_components.getGPSs_Avio_meas();
+        long* posECEF = EGI_components.getGPSs_Avio_meas(1);
         uint8_t GPSs_rl_amount = EGI_components.getGPSs_Avio_rl_amount();
 
           //into the measurement vector for position
@@ -344,12 +344,14 @@ class EGI_obj {
       //Barometric altitude computation
       if(IMU_failure && GPS_failure)
       {
+        float* BAROpdata = EGI_components.getBAROs_Avio_meas(1);
         uint8_t BAROs_rl_amount = EGI_components.getBAROs_Avio_rl_amount();
         
         if(BAROs_rl_amount > 0)
         {
             BARO_failure = false;
 
+            //ISA atmosphere altitude computation
         }
         else
         {
