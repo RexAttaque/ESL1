@@ -46,22 +46,28 @@ class EGI_obj {
     uint8_t pred_Steps; //Number of time steps (loops) between each estimation of the kalman filter, otherwise simply predict (dead reckoning)
 
     //Kalman filter Q and R matrices update
-    bool allowVarUpd;
+    bool allowVarUpd = true;
 
     double std_delta_t; //seconds, time step used by the prediction step of the kalman filter by default
     double delta_t; //seconds, current time step
+    unsigned long StepCount; //current time step
+    uint8_t counter; //second counter to start counting from a specific time step
 
+    bool IMU_failure; //failure indicators
+    bool GPS_failure;
+    bool BARO_failure;
 
     //Altitude calculation necessities
     //x, y, z ECEF position of ESL at the same Lat,Long but at ground level
     BLA::Matrix<pos_var,1> pos_sol;
 
-
     //t_x, t_y, t_z -- east (mag)
     //t'_x, t'_y, t'_z -- north (mag)
     //n_x, n_y, n_z -- up/normal
     //static for now, can depend on the position, will see if it makes a big difference
-    const BLA::Matrix<pos_var,pos_var> ENUmag;
+    const BLA::Matrix<pos_var,pos_var> ENUmag = {cos(mag_dev), -sin(mag_dev), 0, 
+                                                 sin(mag_dev), cos(mag_dev), 0, 
+                                                 0, 0, 1};
                                          
     //t_x, t_y, t_z -- east (true)
     //t'_x, t'_y, t'_z -- north (true)
@@ -85,7 +91,12 @@ class EGI_obj {
 
 
     // y_k = H*x_k + v_k -- y_k measurement vector at time step k, x_k state vector, v_k measurement noise -- this matrix does not change with time in our case
-    const BLA::Matrix<meas_var,ss_var, BLA::Array<meas_var,ss_var,uint8_t>> H;
+    const BLA::Matrix<meas_var,ss_var, BLA::Array<meas_var,ss_var,uint8_t>> H = {1,0,0,0,0,0,0,0,0,
+                                                                                 0,1,0,0,0,0,0,0,0,
+                                                                                 0,0,1,0,0,0,0,0,0,
+                                                                                 0,0,0,0,0,0,1,0,0,
+                                                                                 0,0,0,0,0,0,0,1,0,
+                                                                                 0,0,0,0,0,0,0,0,1};
     
     const BLA::Matrix<ss_var,meas_var, BLA::Array<ss_var,meas_var,uint8_t>> H_t = ~H;
     
@@ -104,7 +115,15 @@ class EGI_obj {
     BLA::Matrix<ss_var,ss_var> std_F;
 
     // x_k = F_(k-1)*x_(k-1) + G_(k-1)*u_(k-1) + w_(k-1) -- F_(k-1) equivalent to the A matrix of a SS representation at time step k-1, G_(k-1) "" B matrix "", w_(k-1) is the state noise
-    const BLA::Matrix<ss_var,input_var> G;
+    const BLA::Matrix<ss_var,input_var> G = {0,0,0,
+                                             0,0,0,
+                                             0,0,0,
+                                             0,0,0,
+                                             0,0,0,
+                                             0,0,0,
+                                             1,0,0,
+                                             0,1,0,
+                                             0,0,1};
     
     // Covariance matrix of the state noise (diag if SS variables are indep.) -- a 0 means no noise if on the diag (variance) and no coupling outside (covariance).
     BLA::Matrix<ss_var,ss_var> Q;
