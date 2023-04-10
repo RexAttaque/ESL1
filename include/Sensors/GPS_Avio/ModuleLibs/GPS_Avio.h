@@ -17,6 +17,8 @@ class GPS_Avio : public Base_Sensor<long> {
   
     GPS_Avio(HardwareSerial HWSerial);
 
+    bool init();
+
     uint8_t getStatus();
 
     long* getMeas();
