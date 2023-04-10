@@ -9,18 +9,10 @@ class SensingSystem {
     
     const uint8_t amount_sensor_arrays = 3;
 
-
     Sensors<IMU_BNO055,double> IMUs_Avio;
-
     Sensors<GPS_UBX9,long> GPSs_Avio;
-
     Sensors<BARO_BMP280,float> BAROs_Avio;
-    double P0; //Pressure at sea level
-    double T0; //Temperature at sea level
-    double Tz; //Temperature gradient in troposphere
-    long z_atmo[6]; //altitude of tropopause start,stratosphere start,statopause start,mesosphere start,mesopause start and thermosphere start 
-  
-  
+
   public :
 
     SensingSystem();

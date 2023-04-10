@@ -3,10 +3,12 @@
 //Main
 
 #include <EGI/KalmanPos.h>
+#include <BS/BaroAlt.h>
 #include <Sensors/SensingSystem.h>
 
 SensingSystem SensorsSystem = SensingSystem(); //Sensing system which ensures combination and pre-processing of all sensor data, see header file for sensor declaration, type, combination technique etc.
-EGI_obj EGI_Avio = EGI_obj(&SensorsSystem, 100, 25, true); //EGI - Embedded GPS/IMU, kalman filter algorithm for data fusion between IMU and GPS etc. with backup BARO altitude calculation
+EGI_obj EGI = EGI_obj(&SensorsSystem, 100, 25, true); //EGI - Embedded GPS/IMU, kalman filter algorithm for data fusion between IMU and GPS etc.
+BS_obj BS = BS_obj(&SensorsSystem,1); //BS - Barometric System, altitude calculation from barometric (P and T) data. Used as a backup only to the EGI provided altitude
 
 unsigned long start_clk; //time at timer start
 unsigned long end_clk; //time at timer stop
@@ -21,7 +23,7 @@ void setup() {
   //init sensors
   //init GPS, wait for nav solution 
   //calibrate IMUs (either before GPS to save time or after to stay as precise as possible until launch)
-  loopTimeMax = EGI_Avio.initKalman(); //IMU refresh rate, GPS refresh rate
+  loopTimeMax = EGI.initKalman(); //IMU refresh rate, GPS refresh rate
 
   if(loopTimeMax != 0)
   {
@@ -40,7 +42,7 @@ void loop() {
   //start the clock to monitor for time step changes
   start_clk = micros();
 
-  NavSolution Nav_Data = EGI_Avio.getNavSolution();
+  NavSolution Nav_Data = EGI.getNavSolution();
 
   //check sensor failures to know if time should be used instead of altitude
 
@@ -59,14 +61,14 @@ void loop() {
   { 
     if(timeStepChange == true)
     { 
-      EGI_Avio.updateF(false,0);
+      EGI.updateF(false,0);
       timeStepChange = false;
     }
     delayMicroseconds(timeLeft);
   }
   else if(timeLeft!=0)
   {
-    EGI_Avio.updateF(true,(double) loopTime/pow(10,6));
+    EGI.updateF(true,(double) loopTime/pow(10,6));
     timeStepChange = true;
   }
 }

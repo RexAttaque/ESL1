@@ -112,7 +112,7 @@ void EGI_obj::updateF(bool stepChange, double newTimeStep)
 //_time - Time since launch (seconds)
 //x - Kalman ECEF Position x (cm)
 //y - Kalman ECEF Position y (cm)
-//z - Kalman ECEF Position x (cm)
+//z - Kalman ECEF Position z (cm)
 //altitude - WGS84 altitude or baro if GPS and IMU fail (cm)
 NavSolution EGI_obj::getNavSolution()
 {
@@ -166,8 +166,13 @@ NavSolution EGI_obj::getNavSolution()
     //GPS measurement recovery
     long* posECEF = EGI_components->getGPSs_meas(1);
     uint8_t GPSs_rl_amount = EGI_components->getGPSs_Avio_rl_amount();
+    uint8_t offset_pos_GPS = 1;
 
-      //into the measurement vector for position
+    //into the measurement vector for position
+    for(uint8_t i=0; i<pos_var;i++)
+    {
+      y(i,1) = (double)(posECEF[i+offset_pos_GPS]/1000.0F);
+    }
 
     if(GPSs_rl_amount > 0) //maybe check also if you're not getting the same position twice or if the GPS comes back online
     {  
@@ -235,24 +240,8 @@ NavSolution EGI_obj::getNavSolution()
     }
   }
   
-  //Barometric altitude computation
-  if(IMU_failure && GPS_failure)
-  {
-    float* BAROpdata = EGI_components->getBAROs_meas(1);
-    uint8_t BAROs_rl_amount = EGI_components->getBAROs_Avio_rl_amount();
-    
-    if(BAROs_rl_amount > 0)
-    {
-        BARO_failure = false;
-
-        //ISA atmosphere altitude computation
-    }
-    else
-    {
-        BARO_failure = true;
-    }
-  }
-  else //Altitude computation in ECEF
+  //Altitude computation in ECEF
+  if(!IMU_failure && !GPS_failure)
   {
     //iso Lat,Long ground position in ECEF
     double lg = atan(x(2,1)/x(1,1));

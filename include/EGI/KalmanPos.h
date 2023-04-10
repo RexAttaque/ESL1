@@ -55,7 +55,6 @@ class EGI_obj {
 
     bool IMU_failure; //failure indicators
     bool GPS_failure;
-    bool BARO_failure;
 
     //Altitude calculation necessities
     //x, y, z ECEF position of ESL at the same Lat,Long but at ground level
@@ -154,12 +153,12 @@ class EGI_obj {
     //newTimeStep, seconds : time step used to compute the F matrix (may vary in flight)
     void updateF(bool stepChange, double newTimeStep);
     
-    //getNavSolution provides time since launch, Kalman filter position, altitude (source may change depending on failures for altitude)
+    //getNavSolution provides time since launch, Kalman filter position and altitude
     //Returns
     //_time - Time since launch (seconds)
     //x - Kalman ECEF Position x (cm)
     //y - Kalman ECEF Position y (cm)
     //z - Kalman ECEF Position x (cm)
-    //altitude - WGS84 altitude or baro if GPS and IMU fail (cm)
+    //altitude - WGS84 altitude (cm)
     NavSolution getNavSolution();
 };
