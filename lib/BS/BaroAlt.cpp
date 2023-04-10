@@ -44,7 +44,7 @@ long BS_obj::getAltitude()
     }
     else
     {
-        Altitude = altitudeFaultCode;
+        Altitude = faultCodes::altitude;
         BARO_failure = true;
     }
 

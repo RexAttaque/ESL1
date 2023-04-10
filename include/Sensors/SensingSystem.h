@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include <faultCodes.h>
+#include <fault_debug.h>
 #include <Sensors/Sensors.h>
 #include <Sensors/IMU_BNO055/ModuleLibs/IMU_BNO055.h>
 #include <Sensors/GPS_UBX9/ModuleLibs/GPS_UBX9.h>

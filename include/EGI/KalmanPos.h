@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include <faultCodes.h>
+#include <fault_debug.h>
 #include <Sensors/SensingSystem.h>
 //Linear Algebra Library, has been modified so that the default Matrix storage type is double
 #include <LinearAlgebra/BasicLinearAlgebra.h>

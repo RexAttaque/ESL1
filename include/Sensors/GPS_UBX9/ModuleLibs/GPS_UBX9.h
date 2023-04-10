@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include <faultCodes.h>
+#include <fault_debug.h>
 #include <Sensors/Base_Sensor.h>
 #include <Sensors/GPS_UBX9/InterfaceLibs/ubloxGen9.h>
 

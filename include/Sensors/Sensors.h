@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include <faultCodes.h>
+#include <fault_debug.h>
 
 //Class containing sensors of type S, allows for the polling of all sensors (measurands of type T) and then processing of this data
 //WARNING : All sensors of the same type introduced in this class should have the same refresh rate

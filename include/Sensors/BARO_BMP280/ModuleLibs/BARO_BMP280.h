@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include <faultCodes.h>
+#include <fault_debug.h>
 #include <Sensors/Base_Sensor.h>
 #include <Sensors/BARO_BMP280/InterfaceLibs/Adafruit_BMP280.h>
 

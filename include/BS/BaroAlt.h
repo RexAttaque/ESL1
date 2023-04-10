@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include <faultCodes.h>
+#include <fault_debug.h>
 #include <Sensors/SensingSystem.h>
 
 const uint8_t atmo_model_slices = 6;

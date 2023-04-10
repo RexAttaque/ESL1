@@ -270,7 +270,7 @@ NavSolution EGI_obj::getNavSolution()
     KalmanOutput.x = 0;
     KalmanOutput.y = 0;
     KalmanOutput.z = 0;
-    KalmanOutput.altitude = altitudeFaultCode;
+    KalmanOutput.altitude = faultCodes::altitude;
   }
 
   //time computation (approximate)
