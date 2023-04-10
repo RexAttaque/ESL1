@@ -32,7 +32,33 @@ void Sensors<S, T>::reallocateDataMemory() {
 // }
 
 template <class S, class T>
-T** Sensors<S, T>::get_data()
+uint32_t Sensors<S, T>::initAll()
+{
+  uint32_t initFlags = 0;
+
+  for(uint8_t i=0; i<_th_amount; i++)
+  {
+    initFlags << 1;
+    initFlags = initFlags+_sensors[i].init();
+  }
+
+  return initFlags;
+}
+
+template <class S, class T>
+uint8_t Sensors<S, T>::getThAmount()
+{
+  return _th_amount;
+}
+
+template <class S, class T>
+S *Sensors<S, T>::getSensors()
+{
+  return _sensors;
+}
+
+template <class S, class T>
+T **Sensors<S, T>::get_data()
 {
   return _data;
 }

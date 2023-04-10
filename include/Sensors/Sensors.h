@@ -25,6 +25,10 @@ template <class S, class T> class Sensors {
 
     // Sensors<S,T> &operator=(Sensors<S,T> Sensors_a, Sensors<S,T> Sensors_b);
 
+    uint32_t initAll();
+
+    uint8_t getThAmount();
+    S* getSensors();
     T** get_data();
     T* get_pdata();
     uint32_t get_failure_flags();
