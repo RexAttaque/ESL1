@@ -59,7 +59,7 @@ void loop() {
     useTime = true;
   }
 
-  //relay information
+  //relay information via telemetry
 
   //relay informatio via GSM near the end of flight
   
