@@ -1,8 +1,8 @@
 #include <GSM/Sim800L.h>
 
 // Check wether the SIM is detected or not
-GSM_obj::GSM_obj(HardwareSerial HWSerial, String GSM_num, bool debug, bool cli)
-:GSM_Serial(HWSerial),phoneNumber(GSM_num),_debug(debug),cli_interface(cli)
+GSM_obj::GSM_obj(HardwareSerial HWSerial, String GSM_num, bool debug)
+:GSM_Serial(HWSerial),phoneNumber(GSM_num),_debug(debug)
 {}
 
 String GSM_obj::getLastTX()
@@ -199,18 +199,4 @@ bool GSM_obj::sendSMS()
   if(_debug) Serial.println("\nText sent");
 
   return status;
-}
-
-
-// For data transmission from Serial3 to Serial port & vice versa, debug only
-void GSM_obj::updateSerial()
-{
-  while(Serial3.available()) {
-    Serial.write(Serial3.read());//Forward what Serial3 received to Serial Port
-  }
-  Serial.println("");
-  
-  while(Serial.available()) {
-    Serial3.write(Serial.read());//Forward what Serial received to Serial2 Port
-  }
 }

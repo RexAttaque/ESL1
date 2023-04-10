@@ -14,7 +14,6 @@ class GSM_obj {
         HardwareSerial GSM_Serial;
 
         bool _debug; //debug indicator, outputs via Serial
-        bool cli_interface; //command line interface with the module
 
         String phoneNumber = ""; //phone number of the inserted SIM
         String RX = ""; //last transmission from the module
@@ -23,7 +22,7 @@ class GSM_obj {
 
     public :
 
-        GSM_obj(HardwareSerial HWSerial, String GSM_num, bool debug, bool cli);
+        GSM_obj(HardwareSerial HWSerial, String GSM_num, bool debug);
 
         String getLastTX();
         
@@ -41,8 +40,6 @@ class GSM_obj {
         bool check_AT_OK_GSM(String AT_COMMAND); //Sends then checks that the module has received the command AT_COMMAND
         void TRX_AT_GSM(char c); //Sends the charater c to the module and listens for the answer that is stored in RX
         void TRX_AT_GSM(String AT_COMMAND); //Sends the command AT_COMMAND to the module and listens for the answer that is stored in RX
-
-        void updateSerial(); //Allows for direct communication to the module if cli_interface = true via the serial monitor
 
         bool init(); //initializes the module (checks SIM, REG and SIG), returns false if no SIM, no REG or low SIG quality
         bool PrepSend_s1(); //Sending an SMS is cut into multiple stages because the module is too slow to execute everything at once
