@@ -20,26 +20,43 @@ unsigned long start_clk; //time at timer start
 unsigned long end_clk; //time at timer stop
 unsigned long loopTime; //timer in microseconds (used to measure loop() time)
 unsigned long loopTimeMax; //time in microseconds that the loop() function must not exceed
+unsigned long BaroLoopTimeMax; //time in microseconds that the loop() function must not exceed if barometric altitude is being used
+unsigned long timeSinceLastBaroAlt; //time in microseconds since the last barometric altitude reading
 unsigned long timeLeft; //time in microseconds that there is left until the next loop can start
 bool timeStepChange = false; //indicates if the time quota was breached
 
 void setup() {
   
-  if(debug::info()) Serial.begin(9600); //initialize serial monitor for debugging/information
+  if(debug::info()) Serial.begin(115200); //initialize serial monitor for debugging/information
 
-  //init sensors
-  //init GPS, wait for nav solution 
+  if(debug::info()) Serial.println("Sensor Init...");
+  uint32_t* initFlags = SensorsSystem.initAll();
+  
+  if(debug::info())
+  {
+    Serial.println("Sensor Init Flags : ");
+    for(uint8_t i=0; i<SS_const::amount_sensor_arrays;i++)
+    {
+      Serial.print("-Sensor Array #" + String(i) + " : ");
+      Serial.println(initFlags[i]);
+    }
+  }
+  
   //calibrate IMUs (either before GPS to save time or after to stay as precise as possible until launch)
-  loopTimeMax = EGI.initKalman(); //IMU refresh rate, GPS refresh rate
 
-  if(loopTimeMax != 0)
+  loopTimeMax = EGI.initKalman(); //Initialize EGI (get initial measurements, variance, covariances etc.)
+  BaroLoopTimeMax = BS.initBaroAlt(); //Initialize Barometric System (recover initial altitude, pressure and temperature to initialize atmo model)
+
+  if(loopTimeMax != 0 && BaroLoopTimeMax !=0)
   {
     //NOTE : may need to run calibrations just before launch
     //waiting for the launch trigger... (acceleration interrupt from the IMU maybe)
   }
   else
   {
-    //Init fail
+    if(debug::info()) Serial.println("MAIN INIT FAIL, CHECK DEBUG, EXITING !");
+    delay(10000);
+    exit(0);
   }
 }
 
@@ -53,13 +70,13 @@ void loop() {
   NavSolution Nav_Data = EGI.getNavSolution();
 
   long final_altitude = Nav_Data.altitude;
-  if(final_altitude == faultCodes::altitude) //faultCodes::altitude is the fault indicating value for the altitude
+  if(final_altitude == faultCodes::altitude) //faultCodes::altitude is the fault indicating value for the altitude //need to make sure we're not polling altitude faster than it can be acquired (BaroLoopTimeMax)
   {
     final_altitude = BS.getAltitude();
   }
   if(final_altitude == faultCodes::altitude)
   {
-    //check sensor failure lags to know if time should be used instead of altitude on top of this basic if else condition
+    //check sensor failure flags to know if time should be used instead of altitude on top of this basic if else condition
     useTime = true;
   }
 
