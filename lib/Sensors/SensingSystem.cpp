@@ -48,12 +48,27 @@ double* SensingSystem::getIMUs_CG_meas(int scalingFactor)
   return IMUs_Avio.poll_process_ave_data(scalingFactor);
 }
 
+uint16_t SensingSystem::getIMUs_CG_Hz()
+{
+  return IMUs_Avio.getRefreshRate();
+}
+
 long* SensingSystem::getGPSs_meas(int scalingFactor)
 {
   return GPSs_Avio.poll_process_ave_data(scalingFactor);
 }
 
+uint16_t SensingSystem::getGPSs_Hz()
+{
+  return GPSs_Avio.getRefreshRate();
+}
+
 float* SensingSystem::getBAROs_meas(int scalingFactor)
 {
   return BAROs_Avio.poll_process_ave_data(scalingFactor);
+}
+
+uint16_t SensingSystem::getBAROs_Hz()
+{
+  return BAROs_Avio.getRefreshRate();
 }

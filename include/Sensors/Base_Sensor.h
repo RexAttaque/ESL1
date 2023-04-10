@@ -25,5 +25,6 @@ class Base_Sensor {
         virtual bool goLive();
         virtual bool goIdle();
 
+        uint16_t get_refresh_rate();
         uint8_t get_var_amount();
 };

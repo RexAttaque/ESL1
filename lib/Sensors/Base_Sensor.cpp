@@ -47,6 +47,12 @@ bool Base_Sensor<T>::goIdle()
 
 //Actual common methods
 template <class T>
+uint16_t Base_Sensor<T>::get_refresh_rate()
+{
+    return _refreshHz;
+}
+
+template <class T>
 uint8_t Base_Sensor<T>::get_var_amount()
 {
     return _varAmount;

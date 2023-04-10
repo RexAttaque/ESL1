@@ -46,6 +46,12 @@ uint32_t Sensors<S, T>::initAll()
 }
 
 template <class S, class T>
+uint16_t Sensors<S, T>::getRefreshRate()
+{
+  return _sensors[0].get_refresh_rate();
+}
+
+template <class S, class T>
 uint8_t Sensors<S, T>::getThAmount()
 {
   return _th_amount;
