@@ -126,13 +126,13 @@ NavSolution EGI_obj::getNavSolution()
     IMU_failure = false;
 
     //IMU measurement base change (based on the previous position, base change from ENUmag to ENUtrue then ECEF) and transfer to measurement vector
-    for(int i=0; i<pos_var; i++)
+    for(int i=0; i<EGI_const::pos_var; i++)
     {
-      ENU(i,pos_var) = x(i,1)/WGS84(i,1);
+      ENU(i,EGI_const::pos_var) = x(i,1)/EGI_const::WGS84(i,1);
     }
   
-    double phi = acos(ENU(3,pos_var));
-    double theta = atan(ENU(2,pos_var)/ENU(1,pos_var));
+    double phi = acos(ENU(3,EGI_const::pos_var));
+    double theta = atan(ENU(2,EGI_const::pos_var)/ENU(1,EGI_const::pos_var));
   
     ENU(1,1) = -sin(theta);
     ENU(2,1) = cos(theta);
@@ -145,18 +145,18 @@ NavSolution EGI_obj::getNavSolution()
     tempPosPos = ENU*ENUmag;
     
     //store acceleration data into the measurement vector y
-    for(int i=pos_var; i<meas_var-pos_var;i++)
+    for(int i=EGI_const::pos_var; i<EGI_const::meas_var-EGI_const::pos_var;i++)
     {
       y(i,1)=0;
       
-      for(int j=0; j<pos_var; j++)
+      for(int j=0; j<EGI_const::pos_var; j++)
       {
         y(i,1) += tempPosPos(i,j)*(IMUpdata[j]);
       }
     }
 
     //acceleration is also part of the input vector u
-    u = y.Submatrix<input_var,1>(input_var-1,0);
+    u = y.Submatrix<EGI_const::input_var,1>(EGI_const::input_var-1,0);
 
     delete[] IMUpdata;
 
@@ -176,7 +176,7 @@ NavSolution EGI_obj::getNavSolution()
     uint8_t offset_pos_GPS = 1;
 
     //into the measurement vector for position
-    for(uint8_t i=0; i<pos_var;i++)
+    for(uint8_t i=0; i<EGI_const::pos_var;i++)
     {
       y(i,1) = (double)(posECEF[i+offset_pos_GPS]/1000.0F);
     }
@@ -197,14 +197,14 @@ NavSolution EGI_obj::getNavSolution()
 
       if(allowVarUpd)
       {
-        for(uint8_t i=0;i<pos_var;i++)
+        for(uint8_t i=0;i<EGI_const::pos_var;i++)
         {
           error_pos_meas(i,counter) = y(i,1) - x_est(i,1);
           error_pos_pred(i,counter) = x(i,1) - x_est(i,1);
         }
     
         counter += 1;
-        if(counter == noVarUpd_Steps)
+        if(counter == EGI_const::noVarUpd_Steps)
         {
           //Recompute R based on what was measured for position and what was estimated 
           
@@ -236,9 +236,9 @@ NavSolution EGI_obj::getNavSolution()
   else if(!GPS_failure)
   {
     //simply put the GPS position into the x vector and 0 for the other variables
-    for(int i=0;i<ss_var;i++)
+    for(int i=0;i<EGI_const::ss_var;i++)
     {
-      if(i<pos_var)
+      if(i<EGI_const::pos_var)
       {
         x(i,1) = y(i,1);
       }
@@ -256,7 +256,7 @@ NavSolution EGI_obj::getNavSolution()
     double lg = atan(x(2,1)/x(1,1));
     double la = atan(x(2,1)/sqrt(pow(x(1,1),2)+pow(x(2,1),2)));
   
-    double r0 = sqrt(1/( pow(cos(la),2)*pow(cos(lg),2)/pow(WGS84(1,1),2) + pow(cos(la),2)*pow(sin(lg),2)/pow(WGS84(2,1),2) + pow(sin(la),2)/pow(WGS84(3,1),2) ));
+    double r0 = sqrt(1/( pow(cos(la),2)*pow(cos(lg),2)/pow(EGI_const::WGS84(1,1),2) + pow(cos(la),2)*pow(sin(lg),2)/pow(EGI_const::WGS84(2,1),2) + pow(sin(la),2)/pow(EGI_const::WGS84(3,1),2) ));
   
     double pos_sol[3] = {r0*cos(la)*cos(lg), r0*cos(la)*sin(lg), r0*sin(la)};
 

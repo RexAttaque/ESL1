@@ -6,7 +6,7 @@ SensingSystem::SensingSystem():IMUs_Avio(Sensors<IMU_BNO055,double>(IMU_Avio_arr
 
 uint32_t* SensingSystem::initAll()
 {
-    uint32_t initFlags[amount_sensor_arrays] = {IMUs_Avio.initAll(), GPSs_Avio.initAll(), BAROs_Avio.initAll()};
+    uint32_t initFlags[SS_const::amount_sensor_arrays] = {IMUs_Avio.initAll(), GPSs_Avio.initAll(), BAROs_Avio.initAll()};
     return initFlags;
 }
 

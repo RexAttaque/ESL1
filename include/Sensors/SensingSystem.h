@@ -6,11 +6,12 @@
 #include <Sensors/IMU_BNO055/ModuleLibs/IMU_BNO055.h>
 #include <Sensors/GPS_UBX9/ModuleLibs/GPS_UBX9.h>
 #include <Sensors/BARO_BMP280/ModuleLibs/BARO_BMP280.h>
+
+namespace SS_const {
+    const uint8_t amount_sensor_arrays = 3;
+};
 class SensingSystem {
   private :
-    
-    const uint8_t amount_sensor_arrays = 3;
-
     //Make sure all of the sensors within sensors objects of one "group" use the same refresh rate 
     //(all of the sensors that contribute to one set of measurement must have the same refresh rate)
     Sensors<IMU_BNO055,double> IMUs_Avio;
