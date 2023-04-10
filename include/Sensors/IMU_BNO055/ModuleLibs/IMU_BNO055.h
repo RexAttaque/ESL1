@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Arduino.h>
+#include <faultCodes.h>
 #include <Wire.h>
 #include <Sensors/Base_Sensor.h>
 #include <Adafruit_Unified_Sensor/Adafruit_Sensor.h>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <faultCodes.h>
 
 template <class T>
 class Base_Sensor {

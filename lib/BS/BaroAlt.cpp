@@ -39,11 +39,12 @@ long BS_obj::getAltitude()
         float r = 287.03; // J/kg/K
 
         //TODO
+
+        return Altitude;
     }
     else
     {
         BARO_failure = true;
+        return -altitudeFaultCode;
     }
-
-    return 0.0f;
 }

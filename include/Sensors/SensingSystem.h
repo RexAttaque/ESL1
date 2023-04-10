@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Arduino.h>
+#include <faultCodes.h>
 #include <Sensors/Sensors.h>
 #include <Sensors/IMU_BNO055/ModuleLibs/IMU_BNO055.h>
 #include <Sensors/GPS_UBX9/ModuleLibs/GPS_UBX9.h>
@@ -36,7 +38,7 @@ class SensingSystem {
 
     long* getGPSs_meas(int scalingFactor); //Data combination from the entire sensing system to obtain GPS data for use in the Kalman filter
     uint16_t getGPSs_Hz(); //get the refresh rate of this group of GPSs
-    
+
     float* getBAROs_meas(int scalingFactor); //Data combination from the entire sensing system to obtain BARO data for use in the Kalman filter (as backup altitude computation)
     uint16_t getBAROs_Hz(); //get the refresh rate of this group of BAROs
 };
