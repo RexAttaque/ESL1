@@ -32,7 +32,7 @@
 #include <limits.h>
 #include <math.h>
 
-#include <Sensors/IMU_Avio/InterfaceLib/Adafruit_BNO055.h>
+#include <Sensors/IMU_BNO055/InterfaceLib/Adafruit_BNO055.h>
 
 /*!
  *  @brief  Instantiates a new Adafruit_BNO055 class

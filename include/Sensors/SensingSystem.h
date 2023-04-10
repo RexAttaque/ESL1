@@ -1,26 +1,26 @@
 #pragma once
 
 #include <Sensors/Sensors.h>
-#include <Sensors/IMU_Avio/ModuleLibs/IMU_Avio.h>
-#include <Sensors/GPS_Avio/ModuleLibs/GPS_Avio.h>
-#include <Sensors/BARO_Avio/ModuleLibs/BARO_Avio.h>
+#include <Sensors/IMU_BNO055/ModuleLibs/IMU_BNO055.h>
+#include <Sensors/GPS_UBX9/ModuleLibs/GPS_UBX9.h>
+#include <Sensors/BARO_BMP280/ModuleLibs/BARO_BMP280.h>
 class SensingSystem {
   private :
-    Sensors<IMU_Avio,double> IMUs_Avio;
-    Sensors<GPS_Avio,long> GPSs_Avio;
-    Sensors<BARO_Avio,float> BAROs_Avio;
+    Sensors<IMU_BNO055,double> IMUs_Avio;
+    Sensors<GPS_UBX9,long> GPSs_Avio;
+    Sensors<BARO_BMP280,float> BAROs_Avio;
   
   public :
 
     SensingSystem();
 
-    Sensors<IMU_Avio,double>* getIMUs_Avio();
+    Sensors<IMU_BNO055,double>* getIMUs_Avio();
     uint8_t getIMUs_Avio_rl_amount();
 
-    Sensors<GPS_Avio,long>* getGPSs_Avio(); 
+    Sensors<GPS_UBX9,long>* getGPSs_Avio(); 
     uint8_t getGPSs_Avio_rl_amount();
 
-    Sensors<BARO_Avio,float>* getBAROs_Avio();
+    Sensors<BARO_BMP280,float>* getBAROs_Avio();
     uint8_t getBAROs_Avio_rl_amount();
     
     //get the measurements at CG for use in the Kalman (that includes backup altitude computation from BARO data)

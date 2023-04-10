@@ -1,10 +1,10 @@
 #include <Sensors/SensingSystem.h>
 
-SensingSystem::SensingSystem():IMUs_Avio(Sensors<IMU_Avio,double>(IMU_Avio_array,qty_IMU_Avio)),GPSs_Avio(Sensors<GPS_Avio,long>(GPS_Avio_array,qty_GPS_Avio)),BAROs_Avio(Sensors<BARO_Avio,float>(BARO_Avio_array,qty_BARO_Avio))
+SensingSystem::SensingSystem():IMUs_Avio(Sensors<IMU_BNO055,double>(IMU_Avio_array,qty_IMU_Avio)),GPSs_Avio(Sensors<GPS_UBX9,long>(GPS_Avio_array,qty_GPS_Avio)),BAROs_Avio(Sensors<BARO_BMP280,float>(BARO_Avio_array,qty_BARO_Avio))
 {
 }
 
-Sensors<IMU_Avio, double> *SensingSystem::getIMUs_Avio()
+Sensors<IMU_BNO055, double> *SensingSystem::getIMUs_Avio()
 {
   return &IMUs_Avio;
 }
@@ -15,7 +15,7 @@ uint8_t SensingSystem::getIMUs_Avio_rl_amount()
 }
 
 
-Sensors<GPS_Avio, long> *SensingSystem::getGPSs_Avio()
+Sensors<GPS_UBX9, long> *SensingSystem::getGPSs_Avio()
 {
   return &GPSs_Avio;
 }
@@ -26,7 +26,7 @@ uint8_t SensingSystem::getGPSs_Avio_rl_amount()
 }
 
 
-Sensors<BARO_Avio, float> *SensingSystem::getBAROs_Avio()
+Sensors<BARO_BMP280, float> *SensingSystem::getBAROs_Avio()
 {
   return &BAROs_Avio;
 }

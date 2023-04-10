@@ -19,7 +19,7 @@
  *  BSD license, all text above must be included in any redistribution
  */
 
-#include <Sensors/BARO_Avio/InterfaceLibs/Adafruit_BMP280.h>
+#include <Sensors/BARO_BMP280/InterfaceLibs/Adafruit_BMP280.h>
 
 /*!
  * @brief  BMP280 constructor using i2c

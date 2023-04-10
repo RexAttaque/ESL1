@@ -9,9 +9,9 @@ Structure is as follows :
 
 -> Common base for all sensors (array of measurements, size of the array (# of measurands))
 
--> IMU, GPS, BARO objects (IMU_Avio, GPS_Avio and BARO_Avio objects, with "Avio" indicating their location, the goal is to format measurements into a universal array format) 
+-> IMU, GPS, BARO objects (IMU_BNO055, GPS_UBX9 and BARO_BMP280 objects, with "Avio" indicating their location, the goal is to format measurements into a universal array format) 
 
--> Sensors object (Sensors object, the goal is to combine the data from all sensors of one type (IMU_Avio for example which for ESL1 consists of 2 IMUs))
+-> Sensors object (Sensors object, the goal is to combine the data from all sensors of one type (IMU_BNO055 for example which for ESL1 consists of 2 IMUs))
 
 -> Sensors System object (SensingSystem object, the goal is to centralize all Sensors objects and combine their data into a final form (to combine the data of IMUs in the Avionics bay and in the tail for example, transparent in the case of ESL1))
 

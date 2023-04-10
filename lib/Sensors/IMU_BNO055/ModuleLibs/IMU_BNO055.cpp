@@ -1,11 +1,11 @@
-#include <Sensors/IMU_Avio/ModuleLibs/IMU_Avio.h>
+#include <Sensors/IMU_BNO055/ModuleLibs/IMU_BNO055.h>
 
-IMU_Avio::IMU_Avio(uint8_t type, uint8_t address):Base_Sensor(IMU_varAmount)
+IMU_BNO055::IMU_BNO055(uint8_t type, uint8_t address):Base_Sensor(IMU_varAmount)
 {
   IMU = Adafruit_BNO055(type, address);
 }
 
-bool IMU_Avio::init(adafruit_bno055_opmode_t mode, Adafruit_BNO055::adafruit_bno055_axis_remap_config_t remapcode, Adafruit_BNO055::adafruit_bno055_axis_remap_sign_t remapsign)
+bool IMU_BNO055::init(adafruit_bno055_opmode_t mode, Adafruit_BNO055::adafruit_bno055_axis_remap_config_t remapcode, Adafruit_BNO055::adafruit_bno055_axis_remap_sign_t remapsign)
 {
   bool status = IMU.begin(mode);
   if(status)
@@ -16,12 +16,12 @@ bool IMU_Avio::init(adafruit_bno055_opmode_t mode, Adafruit_BNO055::adafruit_bno
   return status;
 }
 
-uint8_t IMU_Avio::getCalibration()
+uint8_t IMU_BNO055::getCalibration()
 {
   return IMU.getRawCalibration();
 }
 
-double* IMU_Avio::getMeas()
+double* IMU_BNO055::getMeas()
 {
   uint8_t offset = 3;
 
