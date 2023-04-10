@@ -10,5 +10,6 @@ uint8_t GPS_Avio::getStatus()
 
 long* GPS_Avio::getMeas()
 {
+  freeMeasMemory();
   return GPS.getPOSECEF();
 }
