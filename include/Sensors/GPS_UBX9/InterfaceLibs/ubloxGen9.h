@@ -220,7 +220,8 @@ class ublox_gen9 {
     //////////////////////////////////////////////////////// Init ///////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    ublox_gen9(HardwareSerial HWSerial = Serial1, long GPS_Baud = 115200, uint8_t GPS_Pltfrm_Model = 8, uint16_t GPS_Time_To_Refresh = 40, uint8_t GPS_Nav_Rate = 1, uint8_t config_Level = 7, long GPS_default_Baud = 38400, bool buffered_POS = false, bool NMEA_USB = false, long USB_Baud = 115200, bool NMEA_UART1 = false, uint8_t GPS_Stop_Bits = 1);
+    //GPS_Time_To_Refresh in ms, check the respective argument comments to see how each config changes behavior
+    ublox_gen9(HardwareSerial HWSerial, long GPS_Baud, uint8_t GPS_Pltfrm_Model, uint16_t GPS_Time_To_Refresh, uint8_t GPS_Nav_Rate, uint8_t config_Level, long GPS_default_Baud, bool buffered_POS, bool NMEA_USB, long USB_Baud, bool NMEA_UART1, uint8_t GPS_Stop_Bits);
     
     bool initGPS();
 
