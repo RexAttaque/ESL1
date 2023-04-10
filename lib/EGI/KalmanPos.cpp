@@ -1,10 +1,11 @@
 #include <EGI/KalmanPos.h>
 
-//IMU_refreshRate, Hz : refresh rate of the IMU that will be used
-//GPS_refreshRate, Hz : refresh rate of the GPS that will be used
 //VarUpd, bool : specifies wether or not the covariance matrices will be updated during flight or not (experimental)
-EGI_obj::EGI_obj(SensingSystem* SensorSys, uint8_t IMU_refreshRate, uint8_t GPS_refreshRate, bool VarUpd) : EGI_components(SensorSys),refresh_IMU(IMU_refreshRate),refresh_GPS(GPS_refreshRate),allowVarUpd(VarUpd)
+EGI_obj::EGI_obj(SensingSystem* SensorSys, bool VarUpd) : EGI_components(SensorSys),allowVarUpd(VarUpd)
 {
+  refresh_IMU = EGI_components->getIMUs_CG_Hz();
+  refresh_GPS = EGI_components->getGPSs_Hz();
+
   time_IMU = pow(10,6)/refresh_IMU; //microseconds between each IMU refresh
   pred_Steps = refresh_IMU/refresh_GPS; //Number of time steps (loops) between each estimation of the kalman filter, otherwise simply predict (dead reckoning)
   

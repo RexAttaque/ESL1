@@ -142,7 +142,7 @@ class EGI_obj {
     //IMU_refreshRate, Hz : refresh rate of the IMU that will be used
     //GPS_refreshRate, Hz : refresh rate of the GPS that will be used
     //VarUpd, bool : specifies wether or not the covariance matrices will be updated during flight or not (experimental)
-    EGI_obj(SensingSystem* SensorSys, uint8_t IMU_refreshRate, uint8_t GPS_refreshRate, bool VarUpd);
+    EGI_obj(SensingSystem* SensorSys, bool VarUpd);
     
     //function to initialize the kalman filter (covariance matrices, refresh rate values, delta_t etc.). Must be run after all other sensors are initialized and ready since this uses them.
     //returns the time that the loop() function running the kalman filter must not exceed if initialized succesfully, otherwise 0

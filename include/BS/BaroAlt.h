@@ -12,7 +12,8 @@ class BS_obj
     long Altitude;
     SensingSystem* BS_components;
 
-    float time_BARO;
+    uint16_t refresh_BARO;
+    unsigned long time_BARO;
     double delta_t;
 
     float alt_init; //Initial altitude
@@ -25,7 +26,7 @@ class BS_obj
 
   public:  
 
-    BS_obj(SensingSystem* SensorSys, float BARO_refreshRate);
+    BS_obj(SensingSystem* SensorSys);
 
     unsigned long initBaroAlt();
 
