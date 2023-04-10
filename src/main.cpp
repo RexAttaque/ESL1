@@ -41,6 +41,9 @@ void setup() {
       Serial.println(initFlags[i]);
     }
   }
+
+  //physical hardware check
+  //physical hardware init
   
   //calibrate IMUs (either before GPS to save time or after to stay as precise as possible until launch)
 
