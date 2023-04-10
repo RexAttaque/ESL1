@@ -1,8 +1,8 @@
 #include <GSM/Sim800L.h>
 
 // Check wether the SIM is detected or not
-GSM_obj::GSM_obj(HardwareSerial HWSerial, String GSM_num, bool debug)
-:GSM_Serial(HWSerial),phoneNumber(GSM_num),_debug(debug)
+GSM_obj::GSM_obj(HardwareSerial HWSerial, String GSM_num, long Baud)
+:GSM_Serial(HWSerial),phoneNumber(GSM_num),GSM_baudrate(Baud)
 {}
 
 String GSM_obj::getLastTX()
@@ -28,12 +28,12 @@ bool GSM_obj::check_SIM_GSM()
   if(check_AT_OK_GSM("AT+CCID") && RX.substring(ICCID_start_pos, ICCID_start_pos+2) == "89")
   {
     //code to fetch only the whole ICCID
-    if(_debug) 
+    if(debug::full()) 
     {
         int i=0;
         while(RX.charAt(ICCID_start_pos+i) != char(13)) //char(13) is the return carriage character
         {
-        i++;
+          i++;
         }
         Serial.println("ICCID : " + RX.substring(ICCID_start_pos,ICCID_start_pos+i)); // Print ICCID
     }
@@ -84,7 +84,7 @@ bool GSM_obj::check_SIG_GSM(int qualityFloor)
 void GSM_obj::read_RX()
 {
   RX = Serial3.readString();
-  if(_debug) Serial.println(RX); 
+  if(debug::full()) Serial.println(RX); 
 }
 
 // Function to check wether the last two characters of an answer are "OK" indicating the receiver answered and understood, returns the RX if OK is found, returns an empty string otherwise
@@ -94,12 +94,12 @@ bool GSM_obj::check_RX_OK()
     //check the substring before the /r/n characters for "OK"
     if(RX.substring(RX_length-4, RX_length-2) == "OK")
     {
-        if(_debug) Serial.println("PASS\n");
+        if(debug::full()) Serial.println("PASS\n");
 
         return true;
     }
 
-    if(_debug) Serial.println("FAIL\n");
+    if(debug::full()) Serial.println("FAIL\n");
     RX="";
     return false;
 }
@@ -133,27 +133,32 @@ void GSM_obj::TRX_AT_GSM(String AT_COMMAND)
 
 bool GSM_obj::init()
 {
-  // Send attention command to check if all fine, it returns OK
-  check_AT_OK_GSM("AT");
-  
-  if(RX!="" && check_SIM_GSM())
-  {
-    // Wait for network registration
-    while(check_REG_GSM() == false)
-    {
-      delay(1000);
-    }
+  GSM_Serial.begin(GSM_baudrate);
 
-    if(!check_SIG_GSM(signalQuality_floor)) 
-    {
-      if(_debug) Serial.println("WARNING, SIGNAL QUALITY LOW, CHECK DEBUG");
-    }
-
-    return true;
-  }
-  else if(_debug)
+  if(GSM_Serial)
   {
-    Serial.println("ERROR, INIT FAIL, CHECK DEBUG, EXIT");
+    // Send attention command to check if all fine, it returns OK
+    check_AT_OK_GSM("AT");
+    
+    if(RX!="" && check_SIM_GSM())
+    {
+      // Wait for network registration
+      while(check_REG_GSM() == false)
+      {
+        delay(1000);
+      }
+
+      if(!check_SIG_GSM(GSM::signalQuality_floor)) 
+      {
+        if(debug::info()) Serial.println("WARNING, GSM SIGNAL QUALITY LOW, CHECK DEBUG");
+      }
+
+      return true;
+    }
+    else if(debug::info())
+    {
+      Serial.println("ERROR, GSM INIT FAIL, CHECK DEBUG");
+    }
   }
 
   return false;
@@ -180,13 +185,13 @@ bool GSM_obj::PrepSend_s3()
 
 bool GSM_obj::sendSMS()
 {
-  if(_debug) Serial.println("Sending text message...");
+  if(debug::trace()) Serial.println("Sending text message...");
   
   // CTR+Z in ASCII, indicates the end of the message
   bool status = check_AT_OK_GSM(26); //check_AT_OK_GSM didn't work previously, use check_AT_OK_GSM("")
   
   while(Serial3.available()) {
-    if(_debug)
+    if(debug::full())
     {
       Serial.write(Serial3.read()); //Clear the contents of the sim800L TX buffer and display them in the console for debugging
     }
@@ -196,7 +201,7 @@ bool GSM_obj::sendSMS()
     }
   }
   
-  if(_debug) Serial.println("\nText sent");
+  if(debug::trace()) Serial.println("\nText sent");
 
   return status;
 }

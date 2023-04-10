@@ -1,19 +1,16 @@
 #pragma once
 
 #include <Arduino.h>
-#include <faultCodes.h>
+#include <fault_debug.h>
 
-boolean debug=true; 
-boolean cli_interface=false; 
-
-const int signalQuality_floor = 10; // goes from 0 to 31 with 31 being excellent
-
+namespace GSM {
+    const uint8_t signalQuality_floor = 10; // goes from 0 to 31 with 31 being excellent
+    const uint8_t sendStages = 4;
+}
 class GSM_obj {
     private :
-
-        HardwareSerial GSM_Serial;
-
-        bool _debug; //debug indicator, outputs via Serial
+        HardwareSerial GSM_Serial; // SIM800L Serial channel, max AutoBaud 115200, max baud rate (set manually) 460800.
+        long GSM_baudrate;
 
         String phoneNumber = ""; //phone number of the inserted SIM
         String RX = ""; //last transmission from the module
@@ -22,7 +19,7 @@ class GSM_obj {
 
     public :
 
-        GSM_obj(HardwareSerial HWSerial, String GSM_num, bool debug);
+        GSM_obj(HardwareSerial HWSerial = Serial2, String GSM_num = "+33640697567", long Baud = 115200); 
 
         String getLastTX();
         
