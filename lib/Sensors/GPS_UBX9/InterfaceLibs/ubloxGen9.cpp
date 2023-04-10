@@ -634,13 +634,13 @@ ublox_gen9::ublox_gen9(HardwareSerial HWSerial, long GPS_Baud, uint8_t GPS_Pltfr
 
 bool ublox_gen9::initGPS()
 {
-  GPS_Serial.begin(GPS_Baudrate); //GPS Serial channel
+  GPS_Serial.begin(GPS_Baudrate); //GPS Serial channel, if configLevel in flash : GPS_Serial.begin(GPS_default_Baudrate)
   while (!GPS_Serial) delay(10);  // wait for serial1 port to open!
 //      Serial.println("Successfully started Serial 1 (GPS) channel");
 //      Serial.println("");
 
 
-  if(true) //setConfig(configLevel, CFG_UART1_BAUDRATE, GPS_Baudrate, 4)
+  if(true) //if configLevel in flash : setConfig(configLevel, CFG_UART1_BAUDRATE, GPS_Baudrate, 4)
   {
     if(setBasicConfig())
     {
