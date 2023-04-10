@@ -16,5 +16,10 @@ class Base_Sensor {
     public :
         Base_Sensor(uint8_t varAmount);
 
+        virtual bool init();
+        virtual uint8_t getStatus();
+        virtual uint8_t getCalibration();
+        virtual T* getMeas();
+
         uint8_t get_var_amount();
 };

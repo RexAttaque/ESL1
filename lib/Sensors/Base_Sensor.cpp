@@ -6,6 +6,32 @@ Base_Sensor<T>::Base_Sensor(uint8_t varAmount):_varAmount(varAmount)
     allocateMemory();
 }
 
+//virtual methods that should be common to all sensors but vary from one to the other
+template <class T>
+bool Base_Sensor<T>::init()
+{
+    return false;
+}
+
+template <class T>
+uint8_t Base_Sensor<T>::getStatus()
+{
+    return 0;
+}
+
+template <class T>
+uint8_t Base_Sensor<T>::getCalibration()
+{
+    return 0;
+}
+
+template <class T>
+T* Base_Sensor<T>::getMeas()
+{
+    return nullptr;
+}
+
+//Actual common methods
 template <class T>
 uint8_t Base_Sensor<T>::get_var_amount()
 {
