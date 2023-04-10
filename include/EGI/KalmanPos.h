@@ -58,10 +58,6 @@ class EGI_obj {
     bool IMU_failure; //failure indicators
     bool GPS_failure;
 
-    //Altitude calculation necessities
-    //x, y, z ECEF position of ESL at the same Lat,Long but at ground level
-    BLA::Matrix<pos_var,1> pos_sol;
-
     //t_x, t_y, t_z -- east (mag)
     //t'_x, t'_y, t'_z -- north (mag)
     //n_x, n_y, n_z -- up/normal

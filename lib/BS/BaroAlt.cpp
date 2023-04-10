@@ -40,11 +40,13 @@ long BS_obj::getAltitude()
 
         //TODO
 
-        return Altitude;
+        delete[] BAROpdata;
     }
     else
     {
+        Altitude = altitudeFaultCode;
         BARO_failure = true;
-        return -altitudeFaultCode;
     }
+
+    return Altitude;
 }

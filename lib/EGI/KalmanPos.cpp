@@ -144,6 +144,7 @@ NavSolution EGI_obj::getNavSolution()
 
     tempPosPos = ENU*ENUmag;
     
+    //store acceleration data into the measurement vector y
     for(int i=pos_var; i<meas_var-pos_var;i++)
     {
       y(i,1)=0;
@@ -153,8 +154,13 @@ NavSolution EGI_obj::getNavSolution()
         y(i,1) += tempPosPos(i,j)*(IMUpdata[j]);
       }
     }
-    
-    //IMU measurement drift correction
+
+    //acceleration is also part of the input vector u
+    u = y.Submatrix<input_var,1>(input_var-1,0);
+
+    delete[] IMUpdata;
+
+    //IMU measurement drift correction here or above
   }
   else
   {
@@ -215,6 +221,8 @@ NavSolution EGI_obj::getNavSolution()
     {
       GPS_failure = true;
     }
+
+    delete[] posECEF;
   }
 
   if(!IMU_failure)
@@ -242,7 +250,7 @@ NavSolution EGI_obj::getNavSolution()
   }
   
   //Altitude computation in ECEF
-  if(!IMU_failure && !GPS_failure)
+  if(!IMU_failure || !GPS_failure)
   {
     //iso Lat,Long ground position in ECEF
     double lg = atan(x(2,1)/x(1,1));
@@ -250,13 +258,25 @@ NavSolution EGI_obj::getNavSolution()
   
     double r0 = sqrt(1/( pow(cos(la),2)*pow(cos(lg),2)/pow(WGS84(1,1),2) + pow(cos(la),2)*pow(sin(lg),2)/pow(WGS84(2,1),2) + pow(sin(la),2)/pow(WGS84(3,1),2) ));
   
-    pos_sol(1,1) = r0*cos(la)*cos(lg);
-    pos_sol(2,1) = r0*cos(la)*sin(lg);
-    pos_sol(3,1) = r0*sin(la);
+    double pos_sol[3] = {r0*cos(la)*cos(lg), r0*cos(la)*sin(lg), r0*sin(la)};
+
+    KalmanOutput.x = x(1,1);
+    KalmanOutput.y = x(2,1);
+    KalmanOutput.y = x(3,1);
+    KalmanOutput.altitude = (long) 1000*sqrt(pow((x(1,1)-pos_sol[0]),2)+pow((x(2,1)-pos_sol[1]),2)+pow((x(3,1)-pos_sol[2]),2));
+  }
+  else
+  {
+    KalmanOutput.x = 0;
+    KalmanOutput.y = 0;
+    KalmanOutput.z = 0;
+    KalmanOutput.altitude = altitudeFaultCode;
   }
 
   //time computation (approximate)
   KalmanOutput._time += delta_t;
 
   StepCount+=1;
+
+  return KalmanOutput;
 }
