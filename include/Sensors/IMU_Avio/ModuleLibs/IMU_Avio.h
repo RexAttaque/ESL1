@@ -20,7 +20,7 @@ class IMU_Avio : public Base_Sensor<double> {
   public :
     IMU_Avio(uint8_t type, uint8_t address);
 
-    bool IMU_init(adafruit_bno055_opmode_t mode = OPERATION_MODE_NDOF, Adafruit_BNO055::adafruit_bno055_axis_remap_config_t remapcode = Adafruit_BNO055::REMAP_CONFIG_P1, Adafruit_BNO055::adafruit_bno055_axis_remap_sign_t remapsign = Adafruit_BNO055::REMAP_SIGN_P1);
+    bool init(adafruit_bno055_opmode_t mode = OPERATION_MODE_NDOF, Adafruit_BNO055::adafruit_bno055_axis_remap_config_t remapcode = Adafruit_BNO055::REMAP_CONFIG_P1, Adafruit_BNO055::adafruit_bno055_axis_remap_sign_t remapsign = Adafruit_BNO055::REMAP_SIGN_P1);
 
     uint8_t getCalibration();
 

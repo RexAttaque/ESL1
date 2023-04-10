@@ -5,7 +5,7 @@ IMU_Avio::IMU_Avio(uint8_t type, uint8_t address):Base_Sensor(IMU_varAmount)
   IMU = Adafruit_BNO055(type, address);
 }
 
-bool IMU_Avio::IMU_init(adafruit_bno055_opmode_t mode, Adafruit_BNO055::adafruit_bno055_axis_remap_config_t remapcode, Adafruit_BNO055::adafruit_bno055_axis_remap_sign_t remapsign)
+bool IMU_Avio::init(adafruit_bno055_opmode_t mode, Adafruit_BNO055::adafruit_bno055_axis_remap_config_t remapcode, Adafruit_BNO055::adafruit_bno055_axis_remap_sign_t remapsign)
 {
   bool status = IMU.begin(mode);
   if(status)

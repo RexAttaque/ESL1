@@ -4,7 +4,7 @@ BARO_Avio::BARO_Avio(uint8_t address, Adafruit_BMP280::sensor_sampling over_samp
 :Base_Sensor(BARO_Avio_varAmount),_address(address),_over_samp_T(over_samp_T),_over_samp_P(over_samp_P),_filter(filter),_stb_time(stb_time),_mode(mode)
 {}
     
-bool BARO_Avio::BARO_init()
+bool BARO_Avio::init()
 {
   bool status = BARO.begin(_address);
 

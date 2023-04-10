@@ -25,7 +25,7 @@ class BARO_Avio : public Base_Sensor<float> {
   public :
     BARO_Avio(uint8_t address, Adafruit_BMP280::sensor_sampling over_samp_T = Adafruit_BMP280::SAMPLING_X1, Adafruit_BMP280::sensor_sampling over_samp_P = Adafruit_BMP280::SAMPLING_X2, Adafruit_BMP280::sensor_filter filter = Adafruit_BMP280::FILTER_X2, Adafruit_BMP280::standby_duration stb_time = Adafruit_BMP280::STANDBY_MS_1, Adafruit_BMP280::sensor_mode mode = Adafruit_BMP280::MODE_FORCED);
     
-    bool BARO_init();
+    bool init();
 
     float* getMeas();
 };
