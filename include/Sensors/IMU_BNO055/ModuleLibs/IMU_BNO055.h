@@ -29,6 +29,9 @@ class IMU_BNO055 : public Base_Sensor<double> {
 
     bool init();
 
+    bool goLive();
+    bool goIdle();
+
     uint8_t getCalibration();
 
     double* getMeas();
