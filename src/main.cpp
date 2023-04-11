@@ -27,37 +27,41 @@ bool timeStepChange = false; //indicates if the time quota was breached
 
 void setup() {
   
-  if(debug::info()) Serial.begin(115200); //initialize serial monitor for debugging/information
+  if(debug::info()) debug::Serial.begin(115200); //initialize serial monitor for debugging/information
 
-  if(debug::info()) Serial.println("Sensor Init...");
-  uint32_t* initFlags = SensorsSystem.initAll();
+  //Sensor Check/Init
+  bool Sensor_init = SensorsSystem.initAll();
+  //All sensors that can be put to sleep should be to sleep
   
-  if(debug::info())
-  {
-    Serial.println("Sensor Init Flags : ");
-    for(uint8_t i=0; i<SS_const::amount_sensor_arrays;i++)
-    {
-      Serial.print("-Sensor Array #" + String(i) + " : ");
-      Serial.println(initFlags[i]);
-    }
-  }
+  //GSM Check/Init
+  bool GSM_init = GSM_module.init();
+  //GSM module sent to sleep
+
+  //Telemetry Check/Init
+
 
   //physical hardware check
   //physical hardware init
   
+  bool Sensor_wake = SensorsSystem.wakeAll();
   //calibrate IMUs (either before GPS to save time or after to stay as precise as possible until launch)
 
   loopTimeMax = EGI.initKalman(); //Initialize EGI (get initial measurements, variance, covariances etc.)
   BaroLoopTimeMax = BS.initBaroAlt(); //Initialize Barometric System (recover initial altitude, pressure and temperature to initialize atmo model)
 
-  if(loopTimeMax != 0 && BaroLoopTimeMax !=0)
+  if(Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0) //Check Checks, Init and Check calibration
   {
+    bool Sensor_sleep = SensorsSystem.sleepAll();
+    
+    //Wait for wake call...
+
     //NOTE : may need to run calibrations just before launch
+
     //waiting for the launch trigger... (acceleration interrupt from the IMU maybe)
   }
   else
   {
-    if(debug::info()) Serial.println("MAIN INIT FAIL, CHECK DEBUG, EXITING !");
+    if(debug::info()) debug::Serial.println("MAIN INIT FAIL, CHECK DEBUG, EXITING !");
     delay(10000);
     exit(0);
   }
@@ -71,11 +75,12 @@ void loop() {
   start_clk = micros();
 
   NavSolution Nav_Data = EGI.getNavSolution();
+  long baro_altitude = BS.getAltitude(); //need to make sure we're not polling altitude faster than it can be acquired (BaroLoopTimeMax)
 
   long final_altitude = Nav_Data.altitude;
-  if(final_altitude == faultCodes::altitude) //faultCodes::altitude is the fault indicating value for the altitude //need to make sure we're not polling altitude faster than it can be acquired (BaroLoopTimeMax)
+  if(final_altitude == faultCodes::altitude) //faultCodes::altitude is the fault indicating value for the altitude
   {
-    final_altitude = BS.getAltitude();
+    final_altitude = baro_altitude;
   }
   if(final_altitude == faultCodes::altitude)
   {
@@ -125,6 +130,7 @@ void loop() {
   //if altimeter or time criteria is reached
   if((final_altitude>deployAltitude && useTime == false) || (Nav_Data._time>deployTime && useTime == true))
   {
+    GSM_module.goLive(); //turn on GSM module ?
     parachutesDeployed = true;
     //deploy parachutes
   }
