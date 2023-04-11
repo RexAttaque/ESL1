@@ -1,9 +1,14 @@
 #pragma once
 
+#include <Arduino.h>
+
 namespace debug {
     bool _full = false;
     bool _trace = false;
     bool _info = false;
+
+    usb_serial_class Serial = Serial;
+    //HardwareSerial Serial = SerialX; //if a hardware serial wants to be used for debug, to send to telem or something
 
     bool full()
     {
