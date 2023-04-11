@@ -32,17 +32,99 @@ void Sensors<S, T>::reallocateDataMemory() {
 // }
 
 template <class S, class T>
-uint32_t Sensors<S, T>::initAll()
+bool Sensors<S, T>::initAll()
 {
-  uint32_t initFlags = 0;
+  bool result = false;
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    initFlags << 1;
-    initFlags = initFlags+_sensors[i].init();
+    if(debug::info()) 
+    {
+      debug::Serial.println("");
+      debug::Serial.println("    -->Sensor" + i);
+    }
+
+    if(_sensors[i].init()) 
+    {
+      if(debug::info())
+      {
+        debug::Serial.println("    -->INIT PASS");
+        debug::Serial.println("");
+      }
+    
+      result = result && true;
+    }
+    else
+    {
+      result = false;
+    }
   }
 
-  return initFlags;
+  return result;
+}
+
+template <class S, class T>
+bool Sensors<S, T>::wakeAll()
+{
+  bool result = false;
+
+  for(uint8_t i=0; i<_th_amount; i++)
+  {
+    if(debug::info()) 
+    {
+      debug::Serial.println("");
+      debug::Serial.println("    -->Sensor" + i);
+    }
+
+    if(_sensors[i].goLive()) 
+    {
+      if(debug::info())
+      {
+        debug::Serial.println("    -->is going live");
+        debug::Serial.println("");
+      }
+    
+      result = result && true;
+    }
+    else
+    {
+      result = false;
+    }
+  }
+
+  return result;
+}
+
+template <class S, class T>
+bool Sensors<S, T>::sleepAll()
+{
+  bool result = false;
+
+  for(uint8_t i=0; i<_th_amount; i++)
+  {
+    if(debug::info()) 
+    {
+      debug::Serial.println("");
+      debug::Serial.println("    -->Sensor" + i);
+    }
+
+    if(_sensors[i].goIdle()) 
+    {
+      if(debug::info())
+      {
+        debug::Serial.println("    -->is going idle");
+        debug::Serial.println("");
+      }
+    
+      result = result && true;
+    }
+    else
+    {
+      result = false;
+    }
+  }
+
+  return result;
 }
 
 template <class S, class T>

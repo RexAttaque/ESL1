@@ -11,7 +11,7 @@ template <class S, class T> class Sensors {
     uint8_t _th_amount; //theoretical number of sensors
     uint8_t _real_amount; //real number of sensors that are returning data
     uint8_t* _var_amount; //address to the number of measurands that are supposed to be extracted from this type of sensor
-    uint32_t _flags; //flags indicating which sensors are working or not (32 max of each type)
+    uint32_t _flags; //flags indicating which sensors are working or not (32 max for each Sensors class)
     
     T** _data; //all of the data, each line for one sensor, each column for one measurand
     T* _pdata;//processed data array of measurands across all working sensors
@@ -27,7 +27,9 @@ template <class S, class T> class Sensors {
 
     // Sensors<S,T> &operator=(Sensors<S,T> Sensors_a, Sensors<S,T> Sensors_b);
 
-    uint32_t initAll();
+    bool initAll();
+    bool wakeAll();
+    bool sleepAll();
 
     uint16_t getRefreshRate();
     uint8_t getThAmount();

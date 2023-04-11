@@ -15,14 +15,16 @@ class SensingSystem {
     //Make sure all of the sensors within sensors objects of one "group" use the same refresh rate 
     //(all of the sensors that contribute to one set of measurement must have the same refresh rate)
     Sensors<IMU_BNO055,double> IMUs_Avio;
-    Sensors<GPS_UBX9,long> GPSs_Avio; 
+    Sensors<GPS_UBX9,long> GPSs_Avio;
     Sensors<BARO_BMP280,float> BAROs_Avio;
 
   public :
 
     SensingSystem();
 
-    uint32_t* initAll();
+    bool initAll();
+    bool wakeAll();
+    bool sleepAll();
 
     Sensors<IMU_BNO055,double>* getIMUs_Avio();
     uint8_t getIMUs_Avio_rl_amount();
