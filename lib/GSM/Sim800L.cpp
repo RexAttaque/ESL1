@@ -35,7 +35,7 @@ bool GSM_obj::check_SIM_GSM()
         {
           i++;
         }
-        Serial.println("ICCID : " + RX.substring(ICCID_start_pos,ICCID_start_pos+i)); // Print ICCID
+        debug::Serial.println("ICCID : " + RX.substring(ICCID_start_pos,ICCID_start_pos+i)); // Print ICCID
     }
     
     return true;
@@ -84,7 +84,7 @@ bool GSM_obj::check_SIG_GSM(int qualityFloor)
 void GSM_obj::read_RX()
 {
   RX = Serial3.readString();
-  if(debug::full()) Serial.println(RX); 
+  if(debug::full()) debug::Serial.println(RX); 
 }
 
 // Function to check wether the last two characters of an answer are "OK" indicating the receiver answered and understood, returns the RX if OK is found, returns an empty string otherwise
@@ -94,12 +94,12 @@ bool GSM_obj::check_RX_OK()
     //check the substring before the /r/n characters for "OK"
     if(RX.substring(RX_length-4, RX_length-2) == "OK")
     {
-        if(debug::full()) Serial.println("PASS\n");
+        if(debug::full()) debug::Serial.println("PASS\n");
 
         return true;
     }
 
-    if(debug::full()) Serial.println("FAIL\n");
+    if(debug::full()) debug::Serial.println("FAIL\n");
     RX="";
     return false;
 }
@@ -133,35 +133,71 @@ void GSM_obj::TRX_AT_GSM(String AT_COMMAND)
 
 bool GSM_obj::init()
 {
+  if(debug::info()) debug::Serial.println("!! GSM Check/Init !!");
+
   GSM_Serial.begin(GSM_baudrate);
 
   if(GSM_Serial)
   {
-    // Send attention command to check if all fine, it returns OK
-    check_AT_OK_GSM("AT");
-    
-    if(RX!="" && check_SIM_GSM())
+    if(debug::info())
     {
+      debug::Serial.println("");
+      debug::Serial.println(" ->Succesfully opened GSM Serial channel");
+    }
+    
+    // Send attention command to check if all fine, module should answer by OK -> true ; check that a SIM is in the module
+    if(check_AT_OK_GSM("AT") && check_SIM_GSM())
+    {
+      if(debug::info()) 
+      {
+        debug::Serial.println(" ->Module is responsive, SIM detected");
+        debug::Serial.println(" ->Waiting for registration on network...");
+      }
+
       // Wait for network registration
       while(check_REG_GSM() == false)
       {
         delay(1000);
       }
+      if(debug::info()) debug::Serial.println(" ->Registered on network !");
 
       if(!check_SIG_GSM(GSM::signalQuality_floor)) 
       {
-        if(debug::info()) Serial.println("WARNING, GSM SIGNAL QUALITY LOW, CHECK DEBUG");
+        if(debug::info()) debug::Serial.println("   -->WARNING, SIGNAL QUALITY LOW");
+      }
+
+      if(goIdle())
+      {
+        if(debug::info()) debug::Serial.println(" ->Module idling, waiting for wake up call...");
+      }
+
+      if(debug::info()) 
+      {
+        debug::Serial.println("");
+        debug::Serial.println(" ->GSM INIT PASS");
+        debug::Serial.println("");
       }
 
       return true;
     }
     else if(debug::info())
     {
-      Serial.println("ERROR, GSM INIT FAIL, CHECK DEBUG");
+      debug::Serial.println(" ->ERROR, GSM INIT FAIL, CHECK DEBUG");
+      debug::Serial.println("");
     }
   }
 
   return false;
+}
+
+bool GSM_obj::goLive()
+{
+  return check_AT_OK_GSM("AT+CFUN=1"); //set full functionnality
+}
+
+bool GSM_obj::goIdle()
+{
+  return check_AT_OK_GSM("AT+CFUN=0"); //set minimum functionnality
 }
 
 bool GSM_obj::PrepSend_s1()
@@ -185,7 +221,7 @@ bool GSM_obj::PrepSend_s3()
 
 bool GSM_obj::sendSMS()
 {
-  if(debug::trace()) Serial.println("Sending text message...");
+  if(debug::trace()) debug::Serial.println("Sending text message...");
   
   // CTR+Z in ASCII, indicates the end of the message
   bool status = check_AT_OK_GSM(26); //check_AT_OK_GSM didn't work previously, use check_AT_OK_GSM("")
@@ -193,7 +229,7 @@ bool GSM_obj::sendSMS()
   while(Serial3.available()) {
     if(debug::full())
     {
-      Serial.write(Serial3.read()); //Clear the contents of the sim800L TX buffer and display them in the console for debugging
+      debug::Serial.write(Serial3.read()); //Clear the contents of the sim800L TX buffer and display them in the console for debugging
     }
     else
     {
@@ -201,7 +237,7 @@ bool GSM_obj::sendSMS()
     }
   }
   
-  if(debug::trace()) Serial.println("\nText sent");
+  if(debug::trace()) debug::Serial.println("\nText sent");
 
   return status;
 }

@@ -39,6 +39,9 @@ class GSM_obj {
         void TRX_AT_GSM(String AT_COMMAND); //Sends the command AT_COMMAND to the module and listens for the answer that is stored in RX
 
         bool init(); //initializes the module (checks SIM, REG and SIG), returns false if no SIM, no REG or low SIG quality
+        bool goLive(); //wakes the GSM module
+        bool goIdle(); //sends the GSM module to sleep
+
         bool PrepSend_s1(); //Sending an SMS is cut into multiple stages because the module is too slow to execute everything at once
         bool PrepSend_s2();
         bool PrepSend_s3();
