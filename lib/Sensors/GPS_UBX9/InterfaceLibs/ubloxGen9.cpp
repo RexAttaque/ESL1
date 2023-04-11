@@ -41,7 +41,7 @@ bool ublox_gen9::calculateCheckSum(uint8_t* frame, uint16_t frameSize, bool rece
 {
   if(debug::full())
   {
-    Serial.println("calculateCheckSum");
+    debug::Serial.println("calculateCheckSum");
   }
   
   uint8_t checksum[] = {0, 0};
@@ -59,8 +59,8 @@ bool ublox_gen9::calculateCheckSum(uint8_t* frame, uint16_t frameSize, bool rece
   {
     if(debug::full())
     {
-      Serial.println("TX");
-      Serial.println("");
+      debug::Serial.println("TX");
+      debug::Serial.println("");
     }
 
     
@@ -73,15 +73,15 @@ bool ublox_gen9::calculateCheckSum(uint8_t* frame, uint16_t frameSize, bool rece
   {
     if(debug::full())
     {
-      Serial.println("RX");
+      debug::Serial.println("RX");
     }
     
     if( *(frame+frameSize-2) == checksum[0] && *(frame+frameSize-1) == checksum[1] )
     {
       if(debug::full())
       {
-        Serial.println("Pass");
-        Serial.println("");
+        debug::Serial.println("Pass");
+        debug::Serial.println("");
       }
 
       return true;
@@ -90,8 +90,8 @@ bool ublox_gen9::calculateCheckSum(uint8_t* frame, uint16_t frameSize, bool rece
     {
       if(debug::full())
       {
-        Serial.println("Fail");
-        Serial.println("");
+        debug::Serial.println("Fail");
+        debug::Serial.println("");
       }
 
       return false;
@@ -105,9 +105,9 @@ uint8_t* ublox_gen9::splitTo8bit(uint64_t value, uint16_t val_length)
 {
   if(debug::full())
   {
-    Serial.println("splitTo8Bit");
+    debug::Serial.println("splitTo8Bit");
     print64ln(value);
-    Serial.println(val_length);
+    debug::Serial.println(val_length);
   }
   
   if(val_length <= 0)
@@ -118,7 +118,7 @@ uint8_t* ublox_gen9::splitTo8bit(uint64_t value, uint16_t val_length)
   uint8_t* buff = new uint8_t[val_length];
   uint64_t temp;
 
-  if(debug::full()) Serial.print("Split number value : ");
+  if(debug::full()) debug::Serial.print("Split number value : ");
   for(long i=val_length-1; i>=0; i--)
   {
     temp = value>>(val_length-i-1)*8;
@@ -126,22 +126,22 @@ uint8_t* ublox_gen9::splitTo8bit(uint64_t value, uint16_t val_length)
     if(debug::full())
     {
       print64(temp);
-      Serial.print("/");
+      debug::Serial.print("/");
     }
 
     *(buff+i) = temp & 0xFF;
 
     if(debug::full())
     {
-      Serial.print(*(buff+i), HEX);
-      Serial.print(" ");
+      debug::Serial.print(*(buff+i), HEX);
+      debug::Serial.print(" ");
     }
   }
 
   if(debug::full())
   {
-    Serial.println("");
-    Serial.println("");
+    debug::Serial.println("");
+    debug::Serial.println("");
   }
 
   return buff;
@@ -155,9 +155,9 @@ uint8_t* ublox_gen9::receiveUBXframe(uint16_t extractedLength)
 {
   if(debug::trace())
   {
-    Serial.println("receiveUBXframe");
-    Serial.print("extractedLength : ");
-    Serial.println(extractedLength);
+    debug::Serial.println("receiveUBXframe");
+    debug::Serial.print("extractedLength : ");
+    debug::Serial.println(extractedLength);
   }
 
   if(extractedLength <= 0) 
@@ -177,7 +177,7 @@ uint8_t* ublox_gen9::receiveUBXframe(uint16_t extractedLength)
   
   while(Serial1.available() && ReceivedFrameSum == 0 && ReceivedFrameSize != extractedLength)
   {
-    if(debug::trace()) Serial.print("Attempted RX... ");
+    if(debug::trace()) debug::Serial.print("Attempted RX... ");
     ReceivedFrameSize = Serial1.readBytes(buff, extractedLength);
 
     for(int i=0; i<ReceivedFrameSize; i++)
@@ -188,13 +188,13 @@ uint8_t* ublox_gen9::receiveUBXframe(uint16_t extractedLength)
   
   if(debug::full())
   {
-    Serial.println("Received following message : ");
+    debug::Serial.println("Received following message : ");
     for(long i=0; i<extractedLength; i++)
     {
-      Serial.print(*(buff+i), HEX);
-      Serial.print(" ");
+      debug::Serial.print(*(buff+i), HEX);
+      debug::Serial.print(" ");
     }
-    Serial.println("");
+    debug::Serial.println("");
   }
 
 
@@ -208,8 +208,8 @@ uint8_t* ublox_gen9::receiveUBXframe(uint16_t extractedLength)
   {
     if(debug::trace())
     {
-      Serial.println("Checksum Pass on Receive");
-      Serial.println("");
+      debug::Serial.println("Checksum Pass on Receive");
+      debug::Serial.println("");
     }
     return buff;
   }
@@ -217,8 +217,8 @@ uint8_t* ublox_gen9::receiveUBXframe(uint16_t extractedLength)
   {
     if(debug::trace())
     {
-      Serial.println("Checksum Fail on Receive");
-      Serial.println("");
+      debug::Serial.println("Checksum Fail on Receive");
+      debug::Serial.println("");
     }
     return nullptr;
   }
@@ -228,7 +228,7 @@ bool ublox_gen9::sendUBXframe(uint8_t cmdClass, uint8_t messageID, uint16_t payl
 {
   if(debug::trace()) 
   {
-    Serial.println("sendUBXframe");
+    debug::Serial.println("sendUBXframe");
   }
 
   if(cmdClass <= 0 || messageID <= 0)
@@ -242,8 +242,8 @@ bool ublox_gen9::sendUBXframe(uint8_t cmdClass, uint8_t messageID, uint16_t payl
   {
     if(debug::full()) 
     {
-      Serial.print("Payload exists of size ");
-      Serial.println(payloadSize);
+      debug::Serial.print("Payload exists of size ");
+      debug::Serial.println(payloadSize);
     }
 
     splittedSize = splitTo8bit(payloadSize, 2);
@@ -252,7 +252,7 @@ bool ublox_gen9::sendUBXframe(uint8_t cmdClass, uint8_t messageID, uint16_t payl
   {
     if(debug::full()) 
     {
-      Serial.print("Payload does not exist");
+      debug::Serial.print("Payload does not exist");
     }
 
     splittedSize = new uint8_t[2];
@@ -278,13 +278,13 @@ bool ublox_gen9::sendUBXframe(uint8_t cmdClass, uint8_t messageID, uint16_t payl
 
   if(debug::full()) 
   {
-    Serial.print("UBX frame : ");
+    debug::Serial.print("UBX frame : ");
     for (int i=0; i<frameSize; i++)
     {
-      Serial.print(*(buff+i), HEX);
-      Serial.print(" ");
+      debug::Serial.print(*(buff+i), HEX);
+      debug::Serial.print(" ");
     }
-    Serial.println("");
+    debug::Serial.println("");
   }
 
 
@@ -293,7 +293,7 @@ bool ublox_gen9::sendUBXframe(uint8_t cmdClass, uint8_t messageID, uint16_t payl
   while(SentSize != frameSize)
   {
     SentSize = Serial1.write(buff, frameSize);
-    if(debug::full()) Serial.println(SentSize);
+    if(debug::full()) debug::Serial.println(SentSize);
   }
 
   bool outcome = false;
@@ -320,9 +320,9 @@ bool ublox_gen9::sendUBXframe(uint8_t cmdClass, uint8_t messageID, uint16_t payl
 
   if(debug::trace())
   {
-    Serial.print("Outcome :");
-    Serial.println(outcome);
-    Serial.println("");
+    debug::Serial.print("Outcome :");
+    debug::Serial.println(outcome);
+    debug::Serial.println("");
   }
 
   return outcome;
@@ -341,10 +341,10 @@ bool ublox_gen9::setConfig(uint8_t level, long keyID, uint64_t value, uint8_t va
 { 
   if(debug::trace())
   {
-    Serial.print("Level :");
-    Serial.println(level, DEC);
-    Serial.print("KeyID :");
-    Serial.println(keyID, HEX);
+    debug::Serial.print("Level :");
+    debug::Serial.println(level, DEC);
+    debug::Serial.print("KeyID :");
+    debug::Serial.println(keyID, HEX);
   }
 
   if(level < 0 || level > 7)
@@ -375,13 +375,13 @@ bool ublox_gen9::setConfig(uint8_t level, long keyID, uint64_t value, uint8_t va
 
   if(debug::full())
   {
-    Serial.print("Split Payload : ");
+    debug::Serial.print("Split Payload : ");
     for (int i=0; i<payloadSize; i++)
     {
-      Serial.print(*(payload+i), HEX);
-      Serial.print(" ");
+      debug::Serial.print(*(payload+i), HEX);
+      debug::Serial.print(" ");
     }
-    Serial.println("");
+    debug::Serial.println("");
   }
 
   bool success = false;
@@ -404,16 +404,16 @@ bool ublox_gen9::setConfig(uint8_t level, long keyID, uint64_t value, uint8_t va
       {
         if(debug::full())
         {
-          Serial.print(*(splittedGetValue+i), HEX);
-          Serial.print("/");
-          Serial.print(*(splittedValue-i-1+valueSize), HEX);
-          Serial.print(" - ");
+          debug::Serial.print(*(splittedGetValue+i), HEX);
+          debug::Serial.print("/");
+          debug::Serial.print(*(splittedValue-i-1+valueSize), HEX);
+          debug::Serial.print(" - ");
         }
 
         success = *(splittedGetValue+i)==*(splittedValue+valueSize-i-1);
       }
 
-      if(debug::full()) Serial.println("");
+      if(debug::full()) debug::Serial.println("");
     }
 
     delete[] splittedGetValue;
@@ -425,8 +425,8 @@ bool ublox_gen9::setConfig(uint8_t level, long keyID, uint64_t value, uint8_t va
 
   if(debug::trace() && success) 
   {
-    Serial.println("Config successfully applied and checked");
-    Serial.println("");
+    debug::Serial.println("Config successfully applied and checked");
+    debug::Serial.println("");
   }
 
   return success;
@@ -441,7 +441,7 @@ uint8_t* ublox_gen9::getConfig(long keyID, uint8_t level, uint8_t expectedValueS
 {
   if(debug::trace())
   {
-    Serial.println("getConfig");
+    debug::Serial.println("getConfig");
   }
   
   if(level < 0 || level > 7)
@@ -498,8 +498,8 @@ uint8_t* ublox_gen9::getConfig(long keyID, uint8_t level, uint8_t expectedValueS
 
     if(debug::trace())
     {
-      Serial.println("getConfig - Success");
-      Serial.println("");
+      debug::Serial.println("getConfig - Success");
+      debug::Serial.println("");
     }
     
     return value;
@@ -508,8 +508,8 @@ uint8_t* ublox_gen9::getConfig(long keyID, uint8_t level, uint8_t expectedValueS
   {
     if(debug::info())
     {
-      Serial.println("getConfig - Fail");
-      Serial.println("");
+      debug::Serial.println("getConfig - Fail");
+      debug::Serial.println("");
     }
     
     return nullptr;
@@ -523,7 +523,7 @@ uint8_t* ublox_gen9::PollValue(uint8_t cmdClass, uint8_t messageID, uint16_t exp
 {
   if(debug::trace())
   {
-    Serial.println("PollValue");
+    debug::Serial.println("PollValue");
   }
   
   if(expectedPayloadSize > 0)
@@ -551,13 +551,13 @@ uint8_t* ublox_gen9::PollValue(uint8_t cmdClass, uint8_t messageID, uint16_t exp
 
         if(debug::full())
         {
-          Serial.println("Got the following poll response : ");
+          debug::Serial.println("Got the following poll response : ");
           for(long i=0; i<expectedPayloadSize; i++)
           {
-            Serial.print(*(payload+i), HEX);
-            Serial.print(" ");
+            debug::Serial.print(*(payload+i), HEX);
+            debug::Serial.print(" ");
           }
-          Serial.println("");
+          debug::Serial.println("");
         }
 
       }
@@ -565,8 +565,8 @@ uint8_t* ublox_gen9::PollValue(uint8_t cmdClass, uint8_t messageID, uint16_t exp
       {
         if(debug::info())
         {
-          Serial.println("PollValue - Fail - No RX");
-          Serial.println("");
+          debug::Serial.println("PollValue - Fail - No RX");
+          debug::Serial.println("");
         }
 
         payload = nullptr;
@@ -580,8 +580,8 @@ uint8_t* ublox_gen9::PollValue(uint8_t cmdClass, uint8_t messageID, uint16_t exp
     {
       if(debug::info())
       {
-        Serial.println("PollValue - Fail - No TX");
-        Serial.println("");
+        debug::Serial.println("PollValue - Fail - No TX");
+        debug::Serial.println("");
       }
 
       return nullptr;
@@ -598,55 +598,35 @@ uint8_t* ublox_gen9::PollValue(uint8_t cmdClass, uint8_t messageID, uint16_t exp
 
 bool ublox_gen9::setRefreshRate(uint16_t refreshRate)
 {
-  if(debug::trace())
-  {
-    Serial.println("setRefreshRate");
-    Serial.println("");
-  }
+  if(debug::info()) debug::Serial.println("setRefreshRate");
 
   return setConfig(configLevel, CFG_RATE_MEAS, refreshRate, 2);
 }
 
 bool ublox_gen9::setNavRate()
 {
-  if(debug::trace())
-  {
-    Serial.println("setNavRate");
-    Serial.println("");
-  }
+  if(debug::info()) debug::Serial.println("setNavRate");
   
   return setConfig(configLevel, CFG_RATE_NAV, GPS_NavRate, 2);
 }
 
 bool ublox_gen9::setPltfrmModel()
 {
-  if(debug::trace())
-  {
-    Serial.println("setPlatformModel");
-    Serial.println("");
-  }
+  if(debug::info()) debug::Serial.println("setPlatformModel");
 
   return ublox_gen9::setConfig(configLevel, CFG_NAVSPG_DYNMODEL, GPS_PltfrmModel, 1);
 }
 
 bool ublox_gen9::setUART1gen_config()
 {
-  if(debug::trace())
-  {
-    Serial.println("setUART1general_config");
-    Serial.println("");
-  }
+  if(debug::info()) debug::Serial.println("setUART1general_config");
 
   return setConfig(configLevel, CFG_UART1_STOPBITS, GPS_StopBits, 1);
 }
 
 bool ublox_gen9::setUART1prot_config()
 {
-  if(debug::trace())
-  {
-    Serial.println("setUART1protocol(I/O)_config");
-    Serial.println("");
-  }
+  if(debug::info()) debug::Serial.println("setUART1protocol(I/O)_config");
 
   uint8_t valueSize = 1;
   bool NMEA_statement = UART1_NMEA && !bufferedPOSECEF;
@@ -656,11 +636,7 @@ bool ublox_gen9::setUART1prot_config()
 
 bool ublox_gen9::setUART1msg_config()
 {
-  if(debug::trace())
-  {
-    Serial.println("setUART1msg_config");
-    Serial.println("");
-  }
+  if(debug::info()) debug::Serial.println("setUART1msg_config");
 
   bool toggle = 0;
   uint8_t valueSize = 1;
@@ -682,22 +658,14 @@ bool ublox_gen9::setUART1msg_config()
 
 bool ublox_gen9::setUART2gen_config()
 {
-  if(debug::trace())
-  {
-    Serial.println("setUART2general_config");
-    Serial.println("");
-  }
+  if(debug::info()) debug::Serial.println("setUART2general_config");
   
   return setConfig(configLevel, CFG_UART2_ENABLED, 0, 1);
 }
 
 bool ublox_gen9::setSPIgen_config()
 {
-  if(debug::trace())
-  {
-    Serial.println("setSPIgeneral_config");
-    Serial.println("");
-  }
+  if(debug::info()) debug::Serial.println("setSPIgeneral_config");
 
   return setConfig(configLevel, CFG_SPI_ENABLED, 0, 1);
 }
@@ -705,22 +673,14 @@ bool ublox_gen9::setSPIgen_config()
 //already disabled via SEL pin, crashes if you try to set it
 //bool setI2Cgen_config()
 //{
-//  if(debug::trace())
-//  {
-//    Serial.println("setI2Cgeneral_config");
-//    Serial.println("");
-//  }
+//  if(debug::info()) debug::Serial.println("setI2Cgeneral_config");
 //
 //  return setConfig(configLevel, CFG_I2C_ENABLED, 0, 1);
 //}
 
 bool ublox_gen9::setUSBprot_config()
 {
-  if(debug::trace())
-  {
-    Serial.println("setUART2general_config");
-    Serial.println("");
-  }
+  if(debug::info()) debug::Serial.println("setUART2general_config");
 
   uint8_t valueSize = 1;
 
@@ -729,11 +689,7 @@ bool ublox_gen9::setUSBprot_config()
 
 bool ublox_gen9::setUSBmsg_config()
 {
-  if(debug::trace())
-  {
-    Serial.println("setUSBmsg_config");
-    Serial.println("");
-  }
+  if(debug::info()) debug::Serial.println("setUSBmsg_config");
 
 
   bool toggle = 0;
@@ -754,8 +710,7 @@ bool ublox_gen9::setUSBmsg_config()
 
 ublox_gen9::ublox_gen9(HardwareSerial HWSerial, long GPS_Baud, uint8_t GPS_Pltfrm_Model, uint16_t GPS_Time_To_Refresh, uint8_t GPS_Nav_Rate, uint8_t config_Level, long GPS_default_Baud, bool buffered_POS, bool NMEA_USB, long USB_Baud, bool NMEA_UART1, uint8_t GPS_Stop_Bits)
 :GPS_Serial(HWSerial),GPS_Baudrate(GPS_Baud),GPS_PltfrmModel(GPS_Pltfrm_Model),GPS_TimeToRefresh(GPS_Time_To_Refresh),GPS_NavRate(GPS_Nav_Rate),configLevel(config_Level), GPS_default_Baudrate(GPS_default_Baud), bufferedPOSECEF(buffered_POS),USB_NMEA(NMEA_USB),USB_Baudrate(USB_Baud),UART1_NMEA(NMEA_UART1),GPS_StopBits(GPS_Stop_Bits)
-{
-}
+{}
 
 bool ublox_gen9::initGPS()
 {
@@ -766,26 +721,17 @@ bool ublox_gen9::initGPS()
     return false;
   }
 
-  if(debug::trace())
-  {
-    Serial.println("Successfully started Serial 1 (GPS) channel");
-    Serial.println("");
-  }
+  if(debug::info()) debug::Serial.println("     --->Successfully started GPS Serial channel");
 
   if(true) //if configLevel in flash : setConfig(configLevel, CFG_UART1_BAUDRATE, GPS_Baudrate, 4) //will not work since setConfig needs an answer from the GPS which will be given at a new baud rate, need a specific method
   {
     if(setBasicConfig())
     {
-      if(debug::trace())
+      if(debug::info()) 
       {
-        Serial.println("Successfully loaded parameters");
-        Serial.println(""); 
-      }
-
-      if(debug::info())
-      {
+        debug::Serial.println("     --->Successfully loaded parameters");
         //check wether we have a NAV solution already or not, wait if we don't
-        Serial.println("Waiting for GPS Fix...");
+        debug::Serial.println("     --->Waiting for GPS Fix...");
       }
 
       uint8_t NavStatus = 0;
@@ -796,18 +742,31 @@ bool ublox_gen9::initGPS()
 
         if(debug::info()) 
         {
-          Serial.print("Nav fix status: "); Serial.println(NavStatus, DEC); 
+          debug::Serial.print("       ---->Nav fix status: "); debug::Serial.println(NavStatus, DEC); 
         }
 
-      } while(NavStatus<3 || NavStatus>4);
+      } while(NavStatus<2 || NavStatus>3);
+
+
+      if(debug::info()) 
+      {
+        debug::Serial.print("     --->Acquired Nav fix of type (2=2D, 3=3D): "); debug::Serial.println(NavStatus, DEC); 
+      }
+
+      if(debug::info()) debug::Serial.print("     --->Putting GPS to sleep...");
+      //bool sleep = goToSleep(); //Possible but perhaps a little dangerous considering that the GPS will have a limited amount of time to acquire ephemeris data and could lose it all in PSM mode, needs to be discussed
+
+      return true;
     }
   }
   else
   {      
     if(debug::info())
     {
-      Serial.println("Failed to change Serial channel to final GPS_baudrate, check debug");
+      debug::Serial.println("     --->Failed to change Serial channel to final GPS_baudrate, check debug");
     }
+
+    return false;
   }
 }
 
@@ -823,7 +782,7 @@ void ublox_gen9::print64(uint64_t value)
 
     if(left>0)
     {
-      Serial.print(left, HEX);
+      debug::Serial.print(left, HEX);
       
       long temp = right;
       int baseRight = 32;
@@ -836,11 +795,11 @@ void ublox_gen9::print64(uint64_t value)
       
       for(int i=0; i<7-floor(baseRight/4); i++)
       {
-        Serial.print("0");
+        debug::Serial.print("0");
       }
     }
 
-    Serial.print(right, HEX);
+    debug::Serial.print(right, HEX);
   }
 }
 
@@ -853,7 +812,7 @@ void print64ln(uint64_t value)
 
     if(left>0)
     {
-      Serial.print(left, HEX);
+      debug::Serial.print(left, HEX);
 
       long temp = right;
       int baseRight = 32;
@@ -866,11 +825,11 @@ void print64ln(uint64_t value)
     
       for(int i=0; i<7-floor(baseRight/4); i++)
       {
-        Serial.print("0");
+        debug::Serial.print("0");
       }
     }
     
-    Serial.println(right, HEX);
+    debug::Serial.println(right, HEX);
   }
 }
 
@@ -898,7 +857,7 @@ uint16_t ublox_gen9::getRefreshRate(uint8_t level)
 {
  if(debug::trace())
  {
-  Serial.println("getRefreshRate");
+  debug::Serial.println("getRefreshRate");
  }
 
  uint8_t* SplittedRefreshRate = getConfig(CFG_RATE_MEAS, level, 2);
@@ -906,8 +865,8 @@ uint16_t ublox_gen9::getRefreshRate(uint8_t level)
  {
     if(debug::trace())
     {
-      Serial.println("18 - Success");
-      Serial.println("");
+      debug::Serial.println("18 - Success");
+      debug::Serial.println("");
     }
    
     return (uint16_t)*(SplittedRefreshRate+1)<<8 + *SplittedRefreshRate;
@@ -916,8 +875,8 @@ uint16_t ublox_gen9::getRefreshRate(uint8_t level)
  {
     if(debug::trace())
     {
-      Serial.println("18 - Fail");
-      Serial.println("");
+      debug::Serial.println("18 - Fail");
+      debug::Serial.println("");
     }
    
     return 0; //impossible value for refresh rate 
@@ -928,7 +887,7 @@ long* ublox_gen9::getPOSECEF()
 {
   if(debug::trace())
   {
-    Serial.println("getPOSECEF");
+    debug::Serial.println("getPOSECEF");
   }
 
   int payloadSize = 20; //
@@ -954,12 +913,12 @@ long* ublox_gen9::getPOSECEF()
     {
       if(debug::full())
       {
-        Serial.println("Got the following POSECEF : ");
+        debug::Serial.println("Got the following POSECEF : ");
         for(long i=0; i<5; i++)
         {
-          Serial.println(*(POSECEF+i), HEX);
+          debug::Serial.println(*(POSECEF+i), HEX);
         }
-        Serial.println("");
+        debug::Serial.println("");
       }
 
       return POSECEF;   
@@ -968,8 +927,8 @@ long* ublox_gen9::getPOSECEF()
     {
       if(debug::trace())
       {
-        Serial.println("POSECEF - Fail 1");
-        Serial.println("");
+        debug::Serial.println("POSECEF - Fail 1");
+        debug::Serial.println("");
       }
       
       return nullptr;
@@ -980,8 +939,8 @@ long* ublox_gen9::getPOSECEF()
   {
     if(debug::trace())
     {
-      Serial.println("POSECEF - Fail 2");
-      Serial.println("");
+      debug::Serial.println("POSECEF - Fail 2");
+      debug::Serial.println("");
     }
     
     return nullptr;
@@ -992,7 +951,7 @@ uint8_t ublox_gen9::getNavFixStatus()
 {
   if(debug::trace())
   {
-    Serial.println("getNavFixStatus");
+    debug::Serial.println("getNavFixStatus");
   }
   
   int payloadSize = 92;
@@ -1016,13 +975,13 @@ uint8_t ublox_gen9::getNavFixStatus()
 
     if(debug::full())
     {
-      Serial.println("Got the following PVT : ");
+      debug::Serial.println("Got the following PVT : ");
       for(long i=0; i<payloadSize; i++)
       {
-        Serial.print(*(SplittedPVT), HEX);
-        Serial.print(" ");
+        debug::Serial.print(*(SplittedPVT), HEX);
+        debug::Serial.print(" ");
       }
-      Serial.println("");
+      debug::Serial.println("");
     }
 
     delete[] SplittedPVT;
@@ -1035,8 +994,8 @@ uint8_t ublox_gen9::getNavFixStatus()
     {
       if(debug::trace())
       {
-        Serial.println("Nav Fix Status - Fail to RX, try again");
-        Serial.println("");
+        debug::Serial.println("Nav Fix Status - Fail to RX, try again");
+        debug::Serial.println("");
       }
 
       return 6;
@@ -1047,8 +1006,8 @@ uint8_t ublox_gen9::getNavFixStatus()
   {
     if(debug::trace())
     {
-      Serial.println("Nav Fix Status - Fail to Poll, try again");
-      Serial.println("");
+      debug::Serial.println("Nav Fix Status - Fail to Poll, try again");
+      debug::Serial.println("");
     }
     
     return 7;
