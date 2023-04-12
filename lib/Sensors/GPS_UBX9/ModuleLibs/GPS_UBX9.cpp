@@ -4,6 +4,11 @@ GPS_UBX9::GPS_UBX9(HardwareSerial HWSerial, long Baud, uint8_t Pltfrm_Model, uin
 :Base_Sensor(UBX9_const::varAmount, refreshRate),GPS(ublox_gen9(HWSerial, Baud, Pltfrm_Model, (uint16_t) 1000/refreshRate, Nav_Rate, config_Level, default_Baud, buffered_POS, NMEA_USB, USB_Baud, NMEA_UART1, Stop_Bits))
 {}
 
+ublox_gen9* GPS_UBX9::getSensor()
+{
+  return &GPS;
+}
+
 bool GPS_UBX9::init()
 {
   return GPS.initGPS();
