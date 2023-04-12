@@ -43,17 +43,20 @@ void setup() {
   //physical hardware check
   //physical hardware init
   
-  
-  bool Sensor_wake = SensorsSystem.wakeAll();
+
+  //before calibration and remaining inits, wake sensors
+  SensorsSystem.wakeAll();
+
   //calibrate IMUs (either before GPS to save time or after to stay as precise as possible until launch)
 
   loopTimeMax = EGI.initKalman(); //Initialize EGI (get initial measurements, variance, covariances etc.)
   BaroLoopTimeMax = BS.initBaroAlt(); //Initialize Barometric System (recover initial altitude, pressure and temperature to initialize atmo model)
 
+  //put sensors back to sleep
+  SensorsSystem.sleepAll();
+
   if(Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0) //Check Checks, Init and Check calibration
   {
-    bool Sensor_sleep = SensorsSystem.sleepAll();
-    
     //Wait for wake call...
 
     //NOTE : may need to run calibrations just before launch
@@ -62,7 +65,12 @@ void setup() {
   }
   else
   {
-    if(debug::info()) debug::Serial.println("MAIN INIT FAIL, CHECK DEBUG, EXITING !");
+    if(debug::info()) 
+    {
+      debug::Serial.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      debug::Serial.println("MAIN INIT FAIL, CHECK DEBUG, EXITING");
+      debug::Serial.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    }
     delay(10000);
     exit(0);
   }
@@ -115,7 +123,7 @@ void loop() {
       }
       case 3:
       {
-        String GSM_message = ""; //TODO, fill message
+        String GSM_message = "ESL1\nt:" + String(Nav_Data._time) + "\nx:" + Nav_Data.x + "\ny:" + Nav_Data.y + "\nz:" + Nav_Data.z + "\nh:" + final_altitude;
         GSM_module.setTX(GSM_message);
         NextStage = GSM_module.sendSMS();
         counter = 0;
