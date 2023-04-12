@@ -244,7 +244,9 @@ class ublox_gen9 {
     
     uint16_t getRefreshRate(uint8_t level);
     
+    long* getPOS(bool LLH = false);
     long* getPOSECEF();
+    long* getPOSLLH();
 
     uint8_t getNavFixStatus();
 

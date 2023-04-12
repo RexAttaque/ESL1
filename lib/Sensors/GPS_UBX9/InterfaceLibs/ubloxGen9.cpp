@@ -834,49 +834,54 @@ uint16_t ublox_gen9::getRefreshRate(uint8_t level)
  }
 }
 
-long* ublox_gen9::getPOSECEF()
+long* ublox_gen9::getPOS(bool LLH)
 {
-  if(debug::trace())
-  {
-    debug::Serial.println("getPOSECEF");
-  }
+  if(debug::trace()) debug::Serial.println("getPOS(LLH = " + String(LLH) + ")");
 
   int payloadSize = 20; //
   int payloadElementSize = 4;
+  int msgID = 0x01;
+  
+  if(LLH)
+  {
+    payloadSize = 28;
+    msgID = 0x02;
+  }
+
   int payloadNumberElements = payloadSize/payloadElementSize;
   
-  uint8_t* SplittedPOSECEF = PollValue(0x01, 0x01, payloadSize, bufferedPOSECEF);
+  uint8_t* SplittedPOS = PollValue(0x01, msgID, payloadSize, bufferedPOSECEF && !LLH);
   
-  if(SplittedPOSECEF != nullptr)
+  if(SplittedPOS != nullptr)
   {
-    uint64_t POSECEF_sum = 0;
-    long* POSECEF = new long[payloadNumberElements];
+    uint64_t POS_sum = 0;
+    long* POS = new long[payloadNumberElements];
 
     for(int i=0; i<payloadNumberElements; i++)
     {
-      *(POSECEF+i) = ((long) *(SplittedPOSECEF+i*payloadElementSize+3))<<24 | ((long) *(SplittedPOSECEF+i*payloadElementSize+2))<<16 | ((long) *(SplittedPOSECEF+i*payloadElementSize+1))<<8 | *(SplittedPOSECEF+i*payloadElementSize);
-      POSECEF_sum += *(POSECEF+i);
+      *(POS+i) = ((long) *(SplittedPOS+i*payloadElementSize+3))<<24 | ((long) *(SplittedPOS+i*payloadElementSize+2))<<16 | ((long) *(SplittedPOS+i*payloadElementSize+1))<<8 | *(SplittedPOS+i*payloadElementSize);
+      POS_sum += *(POS+i);
     }
 
-    delete[] SplittedPOSECEF;
+    delete[] SplittedPOS;
 
-    if(POSECEF_sum != 0)
+    if(POS_sum != 0)
     {
       if(debug::full())
       {
-        debug::Serial.println("Got the following POSECEF : ");
+        debug::Serial.println("Got the following POS : ");
         for(long i=0; i<5; i++)
         {
-          debug::Serial.println(*(POSECEF+i), HEX);
+          debug::Serial.println(*(POS+i), HEX);
         }
         debug::Serial.println("");
       }
 
-      return POSECEF;   
+      return POS;   
     }
     else
     {
-      if(debug::trace()) debug::Serial.println("POSECEF - Fail 1\n");
+      if(debug::trace()) debug::Serial.println("POS - Fail 1\n");
       
       return nullptr;
     }
@@ -884,10 +889,22 @@ long* ublox_gen9::getPOSECEF()
   }
   else
   {
-    if(debug::trace()) debug::Serial.println("POSECEF - Fail 2\n");
+    if(debug::trace()) debug::Serial.println("POS - Fail 2\n");
     
     return nullptr;
   }
+}
+
+long *ublox_gen9::getPOSECEF()
+{
+  if(debug::trace()) debug::Serial.println("getPOSECEF");
+  return getPOS();
+}
+
+long *ublox_gen9::getPOSLLH()
+{
+  if(debug::trace()) debug::Serial.println("getPOSLLH");
+  return getPOS(true);
 }
 
 uint8_t ublox_gen9::getNavFixStatus()
