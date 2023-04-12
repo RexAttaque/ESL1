@@ -245,8 +245,8 @@ class ublox_gen9 {
     uint16_t getRefreshRate(uint8_t level);
     
     long* getPOS(bool LLH = false);
-    long* getPOSECEF();
-    long* getPOSLLH();
+    long* getPOSECEF(); //(iTOW (ms), xECEF (cm), yECEF (cm), zECEF (cm) , CEP (cm))
+    long* getPOSLLH(); //(iTOW (ms), long (1e-7 deg), lat (1e-7 deg), hWGS84 (mm) , hMSL (mm), hAcc (mm), vAcc(mm))
 
     uint8_t getNavFixStatus();
 
