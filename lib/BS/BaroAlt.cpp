@@ -12,10 +12,41 @@ BS_obj::BS_obj(SensingSystem* SensorSys)
 
 unsigned long BS_obj::initBaroAlt()
 {
-    //get P_init, T_init and alt_init from sensors/user
-
-    if(true)
+    //get P_init, T_init and alt_init from sensors
+    if(debug::info()) 
     {
+        debug::Serial.println("!! Barometric System Init !!\n\n");
+        debug::Serial.println(" ->Instructions :");
+        debug::Serial.println("     -->Place the Avionics bay in the shade outside (try to ventilate the BARO sensors), wait " + String(BS_const::delayBeforeInitMeas/60000) + "min...");
+    }
+    delay(BS_const::delayBeforeInitMeas);
+
+    //Call for GPS measurements through the convential manner to get the real amount of GPS working
+    BS_components->getGPSs_meas(1); 
+    uint8_t GPSs_real_amount = BS_components->getGPSs_Avio_rl_amount();
+    //Then call for LLH GPS measurements (which gives height MSL)
+    long* GPS_LLH = (BS_components->getGPSs_Avio()->getSensors())[0].getSensor()->getPOSLLH(); //(iTOW (ms), long (1e-7 deg), lat (1e-7 deg), hWGS84 (mm) , hMSL (mm), hAcc (mm), vAcc(mm))
+    
+    float* BAROpdata = BS_components->getBAROs_meas(1); //initial Pressure and Temperature
+    uint8_t BAROs_rl_amount = BS_components->getBAROs_Avio_rl_amount();
+
+    if(BAROs_rl_amount>0 && GPSs_real_amount>0)
+    {
+        P = BAROpdata[0];
+        T = BAROpdata[1];
+        Altitude = GPS_LLH[4]*1000; //conversion from mm to m
+
+        delete[] BAROpdata;
+        delete[] GPS_LLH;
+
+        if(debug::info()) 
+        {
+            debug::Serial.println("   ->Recovered Initial :");
+            debug::Serial.println("     -->Altitude : " + String(Altitude)) + "m";
+            debug::Serial.println("     -->Pressure : " + String(P)) + "Pa";
+            debug::Serial.println("     -->Temperature : " + String(T)) + "K";
+        }
+
         return (unsigned long) pow(10,6)*time_BARO;
     }
     else
@@ -33,12 +64,15 @@ long BS_obj::getAltitude()
     {
         BARO_failure = false;
 
-        //ISA atmosphere altitude computation
-        float gam = 1.4;
-        float g = 9.81; // m/s^2
-        float r = 287.03; // J/kg/K
+        //Current Temperature Based Altitude Step Integral Computation method (CTBASIC)
+        //Should work well for small steps in altitude (10m ish)
+        
+        //Compute new altitude based on the old (P,T) and the new Pressure and Temperature stored in BAROpdata
+        Altitude = Altitude - BS_const::r*BAROpdata[2]*log(BAROpdata[1]/P)/BS_const::g;
 
-        //TODO
+        //Update the current (P,T)
+        P = BAROpdata[1];
+        T = BAROpdata[2];
 
         delete[] BAROpdata;
     }
@@ -48,5 +82,5 @@ long BS_obj::getAltitude()
         BARO_failure = true;
     }
 
-    return Altitude;
+    return (long) Altitude*100; //conversion from m to cm
 }
