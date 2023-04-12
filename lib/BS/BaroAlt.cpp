@@ -64,7 +64,7 @@ long BS_obj::getAltitude()
     {
         BARO_failure = false;
 
-        //Current Temperature Based Altitude Step Integral Computation method (CTBASIC)
+        //Current Temperature Based Altitude Step Integral Computation (CTBASIC)
         //Should work well for small steps in altitude (10m ish)
         
         //Compute new altitude based on the old (P,T) and the new Pressure and Temperature stored in BAROpdata
