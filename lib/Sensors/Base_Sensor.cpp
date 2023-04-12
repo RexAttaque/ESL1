@@ -44,6 +44,12 @@ bool Base_Sensor<T>::goIdle()
     return false;
 }
 
+template <class T>
+bool Base_Sensor<T>::reset()
+{
+    return false;
+}
+
 
 //Actual common methods
 template <class T>

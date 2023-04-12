@@ -22,6 +22,7 @@ class Base_Sensor {
         virtual bool goLive();
         virtual bool goIdle();
         virtual bool calibrate();
+        virtual bool reset();
 
         virtual uint8_t getStatus();
         virtual uint8_t getCalibration();
