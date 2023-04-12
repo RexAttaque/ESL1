@@ -80,6 +80,13 @@ T* Base_Sensor<T>::getMeas()
 
 //Actual common methods
 template <class T>
+void Base_Sensor<T>::deleteMeas()
+{
+    freeMeasMemory();
+    meas = nullptr;
+}
+
+template <class T>
 uint16_t Base_Sensor<T>::get_refresh_rate()
 {
     return _refreshHz;

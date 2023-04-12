@@ -10,6 +10,11 @@ Sensors<S, T>::Sensors(S* s, uint8_t th_amount) : _sensors(s), _th_amount(th_amo
 template <class S, class T>
 void Sensors<S, T>::allocateDataMemory() {
   _pdata = new (T)(_var_amount);
+
+  for(uint8_t j=0; j<_var_amount; j++)
+  {
+    _pdata[j] = 0;
+  }
 }
 
 template <class S, class T>
@@ -173,36 +178,46 @@ uint8_t Sensors<S, T>::get_real_amount()
 //data is multiplied by "factor" before being stored in _pdata
 //returns _pdata
 template <class S, class T>
-T* Sensors<S, T>::poll_process_ave_data(int factor){
+T* Sensors<S, T>::poll_process_ave_data(){
 
   //reset indicators and the amount of sensors currently in operation
   _flags = 0;
   _real_amount = 0;
+
+  reallocateDataMemory();
   
   for(uint8_t i=0; i<_th_amount; i++)
-  {
-    _data[i] = _sensors[i].getMeas();
-
-    //if data was correctly recovered
-    if(_data[i] != nullptr)
+  { 
+    //if sensor is responsive
+    if(_sensors[i].getStatus()) 
     {
-      //set flag corresponding to the sensor to 1
-      _flags += pow(2,i);
-      //add one sensor to the set of currently operating sensors
-      _real_amount += 1;
+      _data[i] = _sensors[i].getMeas();
 
-      //processing algo (resulting in a single measurand array, here a simple average) (part1)
-      for(uint8_t j=0; j<_sensors[0].get_varAmount(); j++)
+      //if data was correctly recovered
+      if(_data[i] != nullptr)
       {
-        _pdata[j] += _data[i][j];
+        //set flag corresponding to the sensor to 1
+        _flags += pow(2,i);
+        //add one sensor to the set of currently operating sensors
+        _real_amount += 1;
+
+        //processing algo (resulting in a single measurand array, here a simple average) (part1)
+        for(uint8_t j=0; j<_sensors[0].get_varAmount(); j++)
+        {
+          _pdata[j] += _data[i][j];
+        }
       }
+    }
+    else
+    {
+      _sensors[i].deleteMeas();
     }
   }
   
   //processing algo (resulting in a single measurand array, here a simple average) (part2)
-  for(uint8_t j=0; j<_sensors[0].varAmount; j++)
+  for(uint8_t j=0; j<_var_amount; j++)
   {
-    _pdata[j] *= factor/_real_amount;
+    _pdata[j] /= _real_amount;
   }
 
   return _pdata;

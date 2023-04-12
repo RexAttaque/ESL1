@@ -41,7 +41,6 @@ template <class S, class T> class Sensors {
     uint8_t get_real_amount();
 
     //method to poll data from all sensors (stored in _data) and process it (stored in _pdata)
-    //data is multiplied by "factor" before being stored in _pdata
     //returns _pdata
-    T* poll_process_ave_data(int factor);
+    T* poll_process_ave_data();
 };

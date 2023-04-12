@@ -28,6 +28,7 @@ class Base_Sensor {
         virtual bool getStatus();
         virtual uint8_t getCalibration();
         virtual T* getMeas();
+        void deleteMeas();
 
         uint16_t get_refresh_rate();
         uint8_t get_var_amount();
