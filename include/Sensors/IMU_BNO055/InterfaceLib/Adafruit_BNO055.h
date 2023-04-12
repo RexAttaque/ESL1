@@ -314,8 +314,8 @@ public:
   bool isFullyCalibrated();
 
   /* Power managments functions */
-  void enterSuspendMode();
-  void enterNormalMode();
+  bool enterSuspendMode();
+  bool enterNormalMode();
 
 private:
   byte read8(adafruit_bno055_reg_t);
