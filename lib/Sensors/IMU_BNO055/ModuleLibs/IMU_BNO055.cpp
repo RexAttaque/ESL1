@@ -34,8 +34,10 @@ bool IMU_BNO055::init()
       IMU.setAxisRemap(_remapcode);
       IMU.setAxisSign(_remapsign);
 
-      if(debug::info()) debug::Serial.println("      --->BNO055 Suspended until calibration");
-      goIdle();
+      if(goIdle())
+      {
+        if(debug::info()) debug::Serial.println("      --->BNO055 Suspended until calibration");
+      }
 
       return true;
     }
@@ -45,14 +47,12 @@ bool IMU_BNO055::init()
 
 bool IMU_BNO055::goLive()
 {
-  IMU.enterNormalMode();
-  return true; //Find a way to check if it did enter normal mode
+  return IMU.enterNormalMode();
 }
 
 bool IMU_BNO055::goIdle()
 {
-  IMU.enterSuspendMode();
-  return true; //Find a way to check if it did enter suspend mode
+  return IMU.enterSuspendMode();
 }
 
 bool IMU_BNO055::subCalibrate(uint8_t expectedResult)
