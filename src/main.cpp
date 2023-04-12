@@ -8,7 +8,7 @@
 SensingSystem SensorsSystem = SensingSystem(); //Sensing system which ensures combination and pre-processing of all sensor data, see header file for sensor declaration, type, combination technique etc.
 EGI_obj EGI = EGI_obj(&SensorsSystem, true); //EGI - Embedded GPS/IMU, kalman filter algorithm for data fusion between IMU and GPS etc.
 BS_obj BS = BS_obj(&SensorsSystem); //BS - Barometric System, altitude calculation from barometric (P and T) data. Used as a backup only to the EGI provided altitude
-GSM_obj GSM_module = GSM_obj();
+GSM_obj GSM = GSM_obj();
 
 bool parachutesDeployed = false;
 bool useTime; //indicates if time should be used for parachute deployement
@@ -34,7 +34,7 @@ void setup() {
   //All sensors that can be put to sleep should be to sleep
   
   //GSM Check/Init
-  bool GSM_init = GSM_module.init();
+  bool GSM_init = GSM.init();
   //GSM module sent to sleep
 
   //Telemetry Check/Init
@@ -103,32 +103,32 @@ void loop() {
   //relay information via telemetry
 
   //relay informatio via GSM near the end of flight
-  if(parachutesDeployed && GSM_module.check_REG_GSM() && GSM_module.check_SIG_GSM(GSM::signalQuality_floor))
+  if(parachutesDeployed && GSM.check_REG_GSM() && GSM.check_SIG_GSM(GSM_const::signalQuality_floor))
   {
     bool NextStage = false;
 
-    switch(counter%GSM::sendStages)
+    switch(counter)
     {
       case 0:
       {
-        NextStage = GSM_module.PrepSend_s1();
+        NextStage = GSM.PrepSend_s1();
         counter++;
       }
       case 1:
       {
-        NextStage = GSM_module.PrepSend_s2();
+        NextStage = GSM.PrepSend_s2();
         counter++;
       }
       case 2:
       {
-        NextStage = GSM_module.PrepSend_s3();
+        NextStage = GSM.PrepSend_s3();
         counter++;
       }
       case 3:
       {
         String GSM_message = "ESL1\nt:" + String(Nav_Data._time) + "\nx:" + Nav_Data.x + "\ny:" + Nav_Data.y + "\nz:" + Nav_Data.z + "\nh:" + final_altitude;
-        GSM_module.setTX(GSM_message);
-        NextStage = GSM_module.sendSMS();
+        GSM.setTX(GSM_message);
+        NextStage = GSM.sendSMS();
         counter = 0;
       }
 
@@ -142,7 +142,7 @@ void loop() {
   //if altimeter or time criteria is reached
   if((final_altitude>deployAltitude && useTime == false) || (Nav_Data._time>deployTime && useTime == true))
   {
-    GSM_module.goLive(); //turn on GSM module ?
+    GSM.goLive(); //turn on GSM module ?
     parachutesDeployed = true;
     //deploy parachutes
   }
