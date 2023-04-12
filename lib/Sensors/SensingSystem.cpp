@@ -201,9 +201,9 @@ uint8_t SensingSystem::getBAROs_Avio_rl_amount()
 }
 
 
-double* SensingSystem::getIMUs_CG_meas(int scalingFactor)
+double* SensingSystem::getIMUs_CG_meas()
 {
-  return IMUs_Avio.poll_process_ave_data(scalingFactor);
+  return IMUs_Avio.poll_process_ave_data();
 }
 
 uint16_t SensingSystem::getIMUs_CG_Hz()
@@ -211,9 +211,9 @@ uint16_t SensingSystem::getIMUs_CG_Hz()
   return IMUs_Avio.getRefreshRate();
 }
 
-long* SensingSystem::getGPSs_meas(int scalingFactor)
+long* SensingSystem::getGPSs_meas()
 {
-  return GPSs_Avio.poll_process_ave_data(scalingFactor);
+  return GPSs_Avio.poll_process_ave_data();
 }
 
 uint16_t SensingSystem::getGPSs_Hz()
@@ -221,9 +221,9 @@ uint16_t SensingSystem::getGPSs_Hz()
   return GPSs_Avio.getRefreshRate();
 }
 
-float* SensingSystem::getBAROs_meas(int scalingFactor)
+float* SensingSystem::getBAROs_meas()
 {
-  return BAROs_Avio.poll_process_ave_data(scalingFactor);
+  return BAROs_Avio.poll_process_ave_data();
 }
 
 uint16_t SensingSystem::getBAROs_Hz()

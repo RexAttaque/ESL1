@@ -13,7 +13,7 @@ GSM_obj GSM = GSM_obj();
 bool parachutesDeployed = false;
 bool useTime; //indicates if time should be used for parachute deployement
 unsigned long deployTime = 100*pow(10,6); //time value in microseconds that when passed and when useTime=true, will trigger a parachute deployement
-long deployAltitude = 3000*100; //altitude in cm at which
+long deployAltitude = 3000; //altitude in m at which
 
 uint8_t counter = 0;
 unsigned long start_clk; //time at timer start
@@ -97,9 +97,9 @@ void loop() {
   start_clk = micros();
 
   NavSolution Nav_Data = EGI.getNavSolution();
-  long baro_altitude = BS.getAltitude(); //need to make sure we're not polling altitude faster than it can be acquired (BaroLoopTimeMax)
+  double baro_altitude = BS.getAltitude(); //need to make sure we're not polling altitude faster than it can be acquired (BaroLoopTimeMax)
 
-  long final_altitude = Nav_Data.altitude;
+  double final_altitude = Nav_Data.altitude;
   if(final_altitude == faultCodes::altitude) //faultCodes::altitude is the fault indicating value for the altitude
   {
     final_altitude = baro_altitude;

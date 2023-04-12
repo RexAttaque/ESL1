@@ -117,7 +117,7 @@ void EGI_obj::updateF(bool stepChange, double newTimeStep)
 //altitude - WGS84 altitude or baro if GPS and IMU fail (cm)
 NavSolution EGI_obj::getNavSolution()
 {
-  double* IMUpdata = EGI_components->getIMUs_CG_meas(100);
+  double* IMUpdata = EGI_components->getIMUs_CG_meas();
   uint8_t IMUs_rl_amount = EGI_components->getIMUs_Avio_rl_amount();
           
   //if polling one set of measurements failed, discard it, if all failed, switch to GPS only, if all GPS fail, switch to barometric altitude, if that fails, switch to time based    
@@ -171,18 +171,18 @@ NavSolution EGI_obj::getNavSolution()
   if(StepCount%pred_Steps == 0 && StepCount !=0)
   { 
     //GPS measurement recovery
-    long* posECEF = EGI_components->getGPSs_meas(1);
+    long* posECEF = EGI_components->getGPSs_meas();
     uint8_t GPSs_rl_amount = EGI_components->getGPSs_Avio_rl_amount();
     uint8_t offset_pos_GPS = 1;
 
-    //into the measurement vector for position
-    for(uint8_t i=0; i<EGI_const::pos_var;i++)
-    {
-      y(i,1) = (double)(posECEF[i+offset_pos_GPS]/1000.0F);
-    }
-
     if(GPSs_rl_amount > 0) //maybe check also if you're not getting the same position twice or if the GPS comes back online
     {  
+      //into the measurement vector for position
+      for(uint8_t i=0; i<EGI_const::pos_var;i++)
+      {
+        y(i,1) = (double)(posECEF[i+offset_pos_GPS]/100.0f); //conversion to meters
+      }
+
       GPS_failure = false;        
       
       //Gain computation
@@ -263,7 +263,7 @@ NavSolution EGI_obj::getNavSolution()
     KalmanOutput.x = x(1,1);
     KalmanOutput.y = x(2,1);
     KalmanOutput.y = x(3,1);
-    KalmanOutput.altitude = (long) 1000*sqrt(pow((x(1,1)-pos_sol[0]),2)+pow((x(2,1)-pos_sol[1]),2)+pow((x(3,1)-pos_sol[2]),2));
+    KalmanOutput.altitude = sqrt(pow((x(1,1)-pos_sol[0]),2)+pow((x(2,1)-pos_sol[1]),2)+pow((x(3,1)-pos_sol[2]),2));
   }
   else
   {

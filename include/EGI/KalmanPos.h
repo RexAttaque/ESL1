@@ -30,10 +30,10 @@ namespace EGI_const {
 struct NavSolution
 {
   unsigned long _time;
-  long x;
-  long y;
-  long z;
-  long altitude;
+  double x;
+  double y;
+  double z;
+  double altitude;
 };
 
 class EGI_obj {
