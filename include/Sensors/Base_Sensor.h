@@ -19,12 +19,13 @@ class Base_Sensor {
         Base_Sensor(uint8_t varAmount, uint16_t refreshHz);
 
         virtual bool init();
+        virtual bool goLive();
+        virtual bool goIdle();
+        virtual bool calibrate();
+
         virtual uint8_t getStatus();
         virtual uint8_t getCalibration();
         virtual T* getMeas();
-
-        virtual bool goLive();
-        virtual bool goIdle();
 
         uint16_t get_refresh_rate();
         uint8_t get_var_amount();

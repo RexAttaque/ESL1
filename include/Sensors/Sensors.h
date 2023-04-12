@@ -30,6 +30,7 @@ template <class S, class T> class Sensors {
     bool initAll();
     bool wakeAll();
     bool sleepAll();
+    bool calibrateAll();
 
     uint16_t getRefreshRate();
     uint8_t getThAmount();

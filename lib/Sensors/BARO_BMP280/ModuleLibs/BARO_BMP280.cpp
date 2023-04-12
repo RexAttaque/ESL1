@@ -52,6 +52,11 @@ bool BARO_BMP280::goIdle()
   return true; //BMP280 goes to sleep on it's own so this kind of always is true
 }
 
+bool BARO_BMP280::calibrate()
+{
+  return true; //BMP280 does not really need to be calibrated, it is out of the factory
+}
+
 float* BARO_BMP280::getMeas()
 {
   reallocateMemory();

@@ -47,7 +47,8 @@ void setup() {
   //before calibration and remaining inits, wake sensors
   SensorsSystem.wakeAll();
 
-  //calibrate IMUs (either before GPS to save time or after to stay as precise as possible until launch)
+  //calibrate Sensors
+  bool Sensor_calibration = SensorsSystem.calibrateAll();
 
   loopTimeMax = EGI.initKalman(); //Initialize EGI (get initial measurements, variance, covariances etc.)
   BaroLoopTimeMax = BS.initBaroAlt(); //Initialize Barometric System (recover initial altitude, pressure and temperature to initialize atmo model)
@@ -55,11 +56,13 @@ void setup() {
   //put sensors back to sleep
   SensorsSystem.sleepAll();
 
-  if(Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0) //Check Checks, Init and Check calibration
+  if(Sensor_calibration && Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0) //Check Checks, Init and Check calibration
   {
     //Wait for wake call...
+    //SensorsSystem.wakeAll();
 
     //NOTE : may need to run calibrations just before launch
+    //Sensor_calibration = SensorsSystem.calibrateAll();
 
     //waiting for the launch trigger... (acceleration interrupt from the IMU maybe)
   }

@@ -38,19 +38,11 @@ bool Sensors<S, T>::initAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    if(debug::info()) 
-    {
-      debug::Serial.println("");
-      debug::Serial.println("    -->Sensor" + i);
-    }
+    if(debug::info()) debug::Serial.println("\n    -->Sensor" + i);
 
     if(_sensors[i].init()) 
     {
-      if(debug::info())
-      {
-        debug::Serial.println("    -->INIT PASS");
-        debug::Serial.println("");
-      }
+      if(debug::info()) debug::Serial.println("    -->INIT PASS\n");
     
       result = result && true;
     }
@@ -70,19 +62,11 @@ bool Sensors<S, T>::wakeAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    if(debug::info()) 
-    {
-      debug::Serial.println("");
-      debug::Serial.println("    -->Sensor" + i);
-    }
+    if(debug::info()) debug::Serial.println("\n    -->Sensor" + i);
 
     if(_sensors[i].goLive()) 
     {
-      if(debug::info())
-      {
-        debug::Serial.println("    -->is going live");
-        debug::Serial.println("");
-      }
+      if(debug::info()) debug::Serial.println("    -->IS LIVE\n");
     
       result = result && true;
     }
@@ -102,19 +86,35 @@ bool Sensors<S, T>::sleepAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    if(debug::info()) 
-    {
-      debug::Serial.println("");
-      debug::Serial.println("    -->Sensor" + i);
-    }
+    if(debug::info()) debug::Serial.println("\n    -->Sensor" + i);
 
     if(_sensors[i].goIdle()) 
     {
-      if(debug::info())
-      {
-        debug::Serial.println("    -->is going idle");
-        debug::Serial.println("");
-      }
+      if(debug::info()) debug::Serial.println("    -->IS IDLE\n");
+    
+      result = result && true;
+    }
+    else
+    {
+      result = false;
+    }
+  }
+
+  return result;
+}
+
+template <class S, class T>
+bool Sensors<S, T>::calibrateAll()
+{
+  bool result = false;
+
+  for(uint8_t i=0; i<_th_amount; i++)
+  {
+    if(debug::info()) debug::Serial.println("\n    -->Sensor" + i);
+
+    if(_sensors[i].calibrate()) 
+    {
+      if(debug::info()) debug::Serial.println("    -->IS CALIBRATED\n");
     
       result = result && true;
     }

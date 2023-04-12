@@ -25,6 +25,7 @@ class SensingSystem {
     bool initAll();
     bool wakeAll();
     bool sleepAll();
+    bool calibrateAll();
 
     Sensors<IMU_BNO055,double>* getIMUs_Avio();
     uint8_t getIMUs_Avio_rl_amount();

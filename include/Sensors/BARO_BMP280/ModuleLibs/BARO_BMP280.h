@@ -31,6 +31,7 @@ class BARO_BMP280 : public Base_Sensor<float> {
     bool init();
     bool goLive(); 
     bool goIdle();
+    bool calibrate();
 
     float* getMeas();
 };

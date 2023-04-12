@@ -53,6 +53,12 @@ uint16_t Base_Sensor<T>::get_refresh_rate()
 }
 
 template <class T>
+bool Base_Sensor<T>::calibrate()
+{
+    return false;
+}
+
+template <class T>
 uint8_t Base_Sensor<T>::get_var_amount()
 {
     return _varAmount;
