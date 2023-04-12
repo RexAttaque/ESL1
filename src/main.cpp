@@ -59,10 +59,20 @@ void setup() {
   if(Sensor_calibration && Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0) //Check Checks, Init and Check calibration
   {
     //Wait for wake call...
+    if(debug::info()) debug::Serial.println("Waiting for Main wake call...");
     //SensorsSystem.wakeAll();
 
-    //NOTE : may need to run calibrations just before launch
+    //May need to run calibrations just before going on the pylon ?
     //Sensor_calibration = SensorsSystem.calibrateAll();
+
+    //Put sensors back to sleep ?
+    //SensorsSystem.sleepAll();
+
+
+    //Wake sensors just before launch ?
+    //SensorsSystem.wakeAll();
+    //Disable debugging, perhaps this should only disable external debugging ? (Add SD card logging)
+    debug::disable(); 
 
     //waiting for the launch trigger... (acceleration interrupt from the IMU maybe)
   }

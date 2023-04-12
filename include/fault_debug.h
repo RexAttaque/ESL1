@@ -24,6 +24,15 @@ namespace debug {
     {
         return (_full || _trace || _info);
     }
+
+    void disable()
+    {
+        //if(debug::info()) debug::Serial.println("Good night ESO, see you after the flight... TM"); //To re-enable last minute
+        _full = false;
+        _trace = false;
+        _info = false;
+        debug::Serial.end();
+    }
 }
 
 namespace faultCodes {
