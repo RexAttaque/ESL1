@@ -9,6 +9,16 @@ bool GPS_UBX9::init()
   return GPS.initGPS();
 }
 
+bool GPS_UBX9::goLive()
+{
+  return GPS.highPower();
+}
+
+bool GPS_UBX9::goIdle()
+{
+  return GPS.lowPower();
+}
+
 uint8_t GPS_UBX9::getStatus()
 {
     return GPS.getNavFixStatus();

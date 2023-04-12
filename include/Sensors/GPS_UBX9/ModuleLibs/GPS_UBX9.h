@@ -21,6 +21,8 @@ class GPS_UBX9 : public Base_Sensor<long> {
     GPS_UBX9(HardwareSerial HWSerial = Serial1, long Baud = 115200, uint8_t Pltfrm_Model = 8, uint16_t refreshRate = default_GPS_UBX9_Hz, uint8_t Nav_Rate = 1, uint8_t config_Level = 7, long default_Baud = 38400, bool buffered_POS = false, bool NMEA_USB = false, long USB_Baud = 115200, bool NMEA_UART1 = false, uint8_t Stop_Bits = 1);
 
     bool init();
+    bool goLive();
+    bool goIdle();
 
     uint8_t getStatus();
 

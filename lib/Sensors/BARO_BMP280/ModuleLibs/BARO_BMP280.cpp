@@ -35,6 +35,23 @@ bool BARO_BMP280::init()
   return false;
 }
 
+bool BARO_BMP280::goLive()
+{
+  if(_mode == Adafruit_BMP280::MODE_FORCED) 
+  {
+    return BARO.takeForcedMeasurement(); //BMP280 goes live when asked to in forced mode
+  }  
+  else
+  {
+    return true; //otherwise it always goes between live and idle on it's own
+  }
+}
+
+bool BARO_BMP280::goIdle()
+{
+  return true; //BMP280 goes to sleep on it's own so this kind of always is true
+}
+
 float* BARO_BMP280::getMeas()
 {
   reallocateMemory();

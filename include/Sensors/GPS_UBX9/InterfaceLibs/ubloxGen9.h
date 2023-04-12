@@ -100,6 +100,9 @@ const long CFG_MSGOUT_UBX_NAV_POSECEF_UART1 = 0x20910025; //POSECEF
 // const long CFG_MSGOUT_UBX_TIM_TP_UART1 = 0x2091017e;
 // const long CFG_MSGOUT_UBX_TIM_VRFY_UART1 = 0x20910093;
 
+/////////////// POWER MANAGEMENT //////////////////
+const long CFG_PM_OPERATEMODE = 0x20d00001;
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -244,6 +247,9 @@ class ublox_gen9 {
     long* getPOSECEF();
 
     uint8_t getNavFixStatus();
+
+    bool lowPower();
+    bool highPower();
 };
 
 #endif

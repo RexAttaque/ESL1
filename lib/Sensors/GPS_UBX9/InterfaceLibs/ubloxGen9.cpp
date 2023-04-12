@@ -754,7 +754,8 @@ bool ublox_gen9::initGPS()
       }
 
       if(debug::info()) debug::Serial.print("     --->Putting GPS to sleep...");
-      //bool sleep = goToSleep(); //Possible but perhaps a little dangerous considering that the GPS will have a limited amount of time to acquire ephemeris data and could lose it all in PSM mode, needs to be discussed
+      
+      lowPower(); //Send GPS module to low power state
 
       return true;
     }
@@ -763,7 +764,7 @@ bool ublox_gen9::initGPS()
   {      
     if(debug::info())
     {
-      debug::Serial.println("     --->Failed to change Serial channel to final GPS_baudrate, check debug");
+      debug::Serial.println("     --->Failed to change Serial channel to final GPS_baudrate, check debug/use ucenter via USB");
     }
 
     return false;
@@ -803,7 +804,7 @@ void ublox_gen9::print64(uint64_t value)
   }
 }
 
-void print64ln(uint64_t value)
+void ublox_gen9::print64ln(uint64_t value)
 {  
   if(debug::info())
   {
@@ -1012,4 +1013,16 @@ uint8_t ublox_gen9::getNavFixStatus()
     
     return 7;
   }
+}
+
+bool ublox_gen9::lowPower()
+{
+  //set measurement rate to 60s, set power mode to PSMCT (see integration manual on Power Management)
+  return setConfig(configLevel, CFG_RATE_MEAS, 60000, 2) && setConfig(configLevel, CFG_PM_OPERATEMODE, 2, 1);
+}
+
+bool ublox_gen9::highPower()
+{
+  //set measurement rate to nominal, set power mode to FULL (see integration manual on Power Management)
+  return setNavRate() && setConfig(configLevel, CFG_PM_OPERATEMODE, 0, 1);
 }
