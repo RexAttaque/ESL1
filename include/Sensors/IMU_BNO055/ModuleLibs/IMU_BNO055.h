@@ -16,7 +16,7 @@ IMU_BNO055* IMU_Avio_array;
 namespace BNO055_const {
   const uint16_t Hz = 100; //IMU max refresh rate
   const uint8_t varAmount = 12; //a_x,a_y,a_z,theta,phi,psy,theta_point,phi_point,psy_point,m_x,m_y,m_z (m/s^2 ; rad ; rad/s ; microT) <- ENU referential
-  const uint8_t maxCalibrationAttemps = 3; //maximum number of allowed calibration attempts before cancelling
+  const uint8_t maxCalibrationAttempts = 3; //maximum number of allowed calibration attempts before cancelling
   const unsigned long timeBetweenCalibrations = 60000; //millis of delay between each calibration attemps
   const unsigned long calibrationSettleTime = 5000; //millis of delay after calibration complete to allow settling
 };

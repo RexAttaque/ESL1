@@ -23,11 +23,11 @@ bool GPS_UBX9::calibrate()
 {
   uint8_t attempts = 0;
   uint8_t fixData = GPS.getNavFixStatus(); 
-  
+
   if(debug::info()) Serial.println("      --->Instructions : Place the GPS antenna near a window, preferably outside and away from cover");
     
 
-  while(attempts<UBX9_const::maxCalibrationAttemps && fixData<UBX9_const::minFixStatus && fixData>UBX9_const::maxFixStatus)
+  while(attempts<UBX9_const::maxCalibrationAttempts && fixData<UBX9_const::minFixStatus && fixData>UBX9_const::maxFixStatus)
   {
     if(debug::info()) Serial.println("        ---->UBX9 GPS does not yet have the required fix (result is " + String(fixData) + "), waiting " + String(UBX9_const::timeBetweenCalibrations/1000) + "s...");
     fixData = GPS.getNavFixStatus();
@@ -35,7 +35,7 @@ bool GPS_UBX9::calibrate()
     delay(UBX9_const::timeBetweenCalibrations);
   }
 
-  if(attempts<UBX9_const::maxCalibrationAttemps)
+  if(attempts<UBX9_const::maxCalibrationAttempts)
   {
     if(debug::info()) Serial.println("      --->Got required UBX9 GPS fix, waiting " + String(UBX9_const::calibrationSettleTime/60000) + "s for it to settle ...");
     delay(UBX9_const::calibrationSettleTime);

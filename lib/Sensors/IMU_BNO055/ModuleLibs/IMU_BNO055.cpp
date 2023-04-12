@@ -61,7 +61,7 @@ bool IMU_BNO055::subCalibrate(uint8_t expectedResult)
   uint8_t calData = getCalibration();
 
   //sub Sensor calibration
-  while(subAttempts<BNO055_const::maxCalibrationAttemps && (calData & expectedResult) == expectedResult)
+  while(subAttempts<BNO055_const::maxCalibrationAttempts && (calData & expectedResult) == expectedResult)
   {
     if(debug::info()) Serial.println("\n        ---->subSensor is not calibrated yet (result is " + String(calData) + "), waiting " + String(BNO055_const::timeBetweenCalibrations/1000) + "s...");
     calData = getCalibration();
@@ -69,7 +69,7 @@ bool IMU_BNO055::subCalibrate(uint8_t expectedResult)
     delay(BNO055_const::timeBetweenCalibrations);
   }
 
-  if(subAttempts<BNO055_const::maxCalibrationAttemps)
+  if(subAttempts<BNO055_const::maxCalibrationAttempts)
   {
     if(debug::info()) Serial.println("      --->subSensor calibrated, letting it settle...");
     delay(BNO055_const::calibrationSettleTime);
@@ -87,7 +87,7 @@ bool IMU_BNO055::calibrate()
   uint8_t attempts = 0;
 
   //System calibration 0xC0
-  while(attempts<BNO055_const::maxCalibrationAttemps && (getCalibration() & 0xC0) == 0xC0)
+  while(attempts<BNO055_const::maxCalibrationAttempts && (getCalibration() & 0xC0) == 0xC0)
   {
     //Gyroscope calibration 0x30
     if(debug::info()) 
@@ -133,7 +133,7 @@ bool IMU_BNO055::calibrate()
     attempts++;
   }
 
-  if(attempts<BNO055_const::maxCalibrationAttemps)
+  if(attempts<BNO055_const::maxCalibrationAttempts)
   {
     if(debug::info()) Serial.println("      --->BNO055 System calibrated, waiting for it to settle...");
     delay(BNO055_const::calibrationSettleTime);

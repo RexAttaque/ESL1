@@ -15,7 +15,7 @@ namespace UBX9_const {
 
   const uint8_t minFixStatus = 3; //When using GPS.getNavFixStatus(), what is the minimum fix state that is acceptable
   const uint8_t maxFixStatus = 3; //When using GPS.getNavFixStatus(), what is the maximum fix state that is acceptable
-  const uint8_t maxCalibrationAttemps = 10; //maximum number of allowed calibration attempts before cancelling
+  const uint8_t maxCalibrationAttempts = 10; //maximum number of allowed calibration attempts before cancelling
   const unsigned long timeBetweenCalibrations = 60000; //millis of delay between each calibration attemps
   const unsigned long calibrationSettleTime = 300000; //millis of delay after calibration complete to allow settling
 };
