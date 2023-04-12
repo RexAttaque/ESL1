@@ -144,6 +144,8 @@ bool GSM_obj::init()
     // Send attention command to check if all fine, module should answer by OK -> true ; check that a SIM is in the module
     if(check_AT_OK_GSM("AT") && check_SIM_GSM())
     {
+      uint8_t attempts = 0;
+
       if(debug::info()) 
       {
         debug::Serial.println(" ->Module is responsive, SIM detected");
@@ -151,29 +153,59 @@ bool GSM_obj::init()
       }
 
       // Wait for network registration
-      while(check_REG_GSM() == false)
+      while(attempts<GSM_const::maxRegAttempts && check_REG_GSM() == false)
       {
-        delay(1000);
-      }
-      if(debug::info()) debug::Serial.println(" ->Registered on network !");
-
-      if(!check_SIG_GSM(GSM::signalQuality_floor)) 
-      {
-        if(debug::info()) debug::Serial.println("   -->WARNING, SIGNAL QUALITY LOW");
+        attempts++;
+        delay(GSM_const::timeBetweenRegCheck);
       }
 
-      if(goIdle())
+      if(attempts<GSM_const::maxRegAttempts)
       {
-        if(debug::info()) debug::Serial.println(" ->Module idling, waiting for wake up call...");
+        if(debug::info()) debug::Serial.println(" ->Registered on network !");
+
+        if(!check_SIG_GSM(GSM_const::signalQuality_floor)) 
+        {
+          if(debug::info()) debug::Serial.println("   -->WARNING, SIGNAL QUALITY LOW");
+        }
+
+        bool send = PrepSend_s1();
+        if(send)
+        {
+          delay(100);
+          send = PrepSend_s2();
+          if(send)
+          {
+            delay(100);
+            send = PrepSend_s3();
+            if(send)
+            {
+              delay(100);
+              setTX("ESL1 GSM Init send test");
+              send = sendSMS();
+              delay(100);
+            }
+          }
+        }
+
+        if(send)
+        {
+            if(goIdle())
+            {
+              if(debug::info()) debug::Serial.println(" ->Module idling, waiting for wake up call...");
+            }
+
+            if(debug::info()) debug::Serial.println("\n ->GSM INIT PASS\n");
+            return true;
+        }
       }
-
-      if(debug::info()) debug::Serial.println("\n ->GSM INIT PASS\n");
-
-      return true;
+      else
+      {
+        if(debug::info()) debug::Serial.println(" ->Could not register on network");
+      } 
     }
-    else if(debug::info()) debug::Serial.println(" ->ERROR, GSM INIT FAIL, CHECK DEBUG\n");
   }
 
+  if(debug::info()) debug::Serial.println(" ->ERROR, GSM INIT FAIL, CHECK DEBUG\n");
   return false;
 }
 

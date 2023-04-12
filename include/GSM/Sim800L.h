@@ -3,8 +3,11 @@
 #include <Arduino.h>
 #include <fault_debug.h>
 
-namespace GSM {
+namespace GSM_const {
+    const uint8_t maxRegAttempts = 10; //maximum number of allowed registration attempts before cancelling
+    const unsigned long timeBetweenRegCheck = 5000; //millis of delay between each check of registration
     const uint8_t signalQuality_floor = 10; // goes from 0 to 31 with 31 being excellent
+    
     const uint8_t sendStages = 4;
 }
 class GSM_obj {
