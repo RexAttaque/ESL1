@@ -96,7 +96,7 @@ bool Adafruit_BNO055::begin(adafruit_bno055_opmode_t mode) {
   write8(BNO055_SYS_TRIGGER_ADDR, 0x20);
   /* Delay incrased to 30ms due to power issues https://tinyurl.com/y375z699 */
   delay(30);
-  while (read8(BNO055_CHIP_ID_ADDR) != BNO055_ID) {
+  while (!checkChipID()) {
     delay(10);
   }
   delay(50);
@@ -132,6 +132,11 @@ bool Adafruit_BNO055::begin(adafruit_bno055_opmode_t mode) {
   delay(20);
 
   return true;
+}
+
+bool Adafruit_BNO055::checkChipID()
+{
+  return read8(BNO055_CHIP_ID_ADDR) == BNO055_ID;
 }
 
 /*!

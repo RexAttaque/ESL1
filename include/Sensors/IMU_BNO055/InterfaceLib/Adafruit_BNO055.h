@@ -284,6 +284,7 @@ public:
                   TwoWire *theWire = &Wire);
 
   bool begin(adafruit_bno055_opmode_t mode = OPERATION_MODE_NDOF);
+  bool checkChipID();
   void setMode(adafruit_bno055_opmode_t mode);
   adafruit_bno055_opmode_t getMode();
   void setAxisRemap(adafruit_bno055_axis_remap_config_t remapcode);
