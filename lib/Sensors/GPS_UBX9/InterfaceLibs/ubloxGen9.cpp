@@ -57,11 +57,7 @@ bool ublox_gen9::calculateCheckSum(uint8_t* frame, uint16_t frameSize, bool rece
 
   if(receiveMode == false)
   {
-    if(debug::full())
-    {
-      debug::Serial.println("TX");
-      debug::Serial.println("");
-    }
+    if(debug::full()) debug::Serial.println("TX\n");
 
     
     *(frame+frameSize-2) = checksum[0];
@@ -78,21 +74,13 @@ bool ublox_gen9::calculateCheckSum(uint8_t* frame, uint16_t frameSize, bool rece
     
     if( *(frame+frameSize-2) == checksum[0] && *(frame+frameSize-1) == checksum[1] )
     {
-      if(debug::full())
-      {
-        debug::Serial.println("Pass");
-        debug::Serial.println("");
-      }
+      if(debug::full()) debug::Serial.println("Pass\n");
 
       return true;
     }
     else
     {
-      if(debug::full())
-      {
-        debug::Serial.println("Fail");
-        debug::Serial.println("");
-      }
+      if(debug::full()) debug::Serial.println("Fail\n");
 
       return false;
     }
@@ -138,11 +126,7 @@ uint8_t* ublox_gen9::splitTo8bit(uint64_t value, uint16_t val_length)
     }
   }
 
-  if(debug::full())
-  {
-    debug::Serial.println("");
-    debug::Serial.println("");
-  }
+  if(debug::full()) debug::Serial.println("\n\n");
 
   return buff;
 }
@@ -206,20 +190,14 @@ uint8_t* ublox_gen9::receiveUBXframe(uint16_t extractedLength)
 
   if(calculateCheckSum(buff, extractedLength, true))
   {
-    if(debug::trace())
-    {
-      debug::Serial.println("Checksum Pass on Receive");
-      debug::Serial.println("");
-    }
+    if(debug::trace()) debug::Serial.println("Checksum Pass on Receive\n");
+
     return buff;
   }
   else
   {
-    if(debug::trace())
-    {
-      debug::Serial.println("Checksum Fail on Receive");
-      debug::Serial.println("");
-    }
+    if(debug::trace()) debug::Serial.println("Checksum Fail on Receive\n");
+
     return nullptr;
   }
 }
@@ -423,11 +401,7 @@ bool ublox_gen9::setConfig(uint8_t level, long keyID, uint64_t value, uint8_t va
   delete[] splittedValue;
   delete[] splittedKey;
 
-  if(debug::trace() && success) 
-  {
-    debug::Serial.println("Config successfully applied and checked");
-    debug::Serial.println("");
-  }
+  if(debug::trace() && success) debug::Serial.println("Config successfully applied and checked\n");
 
   return success;
 }
@@ -496,21 +470,13 @@ uint8_t* ublox_gen9::getConfig(long keyID, uint8_t level, uint8_t expectedValueS
 
     delete[] frame;
 
-    if(debug::trace())
-    {
-      debug::Serial.println("getConfig - Success");
-      debug::Serial.println("");
-    }
+    if(debug::trace()) debug::Serial.println("getConfig - Success\n");
     
     return value;
   }
   else
   {
-    if(debug::info())
-    {
-      debug::Serial.println("getConfig - Fail");
-      debug::Serial.println("");
-    }
+    if(debug::info()) debug::Serial.println("getConfig - Fail\n");
     
     return nullptr;
   }
@@ -563,11 +529,7 @@ uint8_t* ublox_gen9::PollValue(uint8_t cmdClass, uint8_t messageID, uint16_t exp
       }
       else
       {
-        if(debug::info())
-        {
-          debug::Serial.println("PollValue - Fail - No RX");
-          debug::Serial.println("");
-        }
+        if(debug::info()) debug::Serial.println("PollValue - Fail - No RX\n");
 
         payload = nullptr;
       }
@@ -578,11 +540,7 @@ uint8_t* ublox_gen9::PollValue(uint8_t cmdClass, uint8_t messageID, uint16_t exp
     }
     else
     {
-      if(debug::info())
-      {
-        debug::Serial.println("PollValue - Fail - No TX");
-        debug::Serial.println("");
-      }
+      if(debug::info()) debug::Serial.println("PollValue - Fail - No TX\n");
 
       return nullptr;
     }
@@ -864,21 +822,13 @@ uint16_t ublox_gen9::getRefreshRate(uint8_t level)
  uint8_t* SplittedRefreshRate = getConfig(CFG_RATE_MEAS, level, 2);
  if(SplittedRefreshRate != nullptr) 
  {
-    if(debug::trace())
-    {
-      debug::Serial.println("18 - Success");
-      debug::Serial.println("");
-    }
+    if(debug::trace()) debug::Serial.println("18 - Success\n");
    
     return (uint16_t)*(SplittedRefreshRate+1)<<8 + *SplittedRefreshRate;
  }
  else
  {
-    if(debug::trace())
-    {
-      debug::Serial.println("18 - Fail");
-      debug::Serial.println("");
-    }
+    if(debug::trace()) debug::Serial.println("18 - Fail\n");
    
     return 0; //impossible value for refresh rate 
  }
@@ -926,11 +876,7 @@ long* ublox_gen9::getPOSECEF()
     }
     else
     {
-      if(debug::trace())
-      {
-        debug::Serial.println("POSECEF - Fail 1");
-        debug::Serial.println("");
-      }
+      if(debug::trace()) debug::Serial.println("POSECEF - Fail 1\n");
       
       return nullptr;
     }
@@ -938,11 +884,7 @@ long* ublox_gen9::getPOSECEF()
   }
   else
   {
-    if(debug::trace())
-    {
-      debug::Serial.println("POSECEF - Fail 2");
-      debug::Serial.println("");
-    }
+    if(debug::trace()) debug::Serial.println("POSECEF - Fail 2\n");
     
     return nullptr;
   }
@@ -993,11 +935,7 @@ uint8_t ublox_gen9::getNavFixStatus()
     }
     else
     {
-      if(debug::trace())
-      {
-        debug::Serial.println("Nav Fix Status - Fail to RX, try again");
-        debug::Serial.println("");
-      }
+      if(debug::trace()) debug::Serial.println("Nav Fix Status - Fail to RX, try again\n");
 
       return 6;
     }
@@ -1005,11 +943,7 @@ uint8_t ublox_gen9::getNavFixStatus()
   }
   else
   {
-    if(debug::trace())
-    {
-      debug::Serial.println("Nav Fix Status - Fail to Poll, try again");
-      debug::Serial.println("");
-    }
+    if(debug::trace()) debug::Serial.println("Nav Fix Status - Fail to Poll, try again\n");
     
     return 7;
   }

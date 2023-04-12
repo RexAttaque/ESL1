@@ -139,11 +139,7 @@ bool GSM_obj::init()
 
   if(GSM_Serial)
   {
-    if(debug::info())
-    {
-      debug::Serial.println("");
-      debug::Serial.println(" ->Succesfully opened GSM Serial channel");
-    }
+    if(debug::info()) debug::Serial.println("\n ->Succesfully opened GSM Serial channel");
     
     // Send attention command to check if all fine, module should answer by OK -> true ; check that a SIM is in the module
     if(check_AT_OK_GSM("AT") && check_SIM_GSM())
@@ -171,20 +167,11 @@ bool GSM_obj::init()
         if(debug::info()) debug::Serial.println(" ->Module idling, waiting for wake up call...");
       }
 
-      if(debug::info()) 
-      {
-        debug::Serial.println("");
-        debug::Serial.println(" ->GSM INIT PASS");
-        debug::Serial.println("");
-      }
+      if(debug::info()) debug::Serial.println("\n ->GSM INIT PASS\n");
 
       return true;
     }
-    else if(debug::info())
-    {
-      debug::Serial.println(" ->ERROR, GSM INIT FAIL, CHECK DEBUG");
-      debug::Serial.println("");
-    }
+    else if(debug::info()) debug::Serial.println(" ->ERROR, GSM INIT FAIL, CHECK DEBUG\n");
   }
 
   return false;
