@@ -33,11 +33,13 @@ class IMU_BNO055 : public Base_Sensor<double> {
     IMU_BNO055(uint8_t type, uint8_t address, adafruit_bno055_opmode_t mode = OPERATION_MODE_NDOF, Adafruit_BNO055::adafruit_bno055_axis_remap_config_t remapcode = Adafruit_BNO055::REMAP_CONFIG_P1, Adafruit_BNO055::adafruit_bno055_axis_remap_sign_t remapsign = Adafruit_BNO055::REMAP_SIGN_P1);
 
     bool init();
-    bool goLive();
-    bool goIdle();
     bool subCalibrate(uint8_t expectedResult);
     bool calibrate();
 
+    bool goLive();
+    bool goIdle();
+
+    bool getStatus();
     uint8_t getCalibration();
 
     double* getMeas();

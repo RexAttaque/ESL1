@@ -23,6 +23,7 @@ namespace UBX9_const {
 class GPS_UBX9 : public Base_Sensor<long> {
   private :
     ublox_gen9 GPS;
+    uint8_t fixType;
   
   public :
   
@@ -31,11 +32,12 @@ class GPS_UBX9 : public Base_Sensor<long> {
     ublox_gen9* getSensor();
 
     bool init();
-    bool goLive();
-    bool goIdle();
     bool calibrate();
 
-    uint8_t getStatus();
+    bool goLive();
+    bool goIdle();
+
+    bool getStatus();
 
     long* getMeas();
 };

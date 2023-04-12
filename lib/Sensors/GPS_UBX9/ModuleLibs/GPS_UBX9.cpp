@@ -14,28 +14,15 @@ bool GPS_UBX9::init()
   return GPS.initGPS();
 }
 
-bool GPS_UBX9::goLive()
-{
-  return GPS.highPower();
-}
-
-bool GPS_UBX9::goIdle()
-{
-  return GPS.lowPower();
-}
-
 bool GPS_UBX9::calibrate()
 {
   uint8_t attempts = 0;
-  uint8_t fixData = GPS.getNavFixStatus(); 
 
   if(debug::info()) Serial.println("      --->Instructions : Place the GPS antenna near a window, preferably outside and away from cover");
     
-
-  while(attempts<UBX9_const::maxCalibrationAttempts && fixData<UBX9_const::minFixStatus && fixData>UBX9_const::maxFixStatus)
+  while(attempts<UBX9_const::maxCalibrationAttempts && getStatus())
   {
-    if(debug::info()) Serial.println("        ---->UBX9 GPS does not yet have the required fix (result is " + String(fixData) + "), waiting " + String(UBX9_const::timeBetweenCalibrations/1000) + "s...");
-    fixData = GPS.getNavFixStatus();
+    if(debug::info()) Serial.println("        ---->UBX9 GPS does not yet have the required fix (result is " + String(fixType) + "), waiting " + String(UBX9_const::timeBetweenCalibrations/1000) + "s...");
     attempts++;
     delay(UBX9_const::timeBetweenCalibrations);
   }
@@ -53,9 +40,20 @@ bool GPS_UBX9::calibrate()
   }
 }
 
-uint8_t GPS_UBX9::getStatus()
+bool GPS_UBX9::goLive()
 {
-    return GPS.getNavFixStatus();
+  return GPS.highPower();
+}
+
+bool GPS_UBX9::goIdle()
+{
+  return GPS.lowPower();
+}
+
+bool GPS_UBX9::getStatus()
+{
+  fixType = GPS.getNavFixStatus();
+  return fixType<UBX9_const::minFixStatus && fixType>UBX9_const::maxFixStatus;
 }
 
 long* GPS_UBX9::getMeas()

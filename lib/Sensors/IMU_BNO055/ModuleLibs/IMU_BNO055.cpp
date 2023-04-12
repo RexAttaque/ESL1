@@ -45,16 +45,6 @@ bool IMU_BNO055::init()
   return false;
 }
 
-bool IMU_BNO055::goLive()
-{
-  return IMU.enterNormalMode();
-}
-
-bool IMU_BNO055::goIdle()
-{
-  return IMU.enterSuspendMode();
-}
-
 bool IMU_BNO055::subCalibrate(uint8_t expectedResult)
 {
   uint8_t subAttempts = 0;
@@ -144,6 +134,21 @@ bool IMU_BNO055::calibrate()
     if(debug::info()) Serial.println("      --->Attempts at calibrating BNO055 failed");
     return false;
   }
+}
+
+bool IMU_BNO055::goLive()
+{
+  return IMU.enterNormalMode();
+}
+
+bool IMU_BNO055::goIdle()
+{
+  return IMU.enterSuspendMode();
+}
+
+bool IMU_BNO055::getStatus()
+{
+  return IMU.checkChipID();
 }
 
 uint8_t IMU_BNO055::getCalibration()

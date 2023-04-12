@@ -35,6 +35,12 @@ bool BARO_BMP280::init()
   return false;
 }
 
+bool BARO_BMP280::calibrate()
+{
+  return true; //BMP280 does not really need to be calibrated, it is out of the factory
+}
+
+
 bool BARO_BMP280::goLive()
 {
   if(_mode == Adafruit_BMP280::MODE_FORCED) 
@@ -52,9 +58,9 @@ bool BARO_BMP280::goIdle()
   return true; //BMP280 goes to sleep on it's own so this kind of always is true
 }
 
-bool BARO_BMP280::calibrate()
+bool BARO_BMP280::getStatus()
 {
-  return true; //BMP280 does not really need to be calibrated, it is out of the factory
+  return BARO.sensorID() == BMP280_CHIPID;
 }
 
 float* BARO_BMP280::getMeas()
