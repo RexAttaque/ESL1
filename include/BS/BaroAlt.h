@@ -15,15 +15,15 @@ class BS_obj
 {
   private:
 
-    float Altitude; //Stores current altitude
+    long Altitude; //Stores current altitude in mm
     SensingSystem* BS_components;
 
     uint16_t refresh_BARO;
     unsigned long time_BARO;
     double delta_t;
 
-    float P; //Stores current pressure
-    float T; //Stores current temperature
+    float P; //Stores current pressure Pa
+    float T; //Stores current temperature K
     
     //double Tz[BS_const::atmo_model_slices+1] = {-0.0065, 0, 0.001, 0.0028, 0, -0.0028, -0.002, 0}; //Temperature gradient in troposphere, tropopause(0),stratosphere1,stratosphere2,stratopause(0),mesosphere1, mesosphere2 and mesopause(0)
     //long z_atmo[BS_const::atmo_model_slices] = {11000, 20000, 32000, 47000, 51000, 71000, 84852}; //altitude of tropopause start, tropopause(0),stratosphere1,stratosphere2,stratopause(0),mesosphere1, mesosphere2 and mesopause(0)

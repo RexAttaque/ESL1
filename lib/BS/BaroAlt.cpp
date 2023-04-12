@@ -34,7 +34,7 @@ unsigned long BS_obj::initBaroAlt()
     {
         P = BAROpdata[0];
         T = BAROpdata[1];
-        Altitude = GPS_LLH[4]*1000; //conversion from mm to m
+        Altitude = GPS_LLH[4]; 
 
         delete[] BAROpdata;
         delete[] GPS_LLH;
@@ -42,7 +42,7 @@ unsigned long BS_obj::initBaroAlt()
         if(debug::info()) 
         {
             debug::Serial.println("   ->Recovered Initial :");
-            debug::Serial.println("     -->Altitude : " + String(Altitude)) + "m";
+            debug::Serial.println("     -->Altitude : " + String(Altitude)) + "mm";
             debug::Serial.println("     -->Pressure : " + String(P)) + "Pa";
             debug::Serial.println("     -->Temperature : " + String(T)) + "K";
         }
@@ -66,9 +66,11 @@ long BS_obj::getAltitude()
 
         //Current Temperature Based Altitude Step Integral Computation (CTBASIC)
         //Should work well for small steps in altitude (10m ish)
+
+        BAROpdata[2] += 273.15; //Conversion to K
         
         //Compute new altitude based on the old (P,T) and the new Pressure and Temperature stored in BAROpdata
-        Altitude = Altitude - BS_const::r*BAROpdata[2]*log(BAROpdata[1]/P)/BS_const::g;
+        Altitude = Altitude - (long) (1000*BS_const::r*BAROpdata[2]*log(BAROpdata[1]/P)/BS_const::g);
 
         //Update the current (P,T)
         P = BAROpdata[1];
@@ -82,5 +84,5 @@ long BS_obj::getAltitude()
         BARO_failure = true;
     }
 
-    return (long) Altitude*100; //conversion from m to cm
+    return (long) Altitude/10; //conversion from mm to cm
 }
