@@ -267,9 +267,9 @@ NavSolution EGI_obj::getNavSolution()
   }
   else
   {
-    KalmanOutput.x = 0;
-    KalmanOutput.y = 0;
-    KalmanOutput.z = 0;
+    KalmanOutput.x = faultCodes::pos;
+    KalmanOutput.y = faultCodes::pos;
+    KalmanOutput.z = faultCodes::pos;
     KalmanOutput.altitude = faultCodes::altitude;
   }
 
