@@ -143,9 +143,13 @@ class EGI_obj {
     //VarUpd, bool : specifies wether or not the covariance matrices will be updated during flight or not (experimental)
     EGI_obj(SensingSystem* SensorSys, bool VarUpd);
     
-    //function to initialize the kalman filter (covariance matrices, refresh rate values, delta_t etc.). Must be run after all other sensors are initialized and ready since this uses them.
+    //function to initialize the kalman filter (covariance matrices). Must be run after all other sensors are initialized and ready since this uses them.
     //returns the time that the loop() function running the kalman filter must not exceed if initialized succesfully, otherwise 0
     unsigned long initKalman();
+
+    //function to acquire the initial position of the rocket
+    //returns true if succesful, false otherwise
+    bool initialPos();
   
     //computes the F matrix (A matrix of the SS representation of the system) which depends on the time step in seconds (this is tied to the system's model)
     //stepChange, bool : indicates wether this function should revert to the standard F matrix (standard time step was respected) or to recomputed F (with new time step)
@@ -154,10 +158,10 @@ class EGI_obj {
     
     //getNavSolution provides time since launch, Kalman filter position and altitude
     //Returns
-    //_time - Time since launch (seconds)
-    //x - Kalman ECEF Position x (cm)
-    //y - Kalman ECEF Position y (cm)
-    //z - Kalman ECEF Position x (cm)
-    //altitude - WGS84 altitude (cm)
+    //_time - Time since launch (milliseconds)
+    //x - Kalman ECEF Position x (m)
+    //y - Kalman ECEF Position y (m)
+    //z - Kalman ECEF Position x (m)
+    //altitude - WGS84 altitude (m)
     NavSolution getNavSolution();
 };

@@ -25,6 +25,8 @@ EGI_obj::EGI_obj(SensingSystem* SensorSys, bool VarUpd) : EGI_components(SensorS
 //returns the time that the loop() function running the kalman filter must not exceed if initialized succesfully, otherwise 0
 unsigned long EGI_obj::initKalman()
 {
+  double* posECEF_init = EGI_components->getGPSs_meas();
+
   //Take initial measurements from the GPS and IMU to establish R0 (initial variances)
   //  R = {1,0,0,0,0,0,
   //       0,1,0,0,0,0,
@@ -44,21 +46,23 @@ unsigned long EGI_obj::initKalman()
   //       0,0,0,0,0,0,0,1,0,
   //       0,0,0,0,0,0,0,0,1};
 
-  //From these measurements (particularily GPS), initialize x (particularily position, the rest should be 0)
-  //  x = {x0,y0,z0,vx0,vy0,vz0,ax0,ay0,az0};
+  //Based on the confidence of the initial state, initialize P. 
+  //Here we are certain for position, speed and acceleration 
+  //(rocket is stationnary (certain about speed and acceleration) and initial position is acquired by the GPS (some uncertainty))
+  P = {pow(10,6),0,0,0,0,0,0,0,0,
+       0,pow(10,6),0,0,0,0,0,0,0,
+       0,0,pow(10,6),0,0,0,0,0,0,
+       0,0,0,1,0,0,0,0,0,
+       0,0,0,0,1,0,0,0,0,
+       0,0,0,0,0,1,0,0,0,
+       0,0,0,0,0,0,1,0,0,
+       0,0,0,0,0,0,0,1,0,
+       0,0,0,0,0,0,0,0,1};
+  P *= pow(10,-6);
 
-  //Based on the confidence of the initial state, initialize P
-  //  P = {1,0,0,0,0,0,0,0,0,
-  //       0,1,0,0,0,0,0,0,0,
-  //       0,0,1,0,0,0,0,0,0,
-  //       0,0,0,1,0,0,0,0,0,
-  //       0,0,0,0,1,0,0,0,0,
-  //       0,0,0,0,0,1,0,0,0,
-  //       0,0,0,0,0,0,1,0,0,
-  //       0,0,0,0,0,0,0,1,0,
-  //       0,0,0,0,0,0,0,0,1};
 
-  //KalmanOutput init
+
+  delete[] posECEF_init;
 
   if(true)
   {
@@ -68,6 +72,14 @@ unsigned long EGI_obj::initKalman()
   {
     return 0;
   }
+}
+
+bool EGI_obj::initialPos()
+{
+  //From these measurements (particularily GPS), initialize x (particularily position, the rest should be 0)
+  //  x = {x0,y0,z0,vx0,vy0,vz0,ax0,ay0,az0};
+
+  //KalmanOutput init
 }
 
 //computes the F matrix (A matrix of the SS representation of the system) which depends on the time step in seconds (this is tied to the system's model)
@@ -118,10 +130,9 @@ void EGI_obj::updateF(bool stepChange, double newTimeStep)
 NavSolution EGI_obj::getNavSolution()
 {
   double* IMUpdata = EGI_components->getIMUs_CG_meas();
-  uint8_t IMUs_rl_amount = EGI_components->getIMUs_Avio_rl_amount();
           
   //if polling one set of measurements failed, discard it, if all failed, switch to GPS only, if all GPS fail, switch to barometric altitude, if that fails, switch to time based    
-  if(IMUs_rl_amount > 0)
+  if(IMUpdata != nullptr)
   {
     IMU_failure = false;
 
@@ -158,8 +169,6 @@ NavSolution EGI_obj::getNavSolution()
     //acceleration is also part of the input vector u
     u = y.Submatrix<EGI_const::input_var,1>(EGI_const::input_var-1,0);
 
-    delete[] IMUpdata;
-
     //IMU measurement drift correction here or above
   }
   else
@@ -171,16 +180,15 @@ NavSolution EGI_obj::getNavSolution()
   if(StepCount%pred_Steps == 0 && StepCount !=0)
   { 
     //GPS measurement recovery
-    long* posECEF = EGI_components->getGPSs_meas();
-    uint8_t GPSs_rl_amount = EGI_components->getGPSs_Avio_rl_amount();
+    double* posECEF = EGI_components->getGPSs_meas();
     uint8_t offset_pos_GPS = 1;
 
-    if(GPSs_rl_amount > 0) //maybe check also if you're not getting the same position twice or if the GPS comes back online
+    if(posECEF != nullptr) //maybe check also if you're not getting the same position twice or if the GPS comes back online
     {  
       //into the measurement vector for position
       for(uint8_t i=0; i<EGI_const::pos_var;i++)
       {
-        y(i,1) = (double)(posECEF[i+offset_pos_GPS]/100.0f); //conversion to meters
+        y(i,1) = posECEF[i+offset_pos_GPS]; //conversion to meters
       }
 
       GPS_failure = false;        
@@ -206,7 +214,7 @@ NavSolution EGI_obj::getNavSolution()
         counter += 1;
         if(counter == EGI_const::noVarUpd_Steps)
         {
-          //Recompute R based on what was measured for position and what was estimated 
+          //Recompute R based on what was measured for position and what was estimated
           
           //Recompute Q based on what was predicted for position and what was estimated
     
@@ -221,8 +229,6 @@ NavSolution EGI_obj::getNavSolution()
     {
       GPS_failure = true;
     }
-
-    delete[] posECEF;
   }
 
   if(!IMU_failure)
