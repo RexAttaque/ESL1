@@ -198,6 +198,7 @@ uint8_t* ublox_gen9::receiveUBXframe(uint16_t extractedLength)
   {
     if(debug::trace()) debug::Serial.println("Checksum Fail on Receive\n");
 
+    delete[] buff;
     return nullptr;
   }
 }
@@ -465,6 +466,7 @@ uint8_t* ublox_gen9::getConfig(long keyID, uint8_t level, uint8_t expectedValueS
     }
     else
     {
+      delete[] value;
       value = nullptr;
     }
 
@@ -525,12 +527,12 @@ uint8_t* ublox_gen9::PollValue(uint8_t cmdClass, uint8_t messageID, uint16_t exp
           }
           debug::Serial.println("");
         }
-
       }
       else
       {
         if(debug::info()) debug::Serial.println("PollValue - Fail - No RX\n");
 
+        delete[] payload;
         payload = nullptr;
       }
   
@@ -883,6 +885,7 @@ long* ublox_gen9::getPOS(bool LLH)
     {
       if(debug::trace()) debug::Serial.println("POS - Fail 1\n");
       
+      delete[] POS;
       return nullptr;
     }
       

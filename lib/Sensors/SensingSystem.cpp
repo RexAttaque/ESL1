@@ -6,164 +6,176 @@ SensingSystem::SensingSystem()
 
 bool SensingSystem::initAll()
 {
-    if(debug::info()) debug::Serial.println("!! Sensors Check/Init !!");
+    if(debug::info()) debug::Serial.println("!! Sensors Check/Init Start !!\n\n");
 
-    bool result = false;
+    bool result = true;
 
-    if(debug::info()) debug::Serial.println("\n\n  ->IMUs Avio :");
+    if(debug::info()) debug::Serial.println("  ->IMUs Avio :");
 
     if(IMUs_Avio.initAll())
     { 
-      result = true;
-      if(debug::info()) debug::Serial.println(" ->IMUs Avio PASS");
+      if(debug::info()) debug::Serial.println(" ->IMUs Avio PASS\n");
+    }
+    else
+    {
+      result = false;
     }
     
-    if(debug::info()) debug::Serial.println("\n ->GPSs Avio :");
+    if(debug::info()) debug::Serial.println(" ->GPSs Avio :");
 
     if(GPSs_Avio.initAll()) 
     {
-      if(debug::info()) debug::Serial.println(" ->GPSs Avio PASS");
+      if(debug::info()) debug::Serial.println(" ->GPSs Avio PASS\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial.println("\n  ->BAROs Avio :");
+    if(debug::info()) debug::Serial.println("  ->BAROs Avio :");
 
     if(BAROs_Avio.initAll()) 
     {
-      if(debug::info()) debug::Serial.println(" ->BAROs Avio PASS");
+      if(debug::info()) debug::Serial.println(" ->BAROs Avio PASS\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial.println("\n\n");
+    if(debug::info()) debug::Serial.println("\n\n!! Sensors Check/Init End (result = " + String(result) + ") !!");
 
     return result;
 }
 
 bool SensingSystem::wakeAll()
 {
-    if(debug::info()) debug::Serial.println("!! Sensors Wake !!");
+    if(debug::info()) debug::Serial.println("!! Sensors Wake Start !!\n\n");
 
-    bool result = false;
+    bool result = true;
 
-    if(debug::info()) debug::Serial.println("\n\n  ->IMUs Avio :");
+    if(debug::info()) debug::Serial.println("  ->IMUs Avio :");
 
     if(IMUs_Avio.wakeAll())
     { 
-      result = true;
-      if(debug::info()) debug::Serial.println(" ->IMUs Avio awake");
+      if(debug::info()) debug::Serial.println(" ->IMUs Avio awake\n");
+    }
+    else
+    {
+      result = false;
     }
     
-    if(debug::info()) debug::Serial.println("\n ->GPSs Avio :");
+    if(debug::info()) debug::Serial.println(" ->GPSs Avio :");
 
     if(GPSs_Avio.wakeAll()) 
     {
-      if(debug::info()) debug::Serial.println(" ->GPSs Avio awake");
+      if(debug::info()) debug::Serial.println(" ->GPSs Avio awake\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial.println("\n  ->BAROs Avio :");
+    if(debug::info()) debug::Serial.println(" ->BAROs Avio :");
 
     if(BAROs_Avio.wakeAll()) 
     {
-      if(debug::info()) debug::Serial.println(" ->BAROs Avio awake");
+      if(debug::info()) debug::Serial.println(" ->BAROs Avio awake\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial.println("\n\n");
+    if(debug::info()) debug::Serial.println("\n\n!! Sensors Wake End (result = " + String(result) + ") !!");
 
     return result;
 }
 
 bool SensingSystem::sleepAll()
 {
-    if(debug::info()) debug::Serial.println("!! Sensors sleep !!");
+    if(debug::info()) debug::Serial.println("!! Sensors sleep !!\n\n");
 
-    bool result = false;
+    bool result = true;
 
-    if(debug::info()) debug::Serial.println("\n\n  ->IMUs Avio :");
+    if(debug::info()) debug::Serial.println(" ->IMUs Avio :");
 
     if(IMUs_Avio.sleepAll())
     { 
-      result = true;
-      if(debug::info()) debug::Serial.println(" ->IMUs Avio asleep");
+      if(debug::info()) debug::Serial.println(" ->IMUs Avio asleep\n");
+    }
+    else
+    {
+      result = false;
     }
     
-    if(debug::info()) debug::Serial.println("\n ->GPSs Avio :");
+    if(debug::info()) debug::Serial.println(" ->GPSs Avio :");
 
     if(GPSs_Avio.sleepAll()) 
     {
-      if(debug::info()) debug::Serial.println(" ->GPSs Avio asleep");
+      if(debug::info()) debug::Serial.println(" ->GPSs Avio asleep\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial.println("\n  ->BAROs Avio :");
+    if(debug::info()) debug::Serial.println(" ->BAROs Avio :");
 
     if(BAROs_Avio.sleepAll()) 
     {
-      if(debug::info()) debug::Serial.println(" ->BAROs Avio asleep");
+      if(debug::info()) debug::Serial.println(" ->BAROs Avio asleep\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial.println("\n\n");
+    if(debug::info()) debug::Serial.println("\n\n!! Sensors sleep End (result = " + String(result) + ") !!");
 
     return result;
 }
 
 bool SensingSystem::calibrateAll()
 {
-    if(debug::info()) debug::Serial.println("!! Sensors Calibration !!");
+    if(debug::info()) debug::Serial.println("!! Sensors Calibration Start !!\n\n");
 
-    bool result = false;
+    bool result = true;
 
-    if(debug::info()) debug::Serial.println("\n\n  ->IMUs Avio :");
+    if(debug::info()) debug::Serial.println("  ->IMUs Avio :");
 
     if(IMUs_Avio.calibrateAll())
     { 
-      result = true;
-      if(debug::info()) debug::Serial.println(" ->IMUs Avio Calibrated");
+      if(debug::info()) debug::Serial.println(" ->IMUs Avio Calibrated\n");
+    }
+    else
+    {
+      result = false;
     }
     
-    if(debug::info()) debug::Serial.println("\n ->GPSs Avio :");
+    if(debug::info()) debug::Serial.println(" ->GPSs Avio :");
 
     if(GPSs_Avio.calibrateAll()) 
     {
-      if(debug::info()) debug::Serial.println(" ->GPSs Avio Calibrated");
+      if(debug::info()) debug::Serial.println(" ->GPSs Avio Calibrated\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial.println("\n  ->BAROs Avio :");
+    if(debug::info()) debug::Serial.println("  ->BAROs Avio :");
 
     if(BAROs_Avio.calibrateAll()) 
     {
-      if(debug::info()) debug::Serial.println(" ->BAROs Avio Calibrated");
+      if(debug::info()) debug::Serial.println(" ->BAROs Avio Calibrated\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial.println("\n\n");
+    if(debug::info()) debug::Serial.println("\n\n!! Sensors Calibration End (result = " + String(result) + ") !!");
 
     return result;
 }

@@ -20,6 +20,7 @@ void Sensors<S, T>::allocateDataMemory() {
 template <class S, class T>
 void Sensors<S, T>::freeDataMemory() {
   delete[] _pdata;
+  _pdata = nullptr;
 }
 
 template <class S, class T>
@@ -214,10 +215,17 @@ T* Sensors<S, T>::poll_process_ave_data(){
     }
   }
   
-  //processing algo (resulting in a single measurand array, here a simple average) (part2)
-  for(uint8_t j=0; j<_var_amount; j++)
+  if(_real_amount>0)
   {
-    _pdata[j] /= _real_amount;
+    //processing algo (resulting in a single measurand array, here a simple average) (part2)
+    for(uint8_t j=0; j<_var_amount; j++)
+    {
+      _pdata[j] /= _real_amount;
+    }
+  }
+  else
+  {
+    freeDataMemory();
   }
 
   return _pdata;

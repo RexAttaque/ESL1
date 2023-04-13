@@ -12,47 +12,48 @@ BS_obj::BS_obj(SensingSystem* SensorSys)
 
 unsigned long BS_obj::initBaroAlt()
 {
+    unsigned long result=0;
+
     //get P_init, T_init and alt_init from sensors
     if(debug::info()) 
     {
-        debug::Serial.println("!! Barometric System Init !!\n\n");
+        debug::Serial.println("!! Barometric System Init Start !!\n\n");
         debug::Serial.println(" ->Instructions :");
         debug::Serial.println("     -->Place the Avionics bay in the shade outside (try to ventilate the BARO sensors), wait " + String(BS_const::delayBeforeInitMeas/60000) + "min...");
     }
     delay(BS_const::delayBeforeInitMeas);
 
-    //Call for GPS measurements through the convential manner to get the real amount of GPS working
-    BS_components->getGPSs_meas(); 
-    uint8_t GPSs_real_amount = BS_components->getGPSs_Avio_rl_amount();
-    //Then call for LLH GPS measurements (which gives height MSL)
-    long* GPS_LLH = (BS_components->getGPSs_Avio()->getSensors())[0].getSensor()->getPOSLLH();
-    
+    bool initializerGPS_status = (BS_components->getGPSs_Avio()->getSensors())[0].getStatus(); //check if the initializer GPS is working
     float* BAROpdata = BS_components->getBAROs_meas(); //initial Pressure and Temperature
-    uint8_t BAROs_rl_amount = BS_components->getBAROs_Avio_rl_amount();
 
-    if(BAROs_rl_amount>0 && GPSs_real_amount>0)
+    if(BAROpdata != nullptr && initializerGPS_status)
     {
-        P = BAROpdata[0];
-        T = BAROpdata[1];
-        altitude = (double) GPS_LLH[4]/1000.0f; 
+        //Then call for LLH GPS measurements (which gives height MSL)
+        long* GPS_LLH = (BS_components->getGPSs_Avio()->getSensors())[0].getSensor()->getPOSLLH();
 
-        delete[] BAROpdata;
-        delete[] GPS_LLH;
-
-        if(debug::info()) 
+        if(GPS_LLH != nullptr)
         {
-            debug::Serial.println("   ->Recovered Initial :");
-            debug::Serial.println("     -->Altitude : " + String(altitude)) + "m";
-            debug::Serial.println("     -->Pressure : " + String(P)) + "Pa";
-            debug::Serial.println("     -->Temperature : " + String(T)) + "K";
-        }
+            P = BAROpdata[0];
+            T = BAROpdata[1];
+            altitude = (double) GPS_LLH[4]/1000.0f; 
 
-        return (unsigned long) pow(10,6)*time_BARO;
+            delete[] BAROpdata;
+            delete[] GPS_LLH;
+
+            if(debug::info()) 
+            {
+                debug::Serial.println("   ->Recovered Initial :");
+                debug::Serial.println("     -->Altitude : " + String(altitude)) + "m";
+                debug::Serial.println("     -->Pressure : " + String(P)) + "Pa";
+                debug::Serial.println("     -->Temperature : " + String(T)) + "K";
+            }
+
+            result = (unsigned long) pow(10,6)*time_BARO;
+        }
     }
-    else
-    {
-        return 0;
-    }
+    
+    if(debug::info()) debug::Serial.println("\n\n!! Barometric System Init End (result = " + String(result) + ") !!");
+    return 0;
 }
 
 double BS_obj::getAltitude()
