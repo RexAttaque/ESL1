@@ -50,6 +50,8 @@ unsigned long BS_obj::initBaroAlt()
 
             result = (unsigned long) pow(10,6)*time_BARO;
         }
+
+        delete[] GPS_LLH;
     }
     
     if(debug::info()) debug::Serial.println("\n\n!! Barometric System Init End (result = " + String(result) + ") !!");
