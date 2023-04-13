@@ -15,7 +15,7 @@ class BS_obj
 {
   private:
 
-    double Altitude; //Stores current altitude in mm
+    double altitude; //Stores current altitude in mm
     SensingSystem* BS_components;
 
     uint16_t refresh_BARO;
