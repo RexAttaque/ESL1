@@ -56,8 +56,18 @@ bool GPS_UBX9::getStatus()
   return fixType<UBX9_const::minFixStatus && fixType>UBX9_const::maxFixStatus;
 }
 
-long* GPS_UBX9::getMeas()
+double* GPS_UBX9::getMeas()
 {
-  freeMeasMemory();
-  return GPS.getPOSECEF();
+  reallocateMemory();
+
+  long* data = GPS.getPOSECEF();
+  
+  for(uint8_t i=0; i<_varAmount; i++)
+  {
+    meas[i] = (double) data[i]*UBX9_const::measFactors[i]; //conversion to the proper unit using factors
+  }
+
+  delete[] data;
+
+  return meas;
 }

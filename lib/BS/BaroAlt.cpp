@@ -66,8 +66,6 @@ double BS_obj::getAltitude()
 
         //Current Temperature Based Altitude Step Integral Computation (CTBASIC)
         //Should work well for small steps in altitude (10m ish)
-
-        BAROpdata[2] += 273.15; //Conversion to K
         
         //Compute new altitude based on the old (P,T) and the new Pressure and Temperature stored in BAROpdata
         altitude = altitude - BS_const::r*BAROpdata[2]*log(BAROpdata[1]/P)/BS_const::g;

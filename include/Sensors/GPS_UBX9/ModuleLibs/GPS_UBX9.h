@@ -12,6 +12,7 @@ GPS_UBX9* GPS_Avio_array;
 namespace UBX9_const {
   const uint16_t Hz = 25; //default GPS refresh rate (Hz)
   const uint8_t varAmount = 5; //time,x,y,z,CEP (ms ; cm)
+  const double measFactors[varAmount] = {1.0f,100.0f,100.0f,100.0f,100.0f}; //conversion factors for each measurand
 
   const uint8_t minFixStatus = 3; //When using GPS.getNavFixStatus(), what is the minimum fix state that is acceptable
   const uint8_t maxFixStatus = 3; //When using GPS.getNavFixStatus(), what is the maximum fix state that is acceptable
@@ -20,7 +21,7 @@ namespace UBX9_const {
   const unsigned long calibrationSettleTime = 300000; //millis of delay after calibration complete to allow settling
 };
 
-class GPS_UBX9 : public Base_Sensor<long> {
+class GPS_UBX9 : public Base_Sensor<double> {
   private :
     ublox_gen9 GPS;
     uint8_t fixType;
@@ -39,5 +40,5 @@ class GPS_UBX9 : public Base_Sensor<long> {
 
     bool getStatus();
 
-    long* getMeas();
+    double* getMeas();
 };

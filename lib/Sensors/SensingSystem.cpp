@@ -1,7 +1,7 @@
 #include <Sensors/SensingSystem.h>
 
 SensingSystem::SensingSystem()
-:IMUs_Avio(Sensors<IMU_BNO055,double>(IMU_Avio_array,qty_IMU_Avio)),GPSs_Avio(Sensors<GPS_UBX9,long>(GPS_Avio_array,qty_GPS_Avio)),BAROs_Avio(Sensors<BARO_BMP280,float>(BARO_Avio_array,qty_BARO_Avio))
+:IMUs_Avio(Sensors<IMU_BNO055,double>(IMU_Avio_array,qty_IMU_Avio)),GPSs_Avio(Sensors<GPS_UBX9,double>(GPS_Avio_array,qty_GPS_Avio)),BAROs_Avio(Sensors<BARO_BMP280,float>(BARO_Avio_array,qty_BARO_Avio))
 {}
 
 bool SensingSystem::initAll()
@@ -179,7 +179,7 @@ uint8_t SensingSystem::getIMUs_Avio_rl_amount()
 }
 
 
-Sensors<GPS_UBX9, long> *SensingSystem::getGPSs_Avio()
+Sensors<GPS_UBX9, double> *SensingSystem::getGPSs_Avio()
 {
   return &GPSs_Avio;
 }
@@ -211,7 +211,7 @@ uint16_t SensingSystem::getIMUs_CG_Hz()
   return IMUs_Avio.getRefreshRate();
 }
 
-long* SensingSystem::getGPSs_meas()
+double* SensingSystem::getGPSs_meas()
 {
   return GPSs_Avio.poll_process_ave_data();
 }
