@@ -4,11 +4,13 @@
 #include <EGI/KalmanPos.h>
 #include <BS/BaroAlt.h>
 #include <GSM/Sim800L.h>
+#include <TELEM/ModuleLibs/SX1267MB1MAS.h>
 
 SensingSystem SensorsSystem = SensingSystem(); //Sensing system which ensures combination and pre-processing of all sensor data, see header file for sensor declaration, type, combination technique etc.
 EGI_obj EGI = EGI_obj(&SensorsSystem, true); //EGI - Embedded GPS/IMU, kalman filter algorithm for data fusion between IMU and GPS etc.
 BS_obj BS = BS_obj(&SensorsSystem); //BS - Barometric System, altitude calculation from barometric (P and T) data. Used as a backup only to the EGI provided altitude
 GSM_obj GSM = GSM_obj();
+TELEM_obj TELEM = TELEM_obj();
 
 bool parachutesDeployed = false;
 bool useTime; //indicates if time should be used for parachute deployement
@@ -38,7 +40,7 @@ void setup() {
   //GSM module sent to sleep
 
   //Telemetry Check/Init
-
+  bool TELEM_init = TELEM.init();
 
   //physical hardware check
   //physical hardware init
