@@ -151,6 +151,21 @@ NavSolution EGI_obj::getNavSolution()
     IMU_failure = false;
 
     //IMU measurement base change (based on orientation, from rocket to ENUmag)
+    double phi = IMUpdata[3];
+    double theta = IMUpdata[4];
+    double psy = IMUpdata[5];
+
+    RKT(1,1) = cos(theta)*cos(psy);
+    RKT(1,2) = cos(theta)*sin(psy);
+    RKT(1,3) = -sin(theta);
+
+    RKT(2,1) = sin(phi)*sin(theta)*cos(psy)-cos(phi)*sin(psy);
+    RKT(2,2) = sin(phi)*sin(theta)*sin(psy)+cos(phi)*cos(psy);
+    RKT(2,3) = sin(phi)*cos(theta);
+
+    RKT(3,1) = cos(phi)*sin(theta)*cos(psy)+sin(phi)*sin(psy);
+    RKT(3,2) = cos(phi)*sin(theta)*sin(psy)-sin(phi)*cos(psy);
+    RKT(3,3) = cos(phi)*cos(theta);
 
     //IMU measurement base change (based on the previous position, base change from ENUmag to ENUtrue then ECEF) and transfer to measurement vector
     for(int i=0; i<EGI_const::pos_var; i++)
@@ -158,8 +173,9 @@ NavSolution EGI_obj::getNavSolution()
       ENU(i,EGI_const::pos_var) = x(i,1)/EGI_const::WGS84(i,1);
     }
   
-    double phi = acos(ENU(3,EGI_const::pos_var));
-    double theta = atan(ENU(2,EGI_const::pos_var)/ENU(1,EGI_const::pos_var));
+    phi = acos(ENU(3,EGI_const::pos_var));
+    theta = atan(ENU(2,EGI_const::pos_var)/ENU(1,EGI_const::pos_var));
+    psy = 0;
   
     ENU(1,1) = -sin(theta);
     ENU(2,1) = cos(theta);
@@ -169,7 +185,7 @@ NavSolution EGI_obj::getNavSolution()
     ENU(2,2) = -cos(phi)*sin(theta);
     ENU(3,2) = sin(phi);
 
-    tempPosPos = ENU*ENUmag;
+    tempPosPos = ENU*ENUmag*RKT;
     
     //store acceleration data into the measurement vector y
     for(int i=EGI_const::pos_var; i<EGI_const::meas_var-EGI_const::pos_var;i++)

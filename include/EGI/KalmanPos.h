@@ -59,6 +59,8 @@ class EGI_obj {
     bool IMU_failure; //failure indicators
     bool GPS_failure;
 
+    BLA::Matrix<EGI_const::pos_var,EGI_const::pos_var> RKT;
+
     //t_x, t_y, t_z -- east (mag)
     //t'_x, t'_y, t'_z -- north (mag)
     //n_x, n_y, n_z -- up/normal
