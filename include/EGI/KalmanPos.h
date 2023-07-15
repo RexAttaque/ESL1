@@ -24,7 +24,7 @@ namespace EGI_const {
   const BLA::Matrix<pos_var,1> WGS84 = {6378137,6378137,6356752};
 
   //magnetic deviation (+ is east, - is west)
-  const float mag_dev = -1.24*PI/180; //for some random place in Portugal, will need to be changed
+  const float mag_dev = -1.24*PI/180; //for some random place in Portugal, will need to be changed //REVIEW
   //const float mag_incl = 52.5167*PI/180; //is probably compensated by the BNO055 already, otherwise needs to be included in the ENUmag matrix
 };
 struct NavSolution
@@ -149,7 +149,7 @@ class EGI_obj {
 
     //function to acquire the initial position of the rocket
     //returns true if succesful, false otherwise
-    bool initialPos();
+    bool initialState();
   
     //computes the F matrix (A matrix of the SS representation of the system) which depends on the time step in seconds (this is tied to the system's model)
     //stepChange, bool : indicates wether this function should revert to the standard F matrix (standard time step was respected) or to recomputed F (with new time step)

@@ -25,26 +25,31 @@ EGI_obj::EGI_obj(SensingSystem* SensorSys, bool VarUpd) : EGI_components(SensorS
 //returns the time that the loop() function running the kalman filter must not exceed if initialized succesfully, otherwise 0
 unsigned long EGI_obj::initKalman()
 {
-  double* posECEF_init = EGI_components->getGPSs_meas();
-
   //Take initial measurements from the GPS and IMU to establish R0 (initial variances)
-  //  R = {1,0,0,0,0,0,
-  //       0,1,0,0,0,0,
-  //       0,0,1,0,0,0,
-  //       0,0,0,1,0,0,
-  //       0,0,0,0,1,0,
-  //       0,0,0,0,0,1};
+  
+  //Placeholder
+  R = {pow(5,2),0,0,0,0,0,
+      0,pow(5,2),0,0,0,0,
+      0,0,pow(5,2),0,0,0,
+      0,0,0,pow(3*pow(10,-2),2),0,0,
+      0,0,0,0,pow(3*pow(10,-2),2),0,
+      0,0,0,0,0,pow(3*pow(10,-2),2)};
         
+  
   //Establish Q0
-  //  Q = {1,0,0,0,0,0,0,0,0,
-  //       0,1,0,0,0,0,0,0,0,
-  //       0,0,1,0,0,0,0,0,0,
-  //       0,0,0,1,0,0,0,0,0,
-  //       0,0,0,0,1,0,0,0,0,
-  //       0,0,0,0,0,1,0,0,0,
-  //       0,0,0,0,0,0,1,0,0,
-  //       0,0,0,0,0,0,0,1,0,
-  //       0,0,0,0,0,0,0,0,1};
+  
+  //Placeholder
+  Q = {1,0,0,pow(10,-3),0,0,pow(10,-6),0,0,
+      0,1,0,0,pow(10,-3),0,0,pow(10,-6),0,
+      0,0,1,0,0,pow(10,-3),0,0,pow(10,-6),
+      0,0,0,1,0,0,pow(10,-3),0,0,
+      0,0,0,0,1,0,0,pow(10,-3),0,
+      0,0,0,0,0,1,0,0,pow(10,-3),
+      0,0,0,0,0,0,1,0,0,
+      0,0,0,0,0,0,0,1,0,
+      0,0,0,0,0,0,0,0,1};
+  Q *= pow(10,-3);
+
 
   //Based on the confidence of the initial state, initialize P. 
   //Here we are certain for position, speed and acceleration 
@@ -61,10 +66,7 @@ unsigned long EGI_obj::initKalman()
   P *= pow(10,-6);
 
 
-
-  delete[] posECEF_init;
-
-  if(true)
+  if(initialState())
   {
     return this->time_IMU;
   }
@@ -74,12 +76,24 @@ unsigned long EGI_obj::initKalman()
   }
 }
 
-bool EGI_obj::initialPos()
+bool EGI_obj::initialState()
 {
-  //From these measurements (particularily GPS), initialize x (particularily position, the rest should be 0)
+  bool success = false;
+
+  //From measurements (particularily GPS), initialize state x (particularily position, the rest should be 0)
   //  x = {x0,y0,z0,vx0,vy0,vz0,ax0,ay0,az0};
 
-  //KalmanOutput init
+  double* posECEF_init = EGI_components->getGPSs_meas();
+
+  if(posECEF_init != nullptr)  
+  {
+    x = {posECEF_init[1], posECEF_init[2], posECEF_init[3], 0, 0, 0, 0, 0, 0};
+    success = true;
+  }
+
+  delete[] posECEF_init;
+
+  return success;
 }
 
 //computes the F matrix (A matrix of the SS representation of the system) which depends on the time step in seconds (this is tied to the system's model)
@@ -136,6 +150,8 @@ NavSolution EGI_obj::getNavSolution()
   {
     IMU_failure = false;
 
+    //IMU measurement base change (based on orientation, from rocket to ENUmag)
+
     //IMU measurement base change (based on the previous position, base change from ENUmag to ENUtrue then ECEF) and transfer to measurement vector
     for(int i=0; i<EGI_const::pos_var; i++)
     {
@@ -188,7 +204,7 @@ NavSolution EGI_obj::getNavSolution()
       //into the measurement vector for position
       for(uint8_t i=0; i<EGI_const::pos_var;i++)
       {
-        y(i,1) = posECEF[i+offset_pos_GPS]; //conversion to meters
+        y(i,1) = posECEF[i+offset_pos_GPS];
       }
 
       GPS_failure = false;        
