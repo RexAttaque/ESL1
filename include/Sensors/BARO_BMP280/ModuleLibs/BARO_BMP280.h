@@ -5,8 +5,8 @@
 #include <Sensors/Base_Sensor.h>
 #include <Sensors/BARO_BMP280/InterfaceLibs/Adafruit_BMP280.h>
 
-BARO_BMP280 BARO1_Avio = BARO_BMP280(BMP280_ADDRESS);
-BARO_BMP280 BARO2_Avio = BARO_BMP280(BMP280_ADDRESS_ALT);
+BARO_BMP280 BARO1_Avio = BARO_BMP280(BMP280_ADDRESS, &Wire);
+BARO_BMP280 BARO2_Avio = BARO_BMP280(BMP280_ADDRESS_ALT, &Wire1);
 const uint8_t qty_BARO_Avio = 2;
 BARO_BMP280* BARO_Avio_array;
 
@@ -29,7 +29,7 @@ class BARO_BMP280 : public Base_Sensor<float> {
   
   public :
     //WARNING : Make sure that the refresh rate with the given config is not lower than the bounding refresh rate
-    BARO_BMP280(uint8_t address, Adafruit_BMP280::sensor_sampling over_samp_T = Adafruit_BMP280::SAMPLING_X1, Adafruit_BMP280::sensor_sampling over_samp_P = Adafruit_BMP280::SAMPLING_X2, Adafruit_BMP280::sensor_filter filter = Adafruit_BMP280::FILTER_X2, Adafruit_BMP280::standby_duration stb_time = Adafruit_BMP280::STANDBY_MS_1, Adafruit_BMP280::sensor_mode mode = Adafruit_BMP280::MODE_FORCED);
+    BARO_BMP280(uint8_t address, TwoWire* i2c_bus = &Wire, Adafruit_BMP280::sensor_sampling over_samp_T = Adafruit_BMP280::SAMPLING_X1, Adafruit_BMP280::sensor_sampling over_samp_P = Adafruit_BMP280::SAMPLING_X2, Adafruit_BMP280::sensor_filter filter = Adafruit_BMP280::FILTER_X2, Adafruit_BMP280::standby_duration stb_time = Adafruit_BMP280::STANDBY_MS_1, Adafruit_BMP280::sensor_mode mode = Adafruit_BMP280::MODE_FORCED);
     
     bool init();
     bool calibrate();

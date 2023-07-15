@@ -8,8 +8,8 @@
 #include <Sensors/IMU_BNO055/InterfaceLib/Adafruit_BNO055.h>
 #include <Sensors/IMU_BNO055/InterfaceLib/utility/imumaths.h>
 
-IMU_BNO055 IMU1_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_A);
-IMU_BNO055 IMU2_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_B);
+IMU_BNO055 IMU1_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_A, &Wire);
+IMU_BNO055 IMU2_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_B, &Wire1);
 const uint8_t qty_IMU_Avio = 2;
 IMU_BNO055* IMU_Avio_array;
 
@@ -30,7 +30,7 @@ class IMU_BNO055 : public Base_Sensor<double> {
     Adafruit_BNO055::adafruit_bno055_axis_remap_sign_t _remapsign;
   
   public :
-    IMU_BNO055(uint8_t type, uint8_t address, adafruit_bno055_opmode_t mode = OPERATION_MODE_NDOF, Adafruit_BNO055::adafruit_bno055_axis_remap_config_t remapcode = Adafruit_BNO055::REMAP_CONFIG_P1, Adafruit_BNO055::adafruit_bno055_axis_remap_sign_t remapsign = Adafruit_BNO055::REMAP_SIGN_P1);
+    IMU_BNO055(uint8_t type, uint8_t address, TwoWire* i2c_bus = &Wire, adafruit_bno055_opmode_t mode = OPERATION_MODE_NDOF, Adafruit_BNO055::adafruit_bno055_axis_remap_config_t remapcode = Adafruit_BNO055::REMAP_CONFIG_P1, Adafruit_BNO055::adafruit_bno055_axis_remap_sign_t remapsign = Adafruit_BNO055::REMAP_SIGN_P1);
 
     bool init();
     bool subCalibrate(uint8_t expectedResult);
