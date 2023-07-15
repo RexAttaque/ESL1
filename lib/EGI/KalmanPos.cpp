@@ -1,7 +1,7 @@
 #include <EGI/KalmanPos.h>
 
 //VarUpd, bool : specifies wether or not the covariance matrices will be updated during flight or not (experimental)
-EGI_obj::EGI_obj(SensingSystem* SensorSys, bool VarUpd) : EGI_components(SensorSys),allowVarUpd(VarUpd)
+EGI_obj::EGI_obj(SensingSystem* SensorSys) : EGI_components(SensorSys)
 {
   refresh_IMU = EGI_components->getIMUs_CG_Hz();
   refresh_GPS = EGI_components->getGPSs_Hz();
@@ -235,7 +235,7 @@ NavSolution EGI_obj::getNavSolution()
       //Update
       x_est = x + K*(y-H*x);
 
-      if(allowVarUpd)
+      if(EGI_const::allowVarUpd)
       {
         for(uint8_t i=0;i<EGI_const::pos_var;i++)
         {

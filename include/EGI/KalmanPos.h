@@ -17,7 +17,7 @@ namespace EGI_const {
 
   //Kalman filter Q and R matrices update
   const uint8_t noVarUpd_Steps = 10; //Matrices Q and R are update every "varianceUpd" time steps after the estimation step -- experimental
-  bool allowVarUpd = true;
+  const bool allowVarUpd = true;
 
   //Base change necessities
   //a, b, c m, earth's major, median and minor axis WGS84
@@ -47,9 +47,6 @@ class EGI_obj {
     unsigned long timeLeft; //microseconds, time left till next IMU refresh
     uint8_t refresh_GPS; //Hz, GPS refresh rate
     uint8_t pred_Steps; //Number of time steps (loops) between each estimation of the kalman filter, otherwise simply predict (dead reckoning)
-
-    //Kalman filter Q and R matrices update
-    bool allowVarUpd = true;
 
     double std_delta_t; //seconds, time step used by the prediction step of the kalman filter by default
     double delta_t; //seconds, current time step
@@ -143,7 +140,7 @@ class EGI_obj {
     //IMU_refreshRate, Hz : refresh rate of the IMU that will be used
     //GPS_refreshRate, Hz : refresh rate of the GPS that will be used
     //VarUpd, bool : specifies wether or not the covariance matrices will be updated during flight or not (experimental)
-    EGI_obj(SensingSystem* SensorSys, bool VarUpd);
+    EGI_obj(SensingSystem* SensorSys);
     
     //function to initialize the kalman filter (covariance matrices). Must be run after all other sensors are initialized and ready since this uses them.
     //returns the time that the loop() function running the kalman filter must not exceed if initialized succesfully, otherwise 0
