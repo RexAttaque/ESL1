@@ -5,8 +5,8 @@
 #include <Sensors/Base_Sensor.h>
 #include <Sensors/BARO_BMP280/InterfaceLibs/Adafruit_BMP280.h>
 
-BARO_BMP280 BARO1_Avio = BARO_BMP280(BMP280_ADDRESS, &Wire1);
-BARO_BMP280 BARO2_Avio = BARO_BMP280(BMP280_ADDRESS_ALT, &Wire);
+BARO_BMP280 BARO1_Avio = BARO_BMP280(BMP280_ADDRESS, &Wire);
+BARO_BMP280 BARO2_Avio = BARO_BMP280(BMP280_ADDRESS_ALT, &Wire1);
 const uint8_t qty_BARO_Avio = 2;
 BARO_BMP280* BARO_Avio_array;
 

@@ -5,12 +5,14 @@
 #include <BS/BaroAlt.h>
 #include <GSM/Sim800L.h>
 #include <TELEM/ModuleLibs/SX1267MB1MAS.h>
+#include <SD/SolidDisk.h>
 
 SensingSystem SensorsSystem = SensingSystem(); //Sensing system which ensures combination and pre-processing of all sensor data, see header file for sensor declaration, type, combination technique etc.
-EGI_obj EGI = EGI_obj(&SensorsSystem, true); //EGI - Embedded GPS/IMU, kalman filter algorithm for data fusion between IMU and GPS etc.
+EGI_obj EGI = EGI_obj(&SensorsSystem); //EGI - Embedded GPS/IMU, kalman filter algorithm for data fusion between IMU and GPS etc.
 BS_obj BS = BS_obj(&SensorsSystem); //BS - Barometric System, altitude calculation from barometric (P and T) data. Used as a backup only to the EGI provided altitude
-GSM_obj GSM = GSM_obj();
+GSM_obj GSM = GSM_obj(Serial1);
 TELEM_obj TELEM = TELEM_obj();
+SD_obj SD;
 
 bool parachutesDeployed = false;
 bool useTime; //indicates if time should be used for parachute deployement
@@ -41,24 +43,26 @@ void setup() {
 
   //Telemetry Check/Init
   bool TELEM_init = TELEM.init();
+  //Telemetry sent to sleep
 
-  //physical hardware check
-  //physical hardware init
+  //SD Check/Init
+  bool SD_init = SD.init();
+
+  //physical hardware Check/Init (parachutes etc.)
   
-
-  //before calibration and remaining inits, wake sensors
+  //Before calibration and remaining inits, wake sensors
   SensorsSystem.wakeAll();
 
-  //calibrate Sensors
+  //Calibrate Sensors
   bool Sensor_calibration = SensorsSystem.calibrateAll();
 
-  loopTimeMax = EGI.initKalman(); //Initialize EGI (get initial measurements, variance, covariances etc.)
+  loopTimeMax = EGI.initKalman(); //Initialize EGI (get initial measurements, variance, covariances etc.), sends back the max time between two kalman runs
   BaroLoopTimeMax = BS.initBaroAlt(); //Initialize Barometric System (recover initial altitude, pressure and temperature to initialize atmo model)
 
   //put sensors back to sleep
   SensorsSystem.sleepAll();
 
-  if(Sensor_calibration && Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0) //Check Checks, Init and Check calibration
+  if(Sensor_calibration && Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0 && TELEM_init && SD_init) //Check Checks, Init and Check calibration
   {
     //Wait for wake call...
     if(debug::info()) debug::Serial.println("Waiting for Main wake call...");
@@ -83,7 +87,7 @@ void setup() {
     if(debug::info()) 
     {
       debug::Serial.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      debug::Serial.println("MAIN INIT FAIL, CHECK DEBUG, EXITING");
+      debug::Serial.println("MAIN INIT FAIL, CHECK DEBUG & LOG, EXITING");
       debug::Serial.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
     delay(10000);
@@ -114,7 +118,7 @@ void loop() {
 
   //relay information via telemetry
 
-  //relay informatio via GSM near the end of flight
+  //relay information via GSM near the end of flight
   if(parachutesDeployed && GSM.check_REG_GSM() && GSM.check_SIG_GSM(GSM_const::signalQuality_floor))
   {
     bool NextStage = false;
