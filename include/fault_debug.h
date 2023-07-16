@@ -36,7 +36,7 @@ namespace debug {
 }
 
 namespace faultCodes {
-    typedef enum faultCodes {
+    enum faultCodes {
         pos = 0,
         altitude = -9999, //if this altitude is thrown out, whatever altitude measurement method failed
     };
