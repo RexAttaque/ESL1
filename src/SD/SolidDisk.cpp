@@ -55,12 +55,12 @@ bool SD_obj::init(uint8_t cspin)
 
     if(success)
     {
-        if(debug::info()) debug::Serial.println("SD Init SUCCESS !");
+        if(debug::info()) debug::Serial_USB.println("SD Init SUCCESS !");
         return true;
     }
     else
     {
-        if(debug::info()) debug::Serial.println("SD Init Failed !");
+        if(debug::info()) debug::Serial_USB.println("SD Init Failed !");
         return false;
     }
 }

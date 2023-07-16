@@ -10,7 +10,7 @@ bool IMU_BNO055::init()
 
   if(status)
   {
-    if(debug::info()) debug::Serial.println("      --->Standby for BIT...");
+    if(debug::info()) debug::Serial_USB.println("      --->Standby for BIT...");
     delay(10); //wait a little just after startup for BIT to perform itself
 
     uint8_t sys_status = 0;
@@ -20,23 +20,23 @@ bool IMU_BNO055::init()
     IMU.getSystemStatus(&sys_status, &self_test, &error);
     if(debug::info()) 
     {
-      debug::Serial.print("        ---->System Status : ");
-      debug::Serial.println(sys_status);
-      debug::Serial.print("        ---->Self Test Results : ");
-      debug::Serial.println(self_test);
-      debug::Serial.print("        ---->Error codes : ");
-      debug::Serial.println(self_test);
+      debug::Serial_USB.print("        ---->System Status : ");
+      debug::Serial_USB.println(sys_status);
+      debug::Serial_USB.print("        ---->Self Test Results : ");
+      debug::Serial_USB.println(self_test);
+      debug::Serial_USB.print("        ---->Error codes : ");
+      debug::Serial_USB.println(self_test);
     }
 
     if(sys_status == 5 && self_test == 15 && error == 0)
     {
-      if(debug::info()) debug::Serial.println("      --->BNO055 Axis Remap...");
+      if(debug::info()) debug::Serial_USB.println("      --->BNO055 Axis Remap...");
       IMU.setAxisRemap(_remapcode);
       IMU.setAxisSign(_remapsign);
 
       if(goIdle())
       {
-        if(debug::info()) debug::Serial.println("      --->BNO055 Suspended until calibration");
+        if(debug::info()) debug::Serial_USB.println("      --->BNO055 Suspended until calibration");
       }
 
       return true;

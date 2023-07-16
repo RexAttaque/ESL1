@@ -44,11 +44,11 @@ bool Sensors<S, T>::initAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    if(debug::info()) debug::Serial.println("\n    -->Sensor" + i);
+    if(debug::info()) debug::Serial_USB.println("\n    -->Sensor" + i);
 
     if(_sensors[i].init()) 
     {
-      if(debug::info()) debug::Serial.println("    -->INIT PASS\n");
+      if(debug::info()) debug::Serial_USB.println("    -->INIT PASS\n");
     
       result = result && true;
     }
@@ -68,11 +68,11 @@ bool Sensors<S, T>::wakeAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    if(debug::info()) debug::Serial.println("\n    -->Sensor" + i);
+    if(debug::info()) debug::Serial_USB.println("\n    -->Sensor" + i);
 
     if(_sensors[i].goLive()) 
     {
-      if(debug::info()) debug::Serial.println("    -->IS LIVE\n");
+      if(debug::info()) debug::Serial_USB.println("    -->IS LIVE\n");
     
       result = result && true;
     }
@@ -92,11 +92,11 @@ bool Sensors<S, T>::sleepAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    if(debug::info()) debug::Serial.println("\n    -->Sensor" + i);
+    if(debug::info()) debug::Serial_USB.println("\n    -->Sensor" + i);
 
     if(_sensors[i].goIdle()) 
     {
-      if(debug::info()) debug::Serial.println("    -->IS IDLE\n");
+      if(debug::info()) debug::Serial_USB.println("    -->IS IDLE\n");
     
       result = result && true;
     }
@@ -116,11 +116,11 @@ bool Sensors<S, T>::calibrateAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    if(debug::info()) debug::Serial.println("\n    -->Sensor" + i);
+    if(debug::info()) debug::Serial_USB.println("\n    -->Sensor" + i);
 
     if(_sensors[i].calibrate()) 
     {
-      if(debug::info()) debug::Serial.println("    -->IS CALIBRATED\n");
+      if(debug::info()) debug::Serial_USB.println("    -->IS CALIBRATED\n");
     
       result = result && true;
     }

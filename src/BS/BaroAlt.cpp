@@ -17,9 +17,9 @@ unsigned long BS_obj::initBaroAlt()
     //get P_init, T_init and alt_init from sensors
     if(debug::info()) 
     {
-        debug::Serial.println("!! Barometric System Init Start !!\n\n");
-        debug::Serial.println(" ->Instructions :");
-        debug::Serial.println("     -->Place the Avionics bay in the shade outside (try to ventilate the BARO sensors), wait " + String(BS_const::delayBeforeInitMeas/60000) + "min...");
+        debug::Serial_USB.println("!! Barometric System Init Start !!\n\n");
+        debug::Serial_USB.println(" ->Instructions :");
+        debug::Serial_USB.println("     -->Place the Avionics bay in the shade outside (try to ventilate the BARO sensors), wait " + String(BS_const::delayBeforeInitMeas/60000) + "min...");
     }
     delay(BS_const::delayBeforeInitMeas);
 
@@ -42,10 +42,10 @@ unsigned long BS_obj::initBaroAlt()
 
             if(debug::info()) 
             {
-                debug::Serial.println("   ->Recovered Initial :");
-                debug::Serial.println("     -->Altitude : " + String(altitude) + "m");
-                debug::Serial.println("     -->Pressure : " + String(P) + "Pa");
-                debug::Serial.println("     -->Temperature : " + String(T) + "K");
+                debug::Serial_USB.println("   ->Recovered Initial :");
+                debug::Serial_USB.println("     -->Altitude : " + String(altitude) + "m");
+                debug::Serial_USB.println("     -->Pressure : " + String(P) + "Pa");
+                debug::Serial_USB.println("     -->Temperature : " + String(T) + "K");
             }
 
             result = (unsigned long) pow(10,6)*time_BARO;
@@ -54,7 +54,7 @@ unsigned long BS_obj::initBaroAlt()
         delete[] GPS_LLH;
     }
     
-    if(debug::info()) debug::Serial.println("\n\n!! Barometric System Init End (result = " + String(result) + ") !!");
+    if(debug::info()) debug::Serial_USB.println("\n\n!! Barometric System Init End (result = " + String(result) + ") !!");
     return 0;
 }
 

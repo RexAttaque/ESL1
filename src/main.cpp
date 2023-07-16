@@ -33,7 +33,7 @@ bool timeStepChange = false; //indicates if the time quota was breached
 
 void setup() {
   
-  if(debug::info()) debug::Serial.begin(115200); //initialize serial monitor for debugging/information
+  if(debug::info()) debug::Serial_USB.begin(115200); //initialize serial monitor for debugging/information
 
   //Sensor Check/Init
   bool Sensor_init = SensorsSystem.initAll();
@@ -67,7 +67,7 @@ void setup() {
   if(Sensor_calibration && Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0 && TELEM_init && SD_init) //Check Checks, Init and Check calibration
   {
     //Wait for wake call...
-    if(debug::info()) debug::Serial.println("Waiting for Main wake call...");
+    if(debug::info()) debug::Serial_USB.println("Waiting for Main wake call...");
     //SensorsSystem.wakeAll();
 
     //May need to run calibrations just before going on the pylon ?
@@ -88,9 +88,9 @@ void setup() {
   {
     if(debug::info()) 
     {
-      debug::Serial.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      debug::Serial.println("MAIN INIT FAIL, CHECK DEBUG & LOG, EXITING");
-      debug::Serial.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      debug::Serial_USB.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      debug::Serial_USB.println("MAIN INIT FAIL, CHECK DEBUG & LOG, EXITING");
+      debug::Serial_USB.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
     delay(10000);
     exit(0);

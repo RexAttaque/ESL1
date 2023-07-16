@@ -7,7 +7,7 @@ namespace debug {
     bool _trace = false;
     bool _info = false;
 
-    usb_serial_class Serial = Serial;
+    usb_serial_class Serial_USB = Serial;
     //HardwareSerial Serial = SerialX; //if a hardware serial wants to be used for debug, to send to telem or something
 
     bool full()
@@ -27,11 +27,11 @@ namespace debug {
 
     void disable()
     {
-        //if(debug::info()) debug::Serial.println("Good night ESO, see you after the flight... TM"); //To re-enable last minute
+        //if(debug::info()) debug::Serial_USB.println("Good night ESO, see you after the flight... TM"); //To re-enable last minute
         _full = false;
         _trace = false;
         _info = false;
-        debug::Serial.end();
+        debug::Serial_USB.end();
     }
 }
 
