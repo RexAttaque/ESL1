@@ -23,7 +23,7 @@ template <class S, class T> class Sensors {
   public:
 
     //s is an array of pointers of all sensors of type S (of which there are thAmount)
-    Sensors(S* s, uint8_t th_amount) : _sensors(s), _th_amount(th_amount);
+    Sensors(S* s, uint8_t th_amount);
 
     // Sensors<S,T> &operator=(Sensors<S,T> Sensors_a, Sensors<S,T> Sensors_b);
 
