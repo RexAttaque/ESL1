@@ -7,12 +7,14 @@
 #include <TELEM/ModuleLibs/SX1267MB1MAS.h>
 #include <SD/SolidDisk.h>
 
+using namespace std;
+
 SensingSystem SensorsSystem = SensingSystem(); //Sensing system which ensures combination and pre-processing of all sensor data, see header file for sensor declaration, type, combination technique etc.
 EGI_obj EGI = EGI_obj(&SensorsSystem); //EGI - Embedded GPS/IMU, kalman filter algorithm for data fusion between IMU and GPS etc.
 BS_obj BS = BS_obj(&SensorsSystem); //BS - Barometric System, altitude calculation from barometric (P and T) data. Used as a backup only to the EGI provided altitude
 GSM_obj GSM = GSM_obj(Serial1);
 TELEM_obj TELEM = TELEM_obj();
-SD_obj SD;
+SD_obj SolidDisk;
 
 bool parachutesDeployed = false;
 bool useTime; //indicates if time should be used for parachute deployement
@@ -46,7 +48,7 @@ void setup() {
   //Telemetry sent to sleep
 
   //SD Check/Init
-  bool SD_init = SD.init();
+  bool SD_init = SolidDisk.init();
 
   //physical hardware Check/Init (parachutes etc.)
   
