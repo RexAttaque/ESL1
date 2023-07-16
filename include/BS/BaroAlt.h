@@ -6,7 +6,7 @@
 
 namespace BS_const {
   const uint8_t atmo_model_slices = 7;
-  const uint8_t delayBeforeInitMeas = 300000; //in ms
+  const unsigned long delayBeforeInitMeas = 300000; //in ms
 
   const float g = 9.81; // m/s^2
   const float r = 287.03; // J/kg/K
