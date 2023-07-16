@@ -11,7 +11,7 @@ template <class S, class T>
 void Sensors<S, T>::allocateDataMemory() {
   _pdata = new (T)(_var_amount);
 
-  for(uint8_t j=0; j<_var_amount; j++)
+  for(uint8_t j=0; j<*_var_amount; j++)
   {
     _pdata[j] = 0;
   }
@@ -218,7 +218,7 @@ T* Sensors<S, T>::poll_process_ave_data(){
   if(_real_amount>0)
   {
     //processing algo (resulting in a single measurand array, here a simple average) (part2)
-    for(uint8_t j=0; j<_var_amount; j++)
+    for(uint8_t j=0; j<*_var_amount; j++)
     {
       _pdata[j] /= _real_amount;
     }

@@ -43,9 +43,9 @@ unsigned long BS_obj::initBaroAlt()
             if(debug::info()) 
             {
                 debug::Serial.println("   ->Recovered Initial :");
-                debug::Serial.println("     -->Altitude : " + String(altitude)) + "m";
-                debug::Serial.println("     -->Pressure : " + String(P)) + "Pa";
-                debug::Serial.println("     -->Temperature : " + String(T)) + "K";
+                debug::Serial.println("     -->Altitude : " + String(altitude) + "m");
+                debug::Serial.println("     -->Pressure : " + String(P) + "Pa");
+                debug::Serial.println("     -->Temperature : " + String(T) + "K");
             }
 
             result = (unsigned long) pow(10,6)*time_BARO;
