@@ -5,10 +5,6 @@
 #include <Sensors/Base_Sensor.h>
 #include <Sensors/GPS_UBX9/InterfaceLibs/ubloxGen9.h>
 
-GPS_UBX9 GPS1_Avio = GPS_UBX9(Serial3);
-const uint8_t qty_GPS_Avio = 1;
-GPS_UBX9* GPS_Avio_array;
-
 namespace UBX9_const {
   const uint16_t Hz = 25; //default GPS refresh rate (Hz)
   const uint8_t varAmount = 5; //time,x,y,z,CEP (ms ; cm)

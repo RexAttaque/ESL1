@@ -8,11 +8,6 @@
 #include <Sensors/IMU_BNO055/InterfaceLib/Adafruit_BNO055.h>
 #include <Sensors/IMU_BNO055/InterfaceLib/utility/imumaths.h>
 
-IMU_BNO055 IMU1_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_A, &Wire);
-IMU_BNO055 IMU2_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_B, &Wire1);
-const uint8_t qty_IMU_Avio = 2;
-IMU_BNO055* IMU_Avio_array;
-
 namespace BNO055_const {
   const uint16_t Hz = 100; //IMU max refresh rate
   const uint8_t varAmount = 12; //a_x,a_y,a_z,theta,phi,psy,theta_point,phi_point,psy_point,m_x,m_y,m_z (m/s^2 ; rad ; rad/s ; microT) <- ENU referential

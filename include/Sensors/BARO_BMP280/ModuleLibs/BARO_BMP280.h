@@ -5,11 +5,6 @@
 #include <Sensors/Base_Sensor.h>
 #include <Sensors/BARO_BMP280/InterfaceLibs/Adafruit_BMP280.h>
 
-BARO_BMP280 BARO1_Avio = BARO_BMP280(BMP280_ADDRESS, &Wire);
-BARO_BMP280 BARO2_Avio = BARO_BMP280(BMP280_ADDRESS_ALT, &Wire1);
-const uint8_t qty_BARO_Avio = 2;
-BARO_BMP280* BARO_Avio_array;
-
 namespace BMP280_const {
   const uint16_t default_BARO_BMP280_Hz = 115; //check paragraph 3.8.1 and 3.8.2 of the datasheet and the default constructor
   const uint8_t BARO_Avio_varAmount = 2; //P,T (Pa ; °C)
