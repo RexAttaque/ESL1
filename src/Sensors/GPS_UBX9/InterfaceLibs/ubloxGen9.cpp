@@ -159,10 +159,10 @@ uint8_t* ublox_gen9::receiveUBXframe(uint16_t extractedLength)
   long ReceivedFrameSum = 0;
   uint8_t ReceivedFrameSize = 0;
   
-  while(Serial1.available() && ReceivedFrameSum == 0 && ReceivedFrameSize != extractedLength)
+  while(GPS_Serial.available() && ReceivedFrameSum == 0 && ReceivedFrameSize != extractedLength)
   {
     if(debug::trace()) debug::Serial_USB.print("Attempted RX... ");
-    ReceivedFrameSize = Serial1.readBytes(buff, extractedLength);
+    ReceivedFrameSize = GPS_Serial.readBytes(buff, extractedLength);
 
     for(int i=0; i<ReceivedFrameSize; i++)
     {
@@ -182,10 +182,10 @@ uint8_t* ublox_gen9::receiveUBXframe(uint16_t extractedLength)
   }
 
 
-  //flush whatever is left in the Serial1 buffer to prevent interactions
-  while(Serial1.available())
+  //flush whatever is left in the GPS_Serial buffer to prevent interactions
+  while(GPS_Serial.available())
   {
-    Serial1.read();
+    GPS_Serial.read();
   }
 
   if(calculateCheckSum(buff, extractedLength, true))
@@ -271,7 +271,7 @@ bool ublox_gen9::sendUBXframe(uint8_t cmdClass, uint8_t messageID, uint16_t payl
   
   while(SentSize != frameSize)
   {
-    SentSize = Serial1.write(buff, frameSize);
+    SentSize = GPS_Serial.write(buff, frameSize);
     if(debug::full()) debug::Serial_USB.println(SentSize);
   }
 
