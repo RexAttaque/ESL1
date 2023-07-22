@@ -8,13 +8,13 @@
 #include <Sensors/BARO_BMP280/ModuleLibs/BARO_BMP280.h>
 
 namespace SS_const {
-  const String SS_debug_ID = "SS";
-  const uint8_t SS_debug_lvl = debugLevel::FULL;
+  const String debug_ID = "SS";
+  const uint8_t debug_lvl = debugLevel::FULL;
 
   const uint8_t amount_sensor_arrays = 3;
 };
 
-fault_debug debug_SS = fault_debug(SS_const::SS_debug_ID, SS_const::SS_debug_lvl); //Debug object for the MAIN module
+fault_debug debug_SS = fault_debug(SS_const::debug_ID, SS_const::debug_lvl); //Debug object for the MAIN module
 
 IMU_BNO055 IMU1_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_A, &Wire);
 IMU_BNO055 IMU2_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_B, &Wire1);
