@@ -5,9 +5,14 @@
 #include <fault_debug.h>
 
 namespace SD_const {
+    const String debug_ID = "SD";
+    const uint8_t debug_lvl = debugLevel::FULL;
+
     const String logname = "log_";
     const String logext = ".txt";
 }
+
+fault_debug debug_SD = fault_debug(SD_const::debug_ID, SD_const::debug_lvl); //Debug object for the SD module
 
 class SD_obj {
     private :
