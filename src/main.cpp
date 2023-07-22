@@ -11,14 +11,14 @@ using namespace std;
 
 namespace main_const
 {
-  const String main_debug_ID = "MAIN";
-  const uint8_t main_debug_lvl = debugLevel::FULL;
+  const String debug_ID = "MAIN";
+  const uint8_t debug_lvl = debugLevel::FULL;
 
   const unsigned long deployTime = 100*pow(10,6); //time value in microseconds that when passed and when useTime=true, will trigger a parachute deployement
   const long deployAltitude = 3000; //altitude in m at which
 };
 
-fault_debug debug_main = fault_debug(main_const::main_debug_ID, main_const::main_debug_lvl); //Debug object for the MAIN module
+fault_debug debug_main = fault_debug(main_const::debug_ID, main_const::debug_lvl); //Debug object for the MAIN module
 
 SensingSystem SensorsSystem = SensingSystem(); //Sensing system which ensures combination and pre-processing of all sensor data, see header file for sensor declaration, type, combination technique etc.
 EGI_obj EGI = EGI_obj(&SensorsSystem); //EGI - Embedded GPS/IMU, kalman filter algorithm for data fusion between IMU and GPS etc.
