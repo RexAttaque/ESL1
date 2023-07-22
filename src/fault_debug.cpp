@@ -58,7 +58,7 @@ void fault_debug::print(uint8_t level, String msg, String sub_ID)
     if(chan_rdy && l>=level && level != 0)
     {
         if(sub_ID != "") set_subID(sub_ID);
-        String compl_msg = ID + " | " + _IDsub + " | " + debugLevel::levelName[level-1] + " | " + msg;
+        String compl_msg = ID + " | " + _IDsub + " | " + debugLevel::name[level-1] + " | " + msg;
         
         if(HW_chan && Serial_HW)
         {

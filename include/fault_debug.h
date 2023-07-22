@@ -15,7 +15,7 @@ namespace debugLevel {
     const uint8_t INFO = 1; //Only information
     const uint8_t NONE = 0; //Nothing
 
-    const String levelName[FULL] = {"INFO", "TRACE", "FULL"}; //Name of the debug levels for display
+    const String name[FULL] = {"INFO", "TRACE", "FULL"}; //Name of the debug levels for display
 }
 
 
