@@ -14,7 +14,7 @@ namespace SS_const {
   const uint8_t amount_sensor_arrays = 3;
 };
 
-fault_debug debug_SS = fault_debug(SS_const::debug_ID, SS_const::debug_lvl); //Debug object for the MAIN module
+fault_debug debug_SS = fault_debug(SS_const::debug_ID, SS_const::debug_lvl); //Debug object for the SS module
 
 IMU_BNO055 IMU1_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_A, &Wire);
 IMU_BNO055 IMU2_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_B, &Wire1);
