@@ -4,12 +4,18 @@
 #include <fault_debug.h>
 
 namespace GSM_const {
+    const String debug_ID = "GSM";
+    const uint8_t debug_lvl = debugLevel::FULL;
+
     const uint8_t maxRegAttempts = 10; //maximum number of allowed registration attempts before cancelling
     const unsigned long timeBetweenRegCheck = 5000; //millis of delay between each check of registration
     const uint8_t signalQuality_floor = 10; // goes from 0 to 31 with 31 being excellent
     
     const uint8_t sendStages = 4;
 }
+
+fault_debug debug_GSM = fault_debug(GSM_const::debug_ID, GSM_const::debug_lvl); //Debug object for the GSM module
+
 class GSM_obj {
     private :
         HardwareSerial GSM_Serial; // SIM800L Serial channel, max AutoBaud 115200, max baud rate (set manually) 460800.
