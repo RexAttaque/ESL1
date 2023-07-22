@@ -3,6 +3,13 @@
 #include <Arduino.h>
 #include <fault_debug.h>
 
+namespace sens_const {
+  const String debug_ID = "SENS";
+  const uint8_t debug_lvl = debugLevel::FULL;
+};
+
+fault_debug debug_sens = fault_debug(sens_const::debug_ID, sens_const::debug_lvl); //Debug object for the MAIN module
+
 //Class containing sensors of type S, allows for the polling of all sensors (measurands of type T) and then processing of this data
 //WARNING : All sensors of the same type introduced in this class should have the same refresh rate
 template <class S, class T> class Sensors {
