@@ -7,6 +7,15 @@
 #include <Sensors/GPS_UBX9/ModuleLibs/GPS_UBX9.h>
 #include <Sensors/BARO_BMP280/ModuleLibs/BARO_BMP280.h>
 
+namespace SS_const {
+  const String SS_debug_ID = "SS";
+  const uint8_t SS_debug_lvl = debugLevel::FULL;
+
+  const uint8_t amount_sensor_arrays = 3;
+};
+
+fault_debug debug_SS = fault_debug(SS_const::SS_debug_ID, SS_const::SS_debug_lvl); //Debug object for the MAIN module
+
 IMU_BNO055 IMU1_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_A, &Wire);
 IMU_BNO055 IMU2_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_B, &Wire1);
 const uint8_t qty_IMU_Avio = 2;
@@ -21,9 +30,6 @@ GPS_UBX9 GPS1_Avio = GPS_UBX9(Serial3);
 const uint8_t qty_GPS_Avio = 1;
 GPS_UBX9* GPS_Avio_array;
 
-namespace SS_const {
-    const uint8_t amount_sensor_arrays = 3;
-};
 class SensingSystem {
   private :
     //Make sure all of the sensors within sensors objects of one "group" use the same refresh rate 

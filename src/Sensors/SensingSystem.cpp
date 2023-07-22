@@ -6,176 +6,176 @@ SensingSystem::SensingSystem()
 
 bool SensingSystem::initAll()
 {
-    if(debug::info()) debug::Serial_USB.println("!! Sensors Check/Init Start !!\n\n");
+    debug_SS.println(debugLevel::INFO, "!! Sensors Check/Init Start !!\n\n", "initAll()");
 
     bool result = true;
 
-    if(debug::info()) debug::Serial_USB.println("  ->IMUs Avio :");
+    debug_SS.println(debugLevel::INFO, "  ->IMUs Avio :");
 
     if(IMUs_Avio.initAll())
     { 
-      if(debug::info()) debug::Serial_USB.println(" ->IMUs Avio PASS\n");
+      debug_SS.println(debugLevel::INFO, " ->IMUs Avio PASS\n");
     }
     else
     {
       result = false;
     }
     
-    if(debug::info()) debug::Serial_USB.println(" ->GPSs Avio :");
+    debug_SS.println(debugLevel::INFO, " ->GPSs Avio :");
 
     if(GPSs_Avio.initAll()) 
     {
-      if(debug::info()) debug::Serial_USB.println(" ->GPSs Avio PASS\n");
+      debug_SS.println(debugLevel::INFO, " ->GPSs Avio PASS\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial_USB.println("  ->BAROs Avio :");
+    debug_SS.println(debugLevel::INFO, "  ->BAROs Avio :");
 
     if(BAROs_Avio.initAll()) 
     {
-      if(debug::info()) debug::Serial_USB.println(" ->BAROs Avio PASS\n");
+      debug_SS.println(debugLevel::INFO, " ->BAROs Avio PASS\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial_USB.println("\n\n!! Sensors Check/Init End (result = " + String(result) + ") !!");
+    debug_SS.println(debugLevel::INFO, "\n\n!! Sensors Check/Init End (result = " + String(result) + ") !!");
 
     return result;
 }
 
 bool SensingSystem::wakeAll()
 {
-    if(debug::info()) debug::Serial_USB.println("!! Sensors Wake Start !!\n\n");
+    debug_SS.println(debugLevel::INFO, "!! Sensors Wake Start !!\n\n", "wakeAll()");
 
     bool result = true;
 
-    if(debug::info()) debug::Serial_USB.println("  ->IMUs Avio :");
+    debug_SS.println(debugLevel::INFO, "  ->IMUs Avio :");
 
     if(IMUs_Avio.wakeAll())
     { 
-      if(debug::info()) debug::Serial_USB.println(" ->IMUs Avio awake\n");
+      debug_SS.println(debugLevel::INFO, " ->IMUs Avio awake\n");
     }
     else
     {
       result = false;
     }
     
-    if(debug::info()) debug::Serial_USB.println(" ->GPSs Avio :");
+    debug_SS.println(debugLevel::INFO, " ->GPSs Avio :");
 
     if(GPSs_Avio.wakeAll()) 
     {
-      if(debug::info()) debug::Serial_USB.println(" ->GPSs Avio awake\n");
+      debug_SS.println(debugLevel::INFO, " ->GPSs Avio awake\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial_USB.println(" ->BAROs Avio :");
+    debug_SS.println(debugLevel::INFO, " ->BAROs Avio :");
 
     if(BAROs_Avio.wakeAll()) 
     {
-      if(debug::info()) debug::Serial_USB.println(" ->BAROs Avio awake\n");
+      debug_SS.println(debugLevel::INFO, " ->BAROs Avio awake\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial_USB.println("\n\n!! Sensors Wake End (result = " + String(result) + ") !!");
+    debug_SS.println(debugLevel::INFO, "\n\n!! Sensors Wake End (result = " + String(result) + ") !!");
 
     return result;
 }
 
 bool SensingSystem::sleepAll()
 {
-    if(debug::info()) debug::Serial_USB.println("!! Sensors sleep !!\n\n");
+    debug_SS.println(debugLevel::INFO, "!! Sensors sleep !!\n\n", "sleepAll()");
 
     bool result = true;
 
-    if(debug::info()) debug::Serial_USB.println(" ->IMUs Avio :");
+    debug_SS.println(debugLevel::INFO, " ->IMUs Avio :");
 
     if(IMUs_Avio.sleepAll())
     { 
-      if(debug::info()) debug::Serial_USB.println(" ->IMUs Avio asleep\n");
+      debug_SS.println(debugLevel::INFO, " ->IMUs Avio asleep\n");
     }
     else
     {
       result = false;
     }
     
-    if(debug::info()) debug::Serial_USB.println(" ->GPSs Avio :");
+    debug_SS.println(debugLevel::INFO, " ->GPSs Avio :");
 
     if(GPSs_Avio.sleepAll()) 
     {
-      if(debug::info()) debug::Serial_USB.println(" ->GPSs Avio asleep\n");
+      debug_SS.println(debugLevel::INFO, " ->GPSs Avio asleep\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial_USB.println(" ->BAROs Avio :");
+    debug_SS.println(debugLevel::INFO, " ->BAROs Avio :");
 
     if(BAROs_Avio.sleepAll()) 
     {
-      if(debug::info()) debug::Serial_USB.println(" ->BAROs Avio asleep\n");
+      debug_SS.println(debugLevel::INFO, " ->BAROs Avio asleep\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial_USB.println("\n\n!! Sensors sleep End (result = " + String(result) + ") !!");
+    debug_SS.println(debugLevel::INFO, "\n\n!! Sensors sleep End (result = " + String(result) + ") !!");
 
     return result;
 }
 
 bool SensingSystem::calibrateAll()
 {
-    if(debug::info()) debug::Serial_USB.println("!! Sensors Calibration Start !!\n\n");
+    debug_SS.println(debugLevel::INFO, "!! Sensors Calibration Start !!\n\n", "calibrateAll()");
 
     bool result = true;
 
-    if(debug::info()) debug::Serial_USB.println("  ->IMUs Avio :");
+    debug_SS.println(debugLevel::INFO, "  ->IMUs Avio :");
 
     if(IMUs_Avio.calibrateAll())
     { 
-      if(debug::info()) debug::Serial_USB.println(" ->IMUs Avio Calibrated\n");
+      debug_SS.println(debugLevel::INFO, " ->IMUs Avio Calibrated\n");
     }
     else
     {
       result = false;
     }
     
-    if(debug::info()) debug::Serial_USB.println(" ->GPSs Avio :");
+    debug_SS.println(debugLevel::INFO, " ->GPSs Avio :");
 
     if(GPSs_Avio.calibrateAll()) 
     {
-      if(debug::info()) debug::Serial_USB.println(" ->GPSs Avio Calibrated\n");
+      debug_SS.println(debugLevel::INFO, " ->GPSs Avio Calibrated\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial_USB.println("  ->BAROs Avio :");
+    debug_SS.println(debugLevel::INFO, "  ->BAROs Avio :");
 
     if(BAROs_Avio.calibrateAll()) 
     {
-      if(debug::info()) debug::Serial_USB.println(" ->BAROs Avio Calibrated\n");
+      debug_SS.println(debugLevel::INFO, " ->BAROs Avio Calibrated\n");
     }
     else
     {
       result = false;
     }
 
-    if(debug::info()) debug::Serial_USB.println("\n\n!! Sensors Calibration End (result = " + String(result) + ") !!");
+    debug_SS.println(debugLevel::INFO, "\n\n!! Sensors Calibration End (result = " + String(result) + ") !!");
 
     return result;
 }
