@@ -18,8 +18,6 @@ namespace debugLevel {
     const String name[FULL] = {"INFO", "TRACE", "FULL"}; //Name of the debug levels for display
 }
 
-
-
 namespace debug {
     usb_serial_class Serial_USB = Serial; //USB serial channel ("Serial" var by def), ! type changes on different duino like boards !
     unsigned long USB_baud = 115200; //USB baud rate (115200 by def)
@@ -27,8 +25,6 @@ namespace debug {
     HardwareSerial def_Serial_Hard = Serial7; //Default serial channel for debug ("Serial7" var by def)
     unsigned long def_SerialHard_baud = 115200; //Default hardware serial channel baud for debug (115200 by def)
 }
-
-
 
 class fault_debug
 {
@@ -50,6 +46,9 @@ public:
     void end(bool closeHW_chan = false);
 
     void set_subID(String sub_ID);
-    void print(uint8_t level, String msg, String sub_ID = "");
+    void print(uint8_t level, String msg, String sub_ID = "", bool skipFormat = false);
     void println(uint8_t level, String msg, String sub_ID = "");
+    void write(uint8_t level, char c);
+
+    bool isLogged(uint8_t level);
 };

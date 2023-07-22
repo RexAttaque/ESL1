@@ -53,12 +53,17 @@ void fault_debug::set_subID(String subID)
 }
 
 // Prints a line without going to the next, msg structure is "ID | subID | debugLevelName | msg", subID is by default "" but is stored in memory if specified once, use set_subID if you only want to change the subID without printing
-void fault_debug::print(uint8_t level, String msg, String sub_ID)
+void fault_debug::print(uint8_t level, String msg, String sub_ID, bool skipFormat)
 {
     if(chan_rdy && l>=level && level != 0)
     {
         if(sub_ID != "") set_subID(sub_ID);
         String compl_msg = ID + " | " + _IDsub + " | " + debugLevel::name[level-1] + " | " + msg;
+
+        if(skipFormat)
+        {
+            compl_msg = msg;
+        }
         
         if(HW_chan && Serial_HW)
         {
@@ -75,4 +80,14 @@ void fault_debug::print(uint8_t level, String msg, String sub_ID)
 void fault_debug::println(uint8_t level, String msg, String sub_ID)
 {
     print(level, msg + "\r\n", sub_ID);
+}
+
+void fault_debug::write(uint8_t level, char c)
+{
+    print(level,c,"",true);
+}
+
+bool fault_debug::isLogged(uint8_t level)
+{
+    return l>=level;
 }
