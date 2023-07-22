@@ -9,6 +9,17 @@
 
 using namespace std;
 
+namespace main_const
+{
+  const String main_debug_ID = "MAIN";
+  const uint8_t main_debug_lvl = debugLevel::FULL;
+
+  const unsigned long deployTime = 100*pow(10,6); //time value in microseconds that when passed and when useTime=true, will trigger a parachute deployement
+  const long deployAltitude = 3000; //altitude in m at which
+};
+
+fault_debug debug_main = fault_debug(main_const::main_debug_ID, main_const::main_debug_lvl); //Debug object for the MAIN module
+
 SensingSystem SensorsSystem = SensingSystem(); //Sensing system which ensures combination and pre-processing of all sensor data, see header file for sensor declaration, type, combination technique etc.
 EGI_obj EGI = EGI_obj(&SensorsSystem); //EGI - Embedded GPS/IMU, kalman filter algorithm for data fusion between IMU and GPS etc.
 BS_obj BS = BS_obj(&SensorsSystem); //BS - Barometric System, altitude calculation from barometric (P and T) data. Used as a backup only to the EGI provided altitude
@@ -18,8 +29,6 @@ SD_obj SolidDisk;
 
 bool parachutesDeployed = false;
 bool useTime; //indicates if time should be used for parachute deployement
-unsigned long deployTime = 100*pow(10,6); //time value in microseconds that when passed and when useTime=true, will trigger a parachute deployement
-long deployAltitude = 3000; //altitude in m at which
 
 uint8_t counter = 0;
 unsigned long start_clk; //time at timer start
@@ -33,7 +42,8 @@ bool timeStepChange = false; //indicates if the time quota was breached
 
 void setup() {
   
-  if(debug::info()) debug::Serial_USB.begin(115200); //initialize serial monitor for debugging/information
+  //Debug
+  debug_main.begin(); //initialize serial monitor for debugging/information
 
   //Sensor Check/Init
   bool Sensor_init = SensorsSystem.initAll();
@@ -67,7 +77,7 @@ void setup() {
   if(Sensor_calibration && Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0 && TELEM_init && SD_init) //Check Checks, Init and Check calibration
   {
     //Wait for wake call...
-    if(debug::info()) debug::Serial_USB.println("Waiting for Main wake call...");
+    debug_main.println(debugLevel::INFO, "Waiting for Main wake call...", "Setup");
     //SensorsSystem.wakeAll();
 
     //May need to run calibrations just before going on the pylon ?
@@ -79,19 +89,15 @@ void setup() {
 
     //Wake sensors just before launch ?
     //SensorsSystem.wakeAll();
-    //Disable debugging, perhaps this should only disable external debugging ? (Add SD card logging)
-    debug::disable(); 
+
+    //Disable external debugging
+    debug_main.end(true); 
 
     //waiting for the launch trigger... (acceleration interrupt from the IMU maybe)
   }
   else
   {
-    if(debug::info()) 
-    {
-      debug::Serial_USB.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      debug::Serial_USB.println("MAIN INIT FAIL, CHECK DEBUG & LOG, EXITING");
-      debug::Serial_USB.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    }
+    debug_main.println(debugLevel::INFO,"!!!!!! CHECK DEBUG & LOG, EXITING !!!!!!", "Setup");
     delay(10000);
     exit(0);
   }
@@ -158,7 +164,7 @@ void loop() {
   }
 
   //if altimeter or time criteria is reached
-  if((final_altitude>deployAltitude && useTime == false) || (Nav_Data._time>deployTime && useTime == true))
+  if((final_altitude>main_const::deployAltitude && useTime == false) || (Nav_Data._time>main_const::deployTime && useTime == true))
   {
     GSM.goLive(); //turn on GSM module ?
     parachutesDeployed = true;
