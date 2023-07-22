@@ -7,6 +7,10 @@ namespace GSM_const {
     const String debug_ID = "GSM";
     const uint8_t debug_lvl = debugLevel::FULL;
 
+    const HardwareSerial def_Serial_GSM = Serial2;
+    const unsigned long def_GSM_baud = 115200;
+    const String def_Number = "+33640697567";
+
     const uint8_t maxRegAttempts = 10; //maximum number of allowed registration attempts before cancelling
     const unsigned long timeBetweenRegCheck = 5000; //millis of delay between each check of registration
     const uint8_t signalQuality_floor = 10; // goes from 0 to 31 with 31 being excellent
@@ -28,7 +32,7 @@ class GSM_obj {
 
     public :
 
-        GSM_obj(HardwareSerial HWSerial = Serial2, String GSM_num = "+33640697567", long Baud = 115200); 
+        GSM_obj(HardwareSerial HWSerial = GSM_const::def_Serial_GSM, String GSM_num = GSM_const::def_Number, long Baud = GSM_const::def_GSM_baud); 
 
         String getLastTX();
         
