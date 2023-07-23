@@ -12,10 +12,10 @@ namespace SD_const {
     const String logext = ".txt";
 }
 
-fault_debug debug_SD = fault_debug(SD_const::debug_ID, SD_const::debug_lvl); //Debug object for the SD module
-
 class SD_obj {
     private :
+        fault_debug debug_SD = fault_debug(SD_const::debug_ID, SD_const::debug_lvl); //Debug object for the SD module
+
         SDClass SD;
 
         unsigned long logID = 1;

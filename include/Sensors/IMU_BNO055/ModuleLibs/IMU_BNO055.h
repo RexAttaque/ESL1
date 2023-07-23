@@ -19,10 +19,10 @@ namespace BNO055_const {
   const unsigned long calibrationSettleTime = 5000; //millis of delay after calibration complete to allow settling
 };
 
-fault_debug debug_BNO055 = fault_debug(BNO055_const::debug_ID, BNO055_const::debug_lvl); //Debug object for the BNO055 module
-
 class IMU_BNO055 : public Base_Sensor<double> {
   private :
+    fault_debug debug_BNO055 = fault_debug(BNO055_const::debug_ID, BNO055_const::debug_lvl); //Debug object for the BNO055 module
+
     Adafruit_BNO055 IMU;
 
     adafruit_bno055_opmode_t _mode; 

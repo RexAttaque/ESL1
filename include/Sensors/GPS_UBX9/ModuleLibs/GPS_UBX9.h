@@ -20,10 +20,10 @@ namespace UBX9_const {
   const unsigned long calibrationSettleTime = 300000; //millis of delay after calibration complete to allow settling
 };
 
-fault_debug debug_GPSUBX9 = fault_debug(UBX9_const::debug_ID, UBX9_const::debug_lvl); //Debug object for the GPS_UBX9 module
-
 class GPS_UBX9 : public Base_Sensor<double> {
   private :
+    fault_debug debug_GPSUBX9 = fault_debug(UBX9_const::debug_ID, UBX9_const::debug_lvl); //Debug object for the GPS_UBX9 module
+
     ublox_gen9 GPS;
     uint8_t fixType;
   

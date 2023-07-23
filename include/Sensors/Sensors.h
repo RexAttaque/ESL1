@@ -8,12 +8,12 @@ namespace sens_const {
   const uint8_t debug_lvl = debugLevel::FULL;
 };
 
-fault_debug debug_sens = fault_debug(sens_const::debug_ID, sens_const::debug_lvl); //Debug object for the sens module
-
 //Class containing sensors of type S, allows for the polling of all sensors (measurands of type T) and then processing of this data
 //WARNING : All sensors of the same type introduced in this class should have the same refresh rate
 template <class S, class T> class Sensors {
   private:
+    fault_debug debug_sens = fault_debug(sens_const::debug_ID, sens_const::debug_lvl); //Debug object for the sens module
+
     S* _sensors; //array of sensors of type S
     uint8_t _th_amount; //theoretical number of sensors
     uint8_t _real_amount; //real number of sensors that are returning data

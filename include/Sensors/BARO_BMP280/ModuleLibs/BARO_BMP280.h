@@ -20,10 +20,10 @@ namespace BMP280_const {
   const float C_2_K = 273.15; //conversion from °C to K
 };
 
-fault_debug debug_BMP280 = fault_debug(BMP280_const::debug_ID, BMP280_const::debug_lvl); //Debug object for the BMP280 module
-
 class BARO_BMP280 : public Base_Sensor<float> {
   private :
+    fault_debug debug_BMP280 = fault_debug(BMP280_const::debug_ID, BMP280_const::debug_lvl); //Debug object for the BMP280 module
+
     Adafruit_BMP280 BARO;
     uint8_t _address;
 

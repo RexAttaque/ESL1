@@ -31,8 +31,6 @@ namespace EGI_const
   const float mag_dev = -1.24*PI/180; //for some random place in Portugal, will need to be changed //REVIEW
   //const float mag_incl = 52.5167*PI/180; //is probably compensated by the BNO055 already, otherwise needs to be included in the ENUmag matrix
 };
-
-fault_debug debug_EGI = fault_debug(EGI_const::debug_ID, EGI_const::debug_lvl); //Debug object for the EGI module
 struct NavSolution
 {
   unsigned long _time;
@@ -44,6 +42,7 @@ struct NavSolution
 
 class EGI_obj {
   private:
+    fault_debug debug_EGI = fault_debug(EGI_const::debug_ID, EGI_const::debug_lvl); //Debug object for the EGI module
 
     NavSolution KalmanOutput;
     SensingSystem* EGI_components;

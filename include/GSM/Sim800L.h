@@ -18,10 +18,10 @@ namespace GSM_const {
     const uint8_t sendStages = 4;
 }
 
-fault_debug debug_GSM = fault_debug(GSM_const::debug_ID, GSM_const::debug_lvl); //Debug object for the GSM module
-
 class GSM_obj {
     private :
+        fault_debug debug_GSM = fault_debug(GSM_const::debug_ID, GSM_const::debug_lvl); //Debug object for the GSM module
+
         HardwareSerial GSM_Serial; // SIM800L Serial channel, max AutoBaud 115200, max baud rate (set manually) 460800.
         long GSM_baudrate;
 

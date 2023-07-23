@@ -15,11 +15,10 @@ namespace BS_const {
   const float r = 287.03; // J/kg/K
 };
 
-fault_debug debug_BS = fault_debug(BS_const::debug_ID, BS_const::debug_lvl);
-
 class BS_obj
 {
   private:
+    fault_debug debug_BS = fault_debug(BS_const::debug_ID, BS_const::debug_lvl);
 
     double altitude; //Stores current altitude in m
     SensingSystem* BS_components;
