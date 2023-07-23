@@ -4,12 +4,12 @@
 fault_debug::fault_debug(String module_ID, uint8_t level, HardwareSerial hard_chan):ID(module_ID),l(level),Serial_HW(hard_chan)
 {}
 
-//Starts serial ports (Serial_USB or Serial_HW (at 115200 by def)). The use of the hardware channel is not mandatory but replaces the USB channel. 
+//Starts serial ports (Serial or Serial_HW (at 115200 by def)). The use of the hardware channel is not mandatory but replaces the USB channel. 
 bool fault_debug::begin(bool enableHW_chan, unsigned long baud_hard)
 {
-    if(!enableHW_chan && !debug::Serial_USB)
+    if(!enableHW_chan && !Serial)
     {
-        debug::Serial_USB.begin(debug::USB_baud);
+        Serial.begin(debug::USB_baud);
     }
 
     if(enableHW_chan && !Serial_HW)
@@ -18,7 +18,7 @@ bool fault_debug::begin(bool enableHW_chan, unsigned long baud_hard)
         Serial_HW.begin(HW_baud);
     }
 
-    if((!enableHW_chan && debug::Serial_USB) || (enableHW_chan && Serial_HW))
+    if((!enableHW_chan && Serial) || (enableHW_chan && Serial_HW))
     {
         chan_rdy = true;
         HW_chan = enableHW_chan;
@@ -69,9 +69,9 @@ void fault_debug::print(uint8_t level, String msg, String sub_ID, bool skipForma
         {
             Serial_HW.print(compl_msg);
         }
-        else if(debug::Serial_USB && !HW_chan)
+        else if(Serial && !HW_chan)
         {
-            debug::Serial_USB.print(compl_msg);
+            Serial.print(compl_msg);
         }
     }
 }

@@ -19,11 +19,9 @@ namespace debugLevel {
 }
 
 namespace debug {
-    usb_serial_class Serial_USB = Serial; //USB serial channel ("Serial" var by def), ! type changes on different duino like boards !
-    unsigned long USB_baud = 115200; //USB baud rate (115200 by def)
+    const unsigned long USB_baud = 115200; //USB baud rate (115200 by def)
 
-    HardwareSerial def_Serial_Hard = Serial7; //Default serial channel for debug ("Serial7" var by def)
-    unsigned long def_SerialHard_baud = 115200; //Default hardware serial channel baud for debug (115200 by def)
+    const unsigned long def_SerialHard_baud = 115200; //Default hardware serial channel baud for debug (115200 by def)
 }
 
 class fault_debug
@@ -39,7 +37,7 @@ private:
     String _IDsub = ""; //Set sub ID that will be printed along with the ID, can be changed
     uint8_t l; //Debug level of the debug instance (the higher the level the more is displayed, see debugLevel namespace for levels and comments)
 public:
-    fault_debug(String module_ID, uint8_t level = debugLevel::FULL, HardwareSerial hard_chan = debug::def_Serial_Hard);
+    fault_debug(String module_ID, uint8_t level = debugLevel::FULL, HardwareSerial hard_chan = Serial7);
 
     bool begin(bool enableHW_chan = false, unsigned long hard_baud = debug::def_SerialHard_baud);
     void set_HWbaud(unsigned long baud_hard);

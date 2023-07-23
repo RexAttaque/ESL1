@@ -9,7 +9,6 @@ namespace BMP280_const {
   const String debug_ID = "BMP280";
   const uint8_t debug_lvl = debugLevel::FULL;
 
-  TwoWire* def_i2c = &Wire; //default i2c bus used for the BMP280 sensors
   const Adafruit_BMP280::sensor_sampling def_oversampT = Adafruit_BMP280::SAMPLING_X1; //default oversample for temperature
   const Adafruit_BMP280::sensor_sampling def_oversampP = Adafruit_BMP280::SAMPLING_X2; //default oversample for pressure
   const Adafruit_BMP280::sensor_filter def_filt = Adafruit_BMP280::FILTER_X2; //default filter setting
@@ -36,7 +35,7 @@ class BARO_BMP280 : public Base_Sensor<float> {
   
   public :
     //WARNING : Make sure that the refresh rate with the given config is not lower than the bounding refresh rate
-    BARO_BMP280(uint8_t address, TwoWire* i2c_bus = BMP280_const::def_i2c, Adafruit_BMP280::sensor_sampling over_samp_T = BMP280_const::def_oversampT, Adafruit_BMP280::sensor_sampling over_samp_P = BMP280_const::def_oversampP, Adafruit_BMP280::sensor_filter filter = BMP280_const::def_filt, Adafruit_BMP280::standby_duration stb_time = BMP280_const::def_stb, Adafruit_BMP280::sensor_mode mode = BMP280_const::def_m);
+    BARO_BMP280(uint8_t address, TwoWire* i2c_bus = &Wire, Adafruit_BMP280::sensor_sampling over_samp_T = BMP280_const::def_oversampT, Adafruit_BMP280::sensor_sampling over_samp_P = BMP280_const::def_oversampP, Adafruit_BMP280::sensor_filter filter = BMP280_const::def_filt, Adafruit_BMP280::standby_duration stb_time = BMP280_const::def_stb, Adafruit_BMP280::sensor_mode mode = BMP280_const::def_m);
     
     bool init();
     bool calibrate();
