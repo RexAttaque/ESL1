@@ -96,11 +96,11 @@ bool Sensors<S, T>::initAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    println(debugLevel::INFO, "\n    -->Sensor" + i, "initAll()");
+    d_println(debugLevel::INFO, "\n    -->Sensor" + i, "initAll()");
 
     if(_sensors[i].init()) 
     {
-      println(debugLevel::INFO, "    -->INIT PASS\n");
+      d_println(debugLevel::INFO, "    -->INIT PASS\n");
     
       result = result && true;
     }
@@ -120,11 +120,11 @@ bool Sensors<S, T>::wakeAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    println(debugLevel::INFO, "\n    -->Sensor" + i, "wakeAll()");
+    d_println(debugLevel::INFO, "\n    -->Sensor" + i, "wakeAll()");
 
     if(_sensors[i].goLive()) 
     {
-      println(debugLevel::INFO, "    -->IS LIVE\n");
+      d_println(debugLevel::INFO, "    -->IS LIVE\n");
     
       result = result && true;
     }
@@ -144,11 +144,11 @@ bool Sensors<S, T>::sleepAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    println(debugLevel::INFO, "\n    -->Sensor" + i, "sleepAll()");
+    d_println(debugLevel::INFO, "\n    -->Sensor" + i, "sleepAll()");
 
     if(_sensors[i].goIdle()) 
     {
-      println(debugLevel::INFO, "    -->IS IDLE\n");
+      d_println(debugLevel::INFO, "    -->IS IDLE\n");
     
       result = result && true;
     }
@@ -168,11 +168,11 @@ bool Sensors<S, T>::calibrateAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    println(debugLevel::INFO, "\n    -->Sensor" + i, "calibrateAll()");
+    d_println(debugLevel::INFO, "\n    -->Sensor" + i, "calibrateAll()");
 
     if(_sensors[i].calibrate()) 
     {
-      println(debugLevel::INFO, "    -->IS CALIBRATED\n");
+      d_println(debugLevel::INFO, "    -->IS CALIBRATED\n");
     
       result = result && true;
     }

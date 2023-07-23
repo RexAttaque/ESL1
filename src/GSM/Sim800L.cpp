@@ -28,14 +28,14 @@ bool GSM_obj::check_SIM_GSM()
   if(check_AT_OK_GSM("AT+CCID") && RX.substring(ICCID_start_pos, ICCID_start_pos+2) == "89")
   {
     //code to fetch only the whole ICCID
-    if(isLogged(debugLevel::FULL)) 
+    if(d_isLogged(debugLevel::FULL)) 
     {
         int i=0;
         while(RX.charAt(ICCID_start_pos+i) != char(13)) //char(13) is the return carriage character
         {
           i++;
         }
-        println(debugLevel::FULL,"ICCID : " + RX.substring(ICCID_start_pos,ICCID_start_pos+i), "check_SIM_GSM()"); // Print ICCID
+        d_println(debugLevel::FULL,"ICCID : " + RX.substring(ICCID_start_pos,ICCID_start_pos+i), "check_SIM_GSM()"); // Print ICCID
     }
     
     return true;
@@ -84,7 +84,7 @@ bool GSM_obj::check_SIG_GSM(int qualityFloor)
 void GSM_obj::read_RX()
 {
   RX = GSM_Serial.readString();
-  println(debugLevel::FULL,RX,"read_RX()"); 
+  d_println(debugLevel::FULL,RX,"read_RX()"); 
 }
 
 // Function to check wether the last two characters of an answer are "OK" indicating the receiver answered and understood, returns the RX if OK is found, returns an empty string otherwise
@@ -94,12 +94,12 @@ bool GSM_obj::check_RX_OK()
     //check the substring before the /r/n characters for "OK"
     if(RX.substring(RX_length-4, RX_length-2) == "OK")
     {
-        println(debugLevel::FULL,"PASS\n","check_RX_OK()");
+        d_println(debugLevel::FULL,"PASS\n","check_RX_OK()");
 
         return true;
     }
 
-    println(debugLevel::FULL,"FAIL\n","check_RX_OK()");
+    d_println(debugLevel::FULL,"FAIL\n","check_RX_OK()");
     RX="";
     return false;
 }
@@ -133,20 +133,20 @@ void GSM_obj::TRX_AT_GSM(String AT_COMMAND)
 
 bool GSM_obj::init()
 {
-  println(debugLevel::INFO,"!! GSM Check/Init !!","init()");
+  d_println(debugLevel::INFO,"!! GSM Check/Init !!","init()");
 
   GSM_Serial.begin(GSM_baudrate);
 
   if(GSM_Serial)
   {
-    println(debugLevel::INFO,"\n ->Succesfully opened GSM Serial channel");
+    d_println(debugLevel::INFO,"\n ->Succesfully opened GSM Serial channel");
     
     // Send attention command to check if all fine, module should answer by OK -> true ; check that a SIM is in the module
     if(check_AT_OK_GSM("AT") && check_SIM_GSM())
     {
       uint8_t attempts = 0;
 
-      println(debugLevel::INFO," ->Module is responsive, SIM detected \r\n ->Waiting for registration on network... \r\n");
+      d_println(debugLevel::INFO," ->Module is responsive, SIM detected \r\n ->Waiting for registration on network... \r\n");
 
       // Wait for network registration
       while(attempts<GSM_const::maxRegAttempts && check_REG_GSM() == false)
@@ -157,11 +157,11 @@ bool GSM_obj::init()
 
       if(attempts<GSM_const::maxRegAttempts)
       {
-        println(debugLevel::INFO," ->Registered on network !");
+        d_println(debugLevel::INFO," ->Registered on network !");
 
         if(!check_SIG_GSM(GSM_const::signalQuality_floor)) 
         {
-          println(debugLevel::INFO,"   -->WARNING, SIGNAL QUALITY LOW");
+          d_println(debugLevel::INFO,"   -->WARNING, SIGNAL QUALITY LOW");
         }
 
         bool send = PrepSend_s1();
@@ -187,21 +187,21 @@ bool GSM_obj::init()
         {
             if(goIdle())
             {
-              println(debugLevel::INFO," ->Module idling, waiting for wake up call...");
+              d_println(debugLevel::INFO," ->Module idling, waiting for wake up call...");
             }
 
-            println(debugLevel::INFO,"\n ->GSM INIT PASS\n");
+            d_println(debugLevel::INFO,"\n ->GSM INIT PASS\n");
             return true;
         }
       }
       else
       {
-        println(debugLevel::INFO," ->Could not register on network");
+        d_println(debugLevel::INFO," ->Could not register on network");
       } 
     }
   }
 
-  println(debugLevel::INFO," ->ERROR, GSM INIT FAIL, CHECK DEBUG\n");
+  d_println(debugLevel::INFO," ->ERROR, GSM INIT FAIL, CHECK DEBUG\n");
   return false;
 }
 
@@ -236,15 +236,15 @@ bool GSM_obj::PrepSend_s3()
 
 bool GSM_obj::sendSMS()
 {
-  println(debugLevel::TRACE,"Sending text message...", "sendSMS()");
+  d_println(debugLevel::TRACE,"Sending text message...", "sendSMS()");
   
   // CTR+Z in ASCII, indicates the end of the message
   bool status = check_AT_OK_GSM(26); //check_AT_OK_GSM didn't work previously, use check_AT_OK_GSM("")
   
   while(GSM_Serial.available()) {
-    if(isLogged(debugLevel::FULL))
+    if(d_isLogged(debugLevel::FULL))
     {
-      write(debugLevel::FULL,GSM_Serial.read()); //Clear the contents of the sim800L TX buffer and display them in the console for debugging
+      d_write(debugLevel::FULL,GSM_Serial.read()); //Clear the contents of the sim800L TX buffer and display them in the console for debugging
     }
     else
     {
@@ -252,7 +252,7 @@ bool GSM_obj::sendSMS()
     }
   }
   
-  println(debugLevel::TRACE,"\nText sent");
+  d_println(debugLevel::TRACE,"\nText sent");
 
   return status;
 }

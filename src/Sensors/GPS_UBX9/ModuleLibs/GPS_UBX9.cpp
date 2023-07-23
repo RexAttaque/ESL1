@@ -18,24 +18,24 @@ bool GPS_UBX9::calibrate()
 {
   uint8_t attempts = 0;
 
-  println(debugLevel::INFO, "      --->Instructions : Place the GPS antenna near a window, preferably outside and away from cover", "calibrate()");
+  d_println(debugLevel::INFO, "      --->Instructions : Place the GPS antenna near a window, preferably outside and away from cover", "calibrate()");
     
   while(attempts<UBX9_const::maxCalibrationAttempts && getStatus())
   {
-    println(debugLevel::INFO, "        ---->UBX9 GPS does not yet have the required fix (result is " + String(fixType) + "), waiting " + String(UBX9_const::timeBetweenCalibrations/1000) + "s...");
+    d_println(debugLevel::INFO, "        ---->UBX9 GPS does not yet have the required fix (result is " + String(fixType) + "), waiting " + String(UBX9_const::timeBetweenCalibrations/1000) + "s...");
     attempts++;
     delay(UBX9_const::timeBetweenCalibrations);
   }
 
   if(attempts<UBX9_const::maxCalibrationAttempts)
   {
-    println(debugLevel::INFO, "      --->Got required UBX9 GPS fix, waiting " + String(UBX9_const::calibrationSettleTime/60000) + "s for it to settle ...");
+    d_println(debugLevel::INFO, "      --->Got required UBX9 GPS fix, waiting " + String(UBX9_const::calibrationSettleTime/60000) + "s for it to settle ...");
     delay(UBX9_const::calibrationSettleTime);
     return true;
   }
   else
   {
-    println(debugLevel::INFO, "      --->Attempts at getting required UBX9 GPS fix failed");
+    d_println(debugLevel::INFO, "      --->Attempts at getting required UBX9 GPS fix failed");
     return false;
   }
 }

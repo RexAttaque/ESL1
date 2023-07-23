@@ -85,7 +85,7 @@ void setup() {
   if(Sensor_calibration && Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0 && TELEM_init) //Check Checks, Init and Check calibration
   {
     //Wait for wake call...
-    debug_main.println(debugLevel::INFO, "Waiting for Main wake call...", "Setup");
+    debug_main.d_println(debugLevel::INFO, "Waiting for Main wake call...", "Setup");
     //SensorsSystem.wakeAll();
 
     //May need to run calibrations just before going on the pylon ?
@@ -97,11 +97,14 @@ void setup() {
     //Wake sensors just before launch ?
     //SensorsSystem.wakeAll();
 
+    //Disable USB Serial
+    debug_main.d_end();
+
     //waiting for the launch trigger... (acceleration interrupt from the IMU maybe)
   }
   else
   {
-    debug_main.println(debugLevel::INFO,"!!!!!! CHECK DEBUG & LOG, EXITING !!!!!!", "Setup");
+    debug_main.d_println(debugLevel::INFO,"!!!!!! CHECK DEBUG & LOG, EXITING !!!!!!", "Setup");
     delay(10000);
     exit(0);
   }

@@ -10,17 +10,17 @@ bool BARO_BMP280::init()
 
   if(status)
   {
-    println(debugLevel::INFO,"      --->BMP280 Active and available on I2C... \r\n      --->Setting sampling mode...","init()");
+    d_println(debugLevel::INFO,"      --->BMP280 Active and available on I2C... \r\n      --->Setting sampling mode...","init()");
 
     BARO.setSampling(_mode,_over_samp_T,_over_samp_P,_filter,_stb_time); 
     if(_mode == Adafruit_BMP280::MODE_FORCED) 
     {
-      println(debugLevel::INFO,"      --->BMP280 in force mode, taking first measurement...");
+      d_println(debugLevel::INFO,"      --->BMP280 in force mode, taking first measurement...");
       BARO.takeForcedMeasurement(); //take a first measurement to sort of kick start the sensor if it's in Force mode, otherwise it'll do it on it's own
     }  
     else
     {
-      println(debugLevel::INFO,"      --->BMP280 in normal mode, letting it take it's first measurement...");
+      d_println(debugLevel::INFO,"      --->BMP280 in normal mode, letting it take it's first measurement...");
       delay(5000); //Give the sensor time, whatever the parameters, to take at least one measurement
     }
     //check that the first measurement is valid ?

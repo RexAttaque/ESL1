@@ -3,11 +3,11 @@
 //Initializes debug instance with full debug and Serial7 hardware channel by default, ID must be specified (and for clarity, should be unique) + Starts serial ports (Serial or Serial_HW (at 115200 by def) (both can be started using USB_and_HW for debug)). The use of the hardware channel is not mandatory but replaces the USB channel. 
 fault_debug::fault_debug(String module_ID, uint8_t level, bool enableHW_chan, HardwareSerial hard_chan):ID(module_ID),l(level),HW_chan(enableHW_chan),Serial_HW(hard_chan)
 {
-    if(level!=debugLevel::NONE) begin();
+    if(level!=debugLevel::NONE) d_begin();
 }
 
 //Starts serial ports (Serial or Serial_HW (at 115200 by def)). The use of the hardware channel is not mandatory but replaces the USB channel unless specified otherwise (for debugging of the hardware pass through). SD card init is attempted as well if desired.
-bool fault_debug::begin(bool attemptSD, bool USB_and_HW)
+bool fault_debug::d_begin(bool attemptSD, bool USB_and_HW)
 {
     if(attemptSD)
     {
@@ -28,13 +28,15 @@ bool fault_debug::begin(bool attemptSD, bool USB_and_HW)
     if((!HW_chan && Serial) || (HW_chan && Serial_HW))
     {
         chan_rdy = true;
-        println(debugLevel::INFO, "Debug Module ID : " + ID + " Initialized at level : " + String(l) + " on hardware channel : " + String(HW_chan), "begin(ID,lvl,HW_chan,HW_serial)");
-        if(sd_rdy) println(debugLevel::INFO, "Debug is being written to SD");
-    } 
+        d_println(debugLevel::INFO, "Debug Module ID : " + ID + " Initialized at level : " + String(l) + " on hardware channel : " + String(HW_chan), "begin(ID,lvl,HW_chan,HW_serial)");
+        if(sd_rdy) d_println(debugLevel::INFO, "Debug is being written to SD");
+    }
+
+    return chan_rdy;
 }
 
 //Disables USB serial logging and SD and/or hardware Serial logging without changing any of the current instance 
-void fault_debug::end(bool closeSD_chan, bool closeHW_chan)
+void fault_debug::d_end(bool closeSD_chan, bool closeHW_chan)
 {
     if(Serial) Serial.end();
 
@@ -51,27 +53,27 @@ void fault_debug::end(bool closeSD_chan, bool closeHW_chan)
     }
 }
 
-SD_obj* fault_debug::get_SD_obj()
+SD_obj* fault_debug::d_get_SD_obj()
 {
     return &SolidDisk;
 }
 
-void fault_debug::set_level(uint8_t level)
+void fault_debug::d_set_level(uint8_t level)
 {
     l = level;
 }
 
-void fault_debug::set_subID(String subID)
+void fault_debug::d_set_subID(String subID)
 {
     _IDsub = subID;
 }
 
 // Prints a line without going to the next, msg structure is "ID | subID | debugLevelName | msg", subID is by default "" but is stored in memory if specified once, use set_subID if you only want to change the subID without printing
-void fault_debug::print(uint8_t level, String msg, String sub_ID, bool skipFormat)
+void fault_debug::d_print(uint8_t level, String msg, String sub_ID, bool skipFormat)
 {
-    if(isLogged(level))
+    if(d_isLogged(level))
     {
-        if(sub_ID != "") set_subID(sub_ID);
+        if(sub_ID != "") d_set_subID(sub_ID);
         String compl_msg = ID + " | " + _IDsub + " | " + debugLevel::name[level-1] + " | " + msg;
 
         if(skipFormat)
@@ -93,25 +95,25 @@ void fault_debug::print(uint8_t level, String msg, String sub_ID, bool skipForma
 }
 
 // Prints a line and goes to the next, see fault_debug::print()
-void fault_debug::println(uint8_t level, String msg, String sub_ID)
+void fault_debug::d_println(uint8_t level, String msg, String sub_ID)
 {
-    print(level, msg + '\r\n', sub_ID);
+    d_print(level, msg + "\r\n", sub_ID);
 }
 
-void fault_debug::write(uint8_t level, char c)
+void fault_debug::d_write(uint8_t level, char c)
 {
-    print(level,c,"",true);
+    d_print(level,c,"",true);
 }
 
-void fault_debug::skipln(uint8_t level, uint8_t amount)
+void fault_debug::d_skipln(uint8_t level, uint8_t amount)
 {
     for(int i=0;i<amount;i++)
     {
-        write(level, '\n');
+        d_write(level, '\n');
     }
 }
 
-bool fault_debug::isLogged(uint8_t level)
+bool fault_debug::d_isLogged(uint8_t level)
 {
     return chan_rdy && l>=level && level != 0;
 }

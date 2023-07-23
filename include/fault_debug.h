@@ -46,18 +46,18 @@ private:
 public:
     fault_debug(String module_ID, uint8_t level = debugLevel::FULL, bool enableHW_chan = debug::externalLogger, HardwareSerial hard_chan = Serial7);
 
-    bool begin(bool attemptSD = debug::useSD, bool USB_and_HW = debug::externalLoggerDebug);
-    void end(bool closeSD_chan = !debug::useSD, bool closeHW_chan = !debug::externalLogger);
+    bool d_begin(bool attemptSD = debug::useSD, bool USB_and_HW = debug::externalLoggerDebug);
+    void d_end(bool closeSD_chan = !debug::useSD, bool closeHW_chan = !debug::externalLogger);
 
-    SD_obj* get_SD_obj();
+    SD_obj* d_get_SD_obj();
 
-    void set_level(uint8_t level);
-    void set_subID(String sub_ID);
+    void d_set_level(uint8_t level);
+    void d_set_subID(String sub_ID);
 
-    void print(uint8_t level, String msg, String sub_ID = "", bool skipFormat = false);
-    void println(uint8_t level, String msg, String sub_ID = "");
-    void skipln(uint8_t level, uint8_t amount = 1);
-    void write(uint8_t level, char c);
+    void d_print(uint8_t level, String msg, String sub_ID = "", bool skipFormat = false);
+    void d_println(uint8_t level, String msg, String sub_ID = "");
+    void d_skipln(uint8_t level, uint8_t amount = 1);
+    void d_write(uint8_t level, char c);
 
-    bool isLogged(uint8_t level);
+    bool d_isLogged(uint8_t level);
 };
