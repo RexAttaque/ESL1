@@ -5,7 +5,6 @@
 #include <BS/BaroAlt.h>
 #include <GSM/Sim800L.h>
 #include <TELEM/ModuleLibs/SX1267MB1MAS.h>
-#include <SD/SolidDisk.h>
 
 using namespace std;
 
@@ -41,7 +40,6 @@ EGI_obj EGI = EGI_obj(&SensorsSystem); //EGI - Embedded GPS/IMU, kalman filter a
 BS_obj BS = BS_obj(&SensorsSystem); //BS - Barometric System, altitude calculation from barometric (P and T) data. Used as a backup only to the EGI provided altitude
 GSM_obj GSM = GSM_obj(Serial1);
 TELEM_obj TELEM = TELEM_obj();
-SD_obj SolidDisk;
 
 bool parachutesDeployed = false;
 bool useTime; //indicates if time should be used for parachute deployement
@@ -73,9 +71,6 @@ void setup() {
   bool TELEM_init = TELEM.init();
   //Telemetry sent to sleep
 
-  //SD Check/Init
-  bool SD_init = SolidDisk.init();
-
   //physical hardware Check/Init (parachutes etc.)
   
   //Before calibration and remaining inits, wake sensors
@@ -90,10 +85,10 @@ void setup() {
   //put sensors back to sleep
   SensorsSystem.sleepAll();
 
-  if(Sensor_calibration && Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0 && TELEM_init && SD_init) //Check Checks, Init and Check calibration
+  if(Sensor_calibration && Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0 && TELEM_init) //Check Checks, Init and Check calibration
   {
     //Wait for wake call...
-    debug_main.println(debugLevel::INFO, "Waiting for Main wake call...", "Setup");
+    debug_main.println(debugLevel::SD, "Waiting for Main wake call...", "Setup");
     //SensorsSystem.wakeAll();
 
     //May need to run calibrations just before going on the pylon ?
@@ -102,18 +97,14 @@ void setup() {
     //Put sensors back to sleep ?
     //SensorsSystem.sleepAll();
 
-
     //Wake sensors just before launch ?
     //SensorsSystem.wakeAll();
-
-    //Disable external debugging
-    debug_main.end(true); 
 
     //waiting for the launch trigger... (acceleration interrupt from the IMU maybe)
   }
   else
   {
-    debug_main.println(debugLevel::INFO,"!!!!!! CHECK DEBUG & LOG, EXITING !!!!!!", "Setup");
+    debug_main.println(debugLevel::SD,"!!!!!! CHECK DEBUG & LOG, EXITING !!!!!!", "Setup");
     delay(10000);
     exit(0);
   }
