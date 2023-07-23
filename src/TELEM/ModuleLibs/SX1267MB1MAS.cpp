@@ -1,5 +1,8 @@
 #include <TELEM\ModuleLibs\SX1267MB1MAS.h>
 
+TELEM_obj::TELEM_obj(HardwareSerial HWSerial, long Baud, unsigned long freq, int8_t power, uint8_t spreadfactor, unsigned long bandwidth, uint8_t codingRate):TELEM_Serial(HWSerial),TELEM_baudrate(Baud)
+{}
+
 bool TELEM_obj::setFreq()
 {
     return false;
