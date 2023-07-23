@@ -37,9 +37,7 @@ private:
 
     SD_obj SolidDisk;
 
-    bool USB_chan = true;
-
-    bool HW_chan = false;
+    bool HW_chan;
     HardwareSerial Serial_HW; //if a hardware serial needs to be used for debug, to send to telem or something
 
     String ID; //ID of the debug instance

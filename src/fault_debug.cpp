@@ -36,18 +36,17 @@ bool fault_debug::begin(bool attemptSD, bool USB_and_HW)
 //Disables USB serial logging and SD and/or hardware Serial logging without changing any of the current instance 
 void fault_debug::end(bool closeSD_chan, bool closeHW_chan)
 {
-    Serial.end();
+    if(Serial) Serial.end();
 
-    if(closeSD_chan)
+    if(closeSD_chan && sd_rdy)
     {
         sd_rdy = false;
         if(HW_chan == false) chan_rdy = false;
         SolidDisk.closeLog();
     }    
 
-    if(closeHW_chan)
+    if(closeHW_chan && chan_rdy && Serial_HW)
     {
-        if(sd_rdy == false) chan_rdy = false;
         Serial_HW.end();
     }
 }
