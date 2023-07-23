@@ -55,9 +55,6 @@ unsigned long timeLeft; //time in microseconds that there is left until the next
 bool timeStepChange = false; //indicates if the time quota was breached
 
 void setup() {
-  
-  //Debug
-  debug_main.begin(); //initialize serial monitor for debugging/information
 
   //Sensor Check/Init
   bool Sensor_init = SensorsSystem.initAll();
@@ -88,7 +85,7 @@ void setup() {
   if(Sensor_calibration && Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0 && TELEM_init) //Check Checks, Init and Check calibration
   {
     //Wait for wake call...
-    debug_main.println(debugLevel::SD, "Waiting for Main wake call...", "Setup");
+    debug_main.println(debugLevel::INFO, "Waiting for Main wake call...", "Setup");
     //SensorsSystem.wakeAll();
 
     //May need to run calibrations just before going on the pylon ?
@@ -104,7 +101,7 @@ void setup() {
   }
   else
   {
-    debug_main.println(debugLevel::SD,"!!!!!! CHECK DEBUG & LOG, EXITING !!!!!!", "Setup");
+    debug_main.println(debugLevel::INFO,"!!!!!! CHECK DEBUG & LOG, EXITING !!!!!!", "Setup");
     delay(10000);
     exit(0);
   }

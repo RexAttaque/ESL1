@@ -1,46 +1,53 @@
 #include <fault_debug.h>
 
-//Initializes debug instance with full debug and Serial7 hardware channel by default, ID must be specified (and for clarity, should be unique)
-fault_debug::fault_debug(String module_ID, uint8_t level, HardwareSerial hard_chan):ID(module_ID),l(level),Serial_HW(hard_chan)
-{}
-
-//Starts serial ports (Serial or Serial_HW (at 115200 by def)). The use of the hardware channel is not mandatory but replaces the USB channel. 
-bool fault_debug::begin(bool enableHW_chan, unsigned long baud_hard)
+//Initializes debug instance with full debug and Serial7 hardware channel by default, ID must be specified (and for clarity, should be unique) + Starts serial ports (Serial or Serial_HW (at 115200 by def) (both can be started using USB_and_HW for debug)). The use of the hardware channel is not mandatory but replaces the USB channel. 
+fault_debug::fault_debug(String module_ID, uint8_t level, bool enableHW_chan, HardwareSerial hard_chan):ID(module_ID),l(level),HW_chan(enableHW_chan),Serial_HW(hard_chan)
 {
-    //SD Check/Init
-    sd_rdy = SolidDisk.init();
+    if(level!=debugLevel::NONE) begin();
+}
 
-    if(!enableHW_chan && !Serial)
+//Starts serial ports (Serial or Serial_HW (at 115200 by def)). The use of the hardware channel is not mandatory but replaces the USB channel unless specified otherwise (for debugging of the hardware pass through). SD card init is attempted as well if desired.
+bool fault_debug::begin(bool attemptSD, bool USB_and_HW)
+{
+    if(attemptSD)
+    {
+        //SD Check/Init
+        sd_rdy = SolidDisk.init();
+    }
+
+    if((!HW_chan || USB_and_HW) && !Serial)
     {
         Serial.begin(debug::USB_baud);
     }
 
-    if(enableHW_chan && !Serial_HW)
+    if(HW_chan && !Serial_HW)
     {
-        set_HWbaud(baud_hard);
-        Serial_HW.begin(HW_baud);
+        Serial_HW.begin(debug::HW_baud);
     }
 
-    if((!enableHW_chan && Serial) || (enableHW_chan && Serial_HW))
+    if((!HW_chan && Serial) || (HW_chan && Serial_HW))
     {
         chan_rdy = true;
-        HW_chan = enableHW_chan;
-        println(debugLevel::INFO, "Debug Initialized Args : " + String(enableHW_chan) + " , " + String(baud_hard), "begin(enableHW_chan, HW_baud)");
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+        println(debugLevel::INFO, "Debug Module ID : " + ID + " Initialized at level : " + String(l) + " on hardware channel : " + String(HW_chan), "begin(ID,lvl,HW_chan,HW_serial)");
+        if(sd_rdy) println(debugLevel::INFO, "Debug is being written to SD");
+    } 
 }
 
-//Simply sets the debug level to 0 (no output), none of the Serial ports are closed to avoid conflicts unless specified for HW channel
-void fault_debug::end(bool closeHW_chan)
+//Disables USB serial logging and SD and/or hardware Serial logging without changing any of the current instance 
+void fault_debug::end(bool closeSD_chan, bool closeHW_chan)
 {
-    l = debugLevel::NONE;
+    Serial.end();
+
+    if(closeSD_chan)
+    {
+        sd_rdy = false;
+        if(HW_chan == false) chan_rdy = false;
+        SolidDisk.closeLog();
+    }    
 
     if(closeHW_chan)
     {
+        if(sd_rdy == false) chan_rdy = false;
         Serial_HW.end();
     }
 }
@@ -48,11 +55,6 @@ void fault_debug::end(bool closeHW_chan)
 SD_obj* fault_debug::get_SD_obj()
 {
     return &SolidDisk;
-}
-
-void fault_debug::set_HWbaud(unsigned long baud_hard)
-{
-    HW_baud = baud_hard;
 }
 
 void fault_debug::set_level(uint8_t level)
