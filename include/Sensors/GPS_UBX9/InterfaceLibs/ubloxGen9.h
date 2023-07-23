@@ -1,11 +1,18 @@
 #pragma once
 
-#ifndef __ublox_Gen9__
-#define __ublox_Gen9__
+#define ubloxGen9_debug
 
 #include <Arduino.h>
 #include <fault_debug.h>
 #include <HardwareSerial.h>
+
+namespace ubxG9_const 
+{
+  const String debug_ID = "ubxG9";
+  const uint8_t debug_lvl = debugLevel::FULL;
+}
+
+fault_debug debug_ubxG9 = fault_debug(ubxG9_const::debug_ID, ubxG9_const::debug_lvl); //Debug object for the ubxG9 module
 
 /////////////////////////////////////////////////// key IDs /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -253,5 +260,3 @@ class ublox_gen9 {
     bool lowPower();
     bool highPower();
 };
-
-#endif
