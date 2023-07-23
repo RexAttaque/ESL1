@@ -55,7 +55,7 @@ void fault_debug::set_subID(String subID)
 // Prints a line without going to the next, msg structure is "ID | subID | debugLevelName | msg", subID is by default "" but is stored in memory if specified once, use set_subID if you only want to change the subID without printing
 void fault_debug::print(uint8_t level, String msg, String sub_ID, bool skipFormat)
 {
-    if(chan_rdy && l>=level && level != 0)
+    if(isLogged(level))
     {
         if(sub_ID != "") set_subID(sub_ID);
         String compl_msg = ID + " | " + _IDsub + " | " + debugLevel::name[level-1] + " | " + msg;
@@ -97,5 +97,5 @@ void fault_debug::skipln(uint8_t level, uint8_t amount)
 
 bool fault_debug::isLogged(uint8_t level)
 {
-    return l>=level;
+    return chan_rdy && l>=level && level != 0;
 }
