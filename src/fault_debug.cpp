@@ -79,12 +79,20 @@ void fault_debug::print(uint8_t level, String msg, String sub_ID, bool skipForma
 // Prints a line and goes to the next, see fault_debug::print()
 void fault_debug::println(uint8_t level, String msg, String sub_ID)
 {
-    print(level, msg + "\r\n", sub_ID);
+    print(level, msg + '\r\n', sub_ID);
 }
 
 void fault_debug::write(uint8_t level, char c)
 {
     print(level,c,"",true);
+}
+
+void fault_debug::skipln(uint8_t level, uint8_t amount)
+{
+    for(int i=0;i<amount;i++)
+    {
+        write(level, '\n');
+    }
 }
 
 bool fault_debug::isLogged(uint8_t level)

@@ -48,6 +48,7 @@ public:
     void set_subID(String sub_ID);
     void print(uint8_t level, String msg, String sub_ID = "", bool skipFormat = false);
     void println(uint8_t level, String msg, String sub_ID = "");
+    void skipln(uint8_t level, uint8_t amount);
     void write(uint8_t level, char c);
 
     bool isLogged(uint8_t level);
