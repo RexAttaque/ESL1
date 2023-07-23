@@ -1,6 +1,6 @@
 #include <Sensors/SensingSystem.h>
 
-SensingSystem::SensingSystem()
+SensingSystem::SensingSystem(IMU_BNO055* IMU_Avio_array, uint8_t qty_IMU_Avio, GPS_UBX9* GPS_Avio_array, uint8_t qty_GPS_Avio, BARO_BMP280* BARO_Avio_array, uint8_t qty_BARO_Avio)
 :IMUs_Avio(Sensors<IMU_BNO055,double>(IMU_Avio_array,qty_IMU_Avio)),GPSs_Avio(Sensors<GPS_UBX9,double>(GPS_Avio_array,qty_GPS_Avio)),BAROs_Avio(Sensors<BARO_BMP280,float>(BARO_Avio_array,qty_BARO_Avio))
 {}
 

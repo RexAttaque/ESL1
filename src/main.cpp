@@ -18,9 +18,25 @@ namespace main_const
   const long deployAltitude = 3000; //altitude in m at which
 };
 
+IMU_BNO055 IMU1_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_A, &Wire);
+IMU_BNO055 IMU2_Avio = IMU_BNO055(BNO055_ID, BNO055_ADDRESS_B, &Wire1);
+const uint8_t qty_IMU_Avio = 2;
+IMU_BNO055 IMU_Avio_array[qty_IMU_Avio] = {IMU1_Avio, IMU2_Avio};
+
+BARO_BMP280 BARO1_Avio = BARO_BMP280(BMP280_ADDRESS, &Wire);
+BARO_BMP280 BARO2_Avio = BARO_BMP280(BMP280_ADDRESS_ALT, &Wire1);
+const uint8_t qty_BARO_Avio = 2;
+BARO_BMP280 BARO_Avio_array[qty_BARO_Avio] = {BARO1_Avio, BARO2_Avio};
+
+GPS_UBX9 GPS1_Avio = GPS_UBX9(Serial3);
+const uint8_t qty_GPS_Avio = 1;
+GPS_UBX9 GPS_Avio_array[qty_GPS_Avio] = {GPS1_Avio};
+
+
 fault_debug debug_main = fault_debug(main_const::debug_ID, main_const::debug_lvl); //Debug object for the MAIN module
 
-SensingSystem SensorsSystem = SensingSystem(); //Sensing system which ensures combination and pre-processing of all sensor data, see header file for sensor declaration, type, combination technique etc.
+
+SensingSystem SensorsSystem = SensingSystem(IMU_Avio_array, qty_IMU_Avio, GPS_Avio_array, qty_GPS_Avio, BARO_Avio_array, qty_BARO_Avio); //Sensing system which ensures combination and pre-processing of all sensor data, see header file for sensor declaration, type, combination technique etc.
 EGI_obj EGI = EGI_obj(&SensorsSystem); //EGI - Embedded GPS/IMU, kalman filter algorithm for data fusion between IMU and GPS etc.
 BS_obj BS = BS_obj(&SensorsSystem); //BS - Barometric System, altitude calculation from barometric (P and T) data. Used as a backup only to the EGI provided altitude
 GSM_obj GSM = GSM_obj(Serial1);
