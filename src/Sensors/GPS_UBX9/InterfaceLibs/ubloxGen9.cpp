@@ -843,13 +843,12 @@ uint8_t ublox_gen9::getNavFixStatus()
 
     if(debug_ubxG9.isLogged(debugLevel::FULL))
     {
-      debug::Serial_USB.println("Got the following PVT : ");
+      debug_ubxG9.println(debugLevel::FULL, "Got the following PVT : ");
       for(long i=0; i<payloadSize; i++)
       {
-        debug::Serial_USB.print(*(SplittedPVT), HEX);
-        debug::Serial_USB.print(" ");
+        debug_ubxG9.print(debugLevel::FULL, String(*(SplittedPVT), HEX) + " ", "", true);
       }
-      debug::Serial_USB.println("");
+      debug_ubxG9.skipln(debugLevel::FULL);
     }
 
     delete[] SplittedPVT;
