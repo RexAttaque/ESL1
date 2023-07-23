@@ -11,9 +11,9 @@ void SD_obj::setLogName(String newName)
     log_filename.toCharArray(log_filename_charred, log_filename.length());
 }
 
-SDClass* SD_obj::getSD()
+unsigned long SD_obj::getLogID()
 {
-    return &SD;
+    return logID;
 }
 
 String SD_obj::getLogName()
@@ -33,8 +33,6 @@ File SD_obj::getLog()
 
 bool SD_obj::init(uint8_t cspin)
 {
-    bool success = false;
-
     if(SD.begin(cspin))
     {    
         while(SD.exists(log_filename_charred))
@@ -43,26 +41,15 @@ bool SD_obj::init(uint8_t cspin)
             setLogName(SD_const::logname + logID + SD_const::logext);
         }
 
-        log = SD.open(log_filename_charred, FILE_WRITE_BEGIN);
-
-        if(log)
+        if(openLog(log_filename))
         {
-            log.println("Log ID : " + String(logID) + " created ! SD card reader initialized...");
-            log.flush();
-            success = true;
+            writeLogLine("Log ID : " + String(logID) + " created ! SD card reader initialized...");
+            flushLog();
+            return true;
         }
     }
 
-    if(success)
-    {
-        debug_SD.println(debugLevel::INFO, "SD Init SUCCESS !", "init()");
-        return true;
-    }
-    else
-    {
-        debug_SD.println(debugLevel::INFO, "SD Init Failed !", "init()");
-        return false;
-    }
+    return false;
 }
 
 void SD_obj::writeLog(String toWrite)
@@ -75,11 +62,23 @@ void SD_obj::writeLogLine(String toWrite)
     log.println(toWrite);
 }
 
-bool SD_obj::openLog(String logname)
+void SD_obj::flushLog()
+{
+    log.flush();
+}
+
+bool SD_obj::openLog(String logname, bool truncate)
 {
     closeLog();
     setLogName(logname);
-    File log_temp = SD.open(log_filename_charred, FILE_WRITE_BEGIN);
+
+    uint16_t flag = O_WRITE | O_CREAT;
+    if(truncate)
+    {
+        flag |= O_TRUNC;
+    }
+
+    File log_temp = SD.open(log_filename_charred, flag);
     if(log_temp)
     {
         log = log_temp;
