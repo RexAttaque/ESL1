@@ -10,9 +10,8 @@ namespace sens_const {
 
 //Class containing sensors of type S, allows for the polling of all sensors (measurands of type T) and then processing of this data
 //WARNING : All sensors of the same type introduced in this class should have the same refresh rate
-template <class S, class T> class Sensors {
+template <class S, class T> class Sensors : public fault_debug {
   private:
-    fault_debug debug_sens = fault_debug(sens_const::debug_ID, sens_const::debug_lvl); //Debug object for the sens module
 
     S* _sensors; //array of sensors of type S
     uint8_t _th_amount; //theoretical number of sensors
@@ -54,14 +53,15 @@ template <class S, class T> class Sensors {
 
 //s is an array of pointers of all sensors of type S (of which there are thAmount)
 template <class S, class T>
-Sensors<S, T>::Sensors(S* s, uint8_t th_amount) : _sensors(s), _th_amount(th_amount) {
-  _var_amount = s[0].get_var_amount();
+Sensors<S, T>::Sensors(S* s, uint8_t th_amount) : fault_debug(sens_const::debug_ID, sens_const::debug_lvl), _sensors(s), _th_amount(th_amount) {
+  uint8_t _var_amount_temp = s[0].get_var_amount();
+  _var_amount = &_var_amount_temp;
   allocateDataMemory();
 }
 
 template <class S, class T>
 void Sensors<S, T>::allocateDataMemory() {
-  _pdata = new T[_var_amount];
+  _pdata = new T[*_var_amount];
 
   for(uint8_t j=0; j<*_var_amount; j++)
   {
@@ -96,11 +96,11 @@ bool Sensors<S, T>::initAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    debug_sens.println(debugLevel::INFO, "\n    -->Sensor" + i, "initAll()");
+    println(debugLevel::INFO, "\n    -->Sensor" + i, "initAll()");
 
     if(_sensors[i].init()) 
     {
-      debug_sens.println(debugLevel::INFO, "    -->INIT PASS\n");
+      println(debugLevel::INFO, "    -->INIT PASS\n");
     
       result = result && true;
     }
@@ -120,11 +120,11 @@ bool Sensors<S, T>::wakeAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    debug_sens.println(debugLevel::INFO, "\n    -->Sensor" + i, "wakeAll()");
+    println(debugLevel::INFO, "\n    -->Sensor" + i, "wakeAll()");
 
     if(_sensors[i].goLive()) 
     {
-      debug_sens.println(debugLevel::INFO, "    -->IS LIVE\n");
+      println(debugLevel::INFO, "    -->IS LIVE\n");
     
       result = result && true;
     }
@@ -144,11 +144,11 @@ bool Sensors<S, T>::sleepAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    debug_sens.println(debugLevel::INFO, "\n    -->Sensor" + i, "sleepAll()");
+    println(debugLevel::INFO, "\n    -->Sensor" + i, "sleepAll()");
 
     if(_sensors[i].goIdle()) 
     {
-      debug_sens.println(debugLevel::INFO, "    -->IS IDLE\n");
+      println(debugLevel::INFO, "    -->IS IDLE\n");
     
       result = result && true;
     }
@@ -168,11 +168,11 @@ bool Sensors<S, T>::calibrateAll()
 
   for(uint8_t i=0; i<_th_amount; i++)
   {
-    debug_sens.println(debugLevel::INFO, "\n    -->Sensor" + i, "calibrateAll()");
+    println(debugLevel::INFO, "\n    -->Sensor" + i, "calibrateAll()");
 
     if(_sensors[i].calibrate()) 
     {
-      debug_sens.println(debugLevel::INFO, "    -->IS CALIBRATED\n");
+      println(debugLevel::INFO, "    -->IS CALIBRATED\n");
     
       result = result && true;
     }

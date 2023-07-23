@@ -40,9 +40,8 @@ struct NavSolution
   double altitude;
 };
 
-class EGI_obj {
+class EGI_obj : public fault_debug {
   private:
-    fault_debug debug_EGI = fault_debug(EGI_const::debug_ID, EGI_const::debug_lvl); //Debug object for the EGI module
 
     NavSolution KalmanOutput;
     SensingSystem* EGI_components;

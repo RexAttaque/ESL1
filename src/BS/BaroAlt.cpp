@@ -1,7 +1,7 @@
 #include <BS/BaroAlt.h>
 
 BS_obj::BS_obj(SensingSystem* SensorSys)
-:BS_components(SensorSys)
+:fault_debug(BS_const::debug_ID, BS_const::debug_lvl),BS_components(SensorSys)
 {
     refresh_BARO = BS_components->getBAROs_Hz();
     time_BARO = (unsigned long) pow(10,6)/refresh_BARO;
@@ -15,7 +15,7 @@ unsigned long BS_obj::initBaroAlt()
     unsigned long result=0;
 
     //get P_init, T_init and alt_init from sensors
-    debug_BS.println(debugLevel::INFO,"!! Barometric System Init Start !!\n\n\r\n ->Instructions : \r\n     -->Place the Avionics bay in the shade outside (try to ventilate the BARO sensors), wait " + String(BS_const::delayBeforeInitMeas/60000) + "min... \r\n", "initBaroAlt()");
+    println(debugLevel::INFO,"!! Barometric System Init Start !!\n\n\r\n ->Instructions : \r\n     -->Place the Avionics bay in the shade outside (try to ventilate the BARO sensors), wait " + String(BS_const::delayBeforeInitMeas/60000) + "min... \r\n", "initBaroAlt()");
     delay(BS_const::delayBeforeInitMeas);
 
     bool initializerGPS_status = (BS_components->getGPSs_Avio()->getSensors())[0].getStatus(); //check if the initializer GPS is working
@@ -35,7 +35,7 @@ unsigned long BS_obj::initBaroAlt()
             delete[] BAROpdata;
             delete[] GPS_LLH;
 
-            debug_BS.println(debugLevel::INFO,"   ->Recovered Initial : \r\n     -->Altitude : " + String(altitude) + "m \r\n     -->Pressure : " + String(P) + "Pa \r\n     -->Temperature : " + String(T) + "K");
+            println(debugLevel::INFO,"   ->Recovered Initial : \r\n     -->Altitude : " + String(altitude) + "m \r\n     -->Pressure : " + String(P) + "Pa \r\n     -->Temperature : " + String(T) + "K");
 
             result = (unsigned long) pow(10,6)*time_BARO;
         }
@@ -43,7 +43,7 @@ unsigned long BS_obj::initBaroAlt()
         delete[] GPS_LLH;
     }
     
-    debug_BS.println(debugLevel::INFO,"\n\n!! Barometric System Init End (result = " + String(result) + ") !!");
+    println(debugLevel::INFO,"\n\n!! Barometric System Init End (result = " + String(result) + ") !!");
     return 0;
 }
 

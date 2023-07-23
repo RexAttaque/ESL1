@@ -1,181 +1,181 @@
 #include <Sensors/SensingSystem.h>
 
 SensingSystem::SensingSystem(IMU_BNO055* IMU_Avio_array, uint8_t qty_IMU_Avio, GPS_UBX9* GPS_Avio_array, uint8_t qty_GPS_Avio, BARO_BMP280* BARO_Avio_array, uint8_t qty_BARO_Avio)
-:IMUs_Avio(Sensors<IMU_BNO055,double>(IMU_Avio_array,qty_IMU_Avio)),GPSs_Avio(Sensors<GPS_UBX9,double>(GPS_Avio_array,qty_GPS_Avio)),BAROs_Avio(Sensors<BARO_BMP280,float>(BARO_Avio_array,qty_BARO_Avio))
+:fault_debug(SS_const::debug_ID, SS_const::debug_lvl),IMUs_Avio(Sensors<IMU_BNO055,double>(IMU_Avio_array,qty_IMU_Avio)),GPSs_Avio(Sensors<GPS_UBX9,double>(GPS_Avio_array,qty_GPS_Avio)),BAROs_Avio(Sensors<BARO_BMP280,float>(BARO_Avio_array,qty_BARO_Avio))
 {}
 
 bool SensingSystem::initAll()
 {
-    debug_SS.println(debugLevel::INFO, "!! Sensors Check/Init Start !!\n\n", "initAll()");
+    println(debugLevel::INFO, "!! Sensors Check/Init Start !!\n\n", "initAll()");
 
     bool result = true;
 
-    debug_SS.println(debugLevel::INFO, "  ->IMUs Avio :");
+    println(debugLevel::INFO, "  ->IMUs Avio :");
 
     if(IMUs_Avio.initAll())
     { 
-      debug_SS.println(debugLevel::INFO, " ->IMUs Avio PASS\n");
+      println(debugLevel::INFO, " ->IMUs Avio PASS\n");
     }
     else
     {
       result = false;
     }
     
-    debug_SS.println(debugLevel::INFO, " ->GPSs Avio :");
+    println(debugLevel::INFO, " ->GPSs Avio :");
 
     if(GPSs_Avio.initAll()) 
     {
-      debug_SS.println(debugLevel::INFO, " ->GPSs Avio PASS\n");
+      println(debugLevel::INFO, " ->GPSs Avio PASS\n");
     }
     else
     {
       result = false;
     }
 
-    debug_SS.println(debugLevel::INFO, "  ->BAROs Avio :");
+    println(debugLevel::INFO, "  ->BAROs Avio :");
 
     if(BAROs_Avio.initAll()) 
     {
-      debug_SS.println(debugLevel::INFO, " ->BAROs Avio PASS\n");
+      println(debugLevel::INFO, " ->BAROs Avio PASS\n");
     }
     else
     {
       result = false;
     }
 
-    debug_SS.println(debugLevel::INFO, "\n\n!! Sensors Check/Init End (result = " + String(result) + ") !!");
+    println(debugLevel::INFO, "\n\n!! Sensors Check/Init End (result = " + String(result) + ") !!");
 
     return result;
 }
 
 bool SensingSystem::wakeAll()
 {
-    debug_SS.println(debugLevel::INFO, "!! Sensors Wake Start !!\n\n", "wakeAll()");
+    println(debugLevel::INFO, "!! Sensors Wake Start !!\n\n", "wakeAll()");
 
     bool result = true;
 
-    debug_SS.println(debugLevel::INFO, "  ->IMUs Avio :");
+    println(debugLevel::INFO, "  ->IMUs Avio :");
 
     if(IMUs_Avio.wakeAll())
     { 
-      debug_SS.println(debugLevel::INFO, " ->IMUs Avio awake\n");
+      println(debugLevel::INFO, " ->IMUs Avio awake\n");
     }
     else
     {
       result = false;
     }
     
-    debug_SS.println(debugLevel::INFO, " ->GPSs Avio :");
+    println(debugLevel::INFO, " ->GPSs Avio :");
 
     if(GPSs_Avio.wakeAll()) 
     {
-      debug_SS.println(debugLevel::INFO, " ->GPSs Avio awake\n");
+      println(debugLevel::INFO, " ->GPSs Avio awake\n");
     }
     else
     {
       result = false;
     }
 
-    debug_SS.println(debugLevel::INFO, " ->BAROs Avio :");
+    println(debugLevel::INFO, " ->BAROs Avio :");
 
     if(BAROs_Avio.wakeAll()) 
     {
-      debug_SS.println(debugLevel::INFO, " ->BAROs Avio awake\n");
+      println(debugLevel::INFO, " ->BAROs Avio awake\n");
     }
     else
     {
       result = false;
     }
 
-    debug_SS.println(debugLevel::INFO, "\n\n!! Sensors Wake End (result = " + String(result) + ") !!");
+    println(debugLevel::INFO, "\n\n!! Sensors Wake End (result = " + String(result) + ") !!");
 
     return result;
 }
 
 bool SensingSystem::sleepAll()
 {
-    debug_SS.println(debugLevel::INFO, "!! Sensors sleep !!\n\n", "sleepAll()");
+    println(debugLevel::INFO, "!! Sensors sleep !!\n\n", "sleepAll()");
 
     bool result = true;
 
-    debug_SS.println(debugLevel::INFO, " ->IMUs Avio :");
+    println(debugLevel::INFO, " ->IMUs Avio :");
 
     if(IMUs_Avio.sleepAll())
     { 
-      debug_SS.println(debugLevel::INFO, " ->IMUs Avio asleep\n");
+      println(debugLevel::INFO, " ->IMUs Avio asleep\n");
     }
     else
     {
       result = false;
     }
     
-    debug_SS.println(debugLevel::INFO, " ->GPSs Avio :");
+    println(debugLevel::INFO, " ->GPSs Avio :");
 
     if(GPSs_Avio.sleepAll()) 
     {
-      debug_SS.println(debugLevel::INFO, " ->GPSs Avio asleep\n");
+      println(debugLevel::INFO, " ->GPSs Avio asleep\n");
     }
     else
     {
       result = false;
     }
 
-    debug_SS.println(debugLevel::INFO, " ->BAROs Avio :");
+    println(debugLevel::INFO, " ->BAROs Avio :");
 
     if(BAROs_Avio.sleepAll()) 
     {
-      debug_SS.println(debugLevel::INFO, " ->BAROs Avio asleep\n");
+      println(debugLevel::INFO, " ->BAROs Avio asleep\n");
     }
     else
     {
       result = false;
     }
 
-    debug_SS.println(debugLevel::INFO, "\n\n!! Sensors sleep End (result = " + String(result) + ") !!");
+    println(debugLevel::INFO, "\n\n!! Sensors sleep End (result = " + String(result) + ") !!");
 
     return result;
 }
 
 bool SensingSystem::calibrateAll()
 {
-    debug_SS.println(debugLevel::INFO, "!! Sensors Calibration Start !!\n\n", "calibrateAll()");
+    println(debugLevel::INFO, "!! Sensors Calibration Start !!\n\n", "calibrateAll()");
 
     bool result = true;
 
-    debug_SS.println(debugLevel::INFO, "  ->IMUs Avio :");
+    println(debugLevel::INFO, "  ->IMUs Avio :");
 
     if(IMUs_Avio.calibrateAll())
     { 
-      debug_SS.println(debugLevel::INFO, " ->IMUs Avio Calibrated\n");
+      println(debugLevel::INFO, " ->IMUs Avio Calibrated\n");
     }
     else
     {
       result = false;
     }
     
-    debug_SS.println(debugLevel::INFO, " ->GPSs Avio :");
+    println(debugLevel::INFO, " ->GPSs Avio :");
 
     if(GPSs_Avio.calibrateAll()) 
     {
-      debug_SS.println(debugLevel::INFO, " ->GPSs Avio Calibrated\n");
+      println(debugLevel::INFO, " ->GPSs Avio Calibrated\n");
     }
     else
     {
       result = false;
     }
 
-    debug_SS.println(debugLevel::INFO, "  ->BAROs Avio :");
+    println(debugLevel::INFO, "  ->BAROs Avio :");
 
     if(BAROs_Avio.calibrateAll()) 
     {
-      debug_SS.println(debugLevel::INFO, " ->BAROs Avio Calibrated\n");
+      println(debugLevel::INFO, " ->BAROs Avio Calibrated\n");
     }
     else
     {
       result = false;
     }
 
-    debug_SS.println(debugLevel::INFO, "\n\n!! Sensors Calibration End (result = " + String(result) + ") !!");
+    println(debugLevel::INFO, "\n\n!! Sensors Calibration End (result = " + String(result) + ") !!");
 
     return result;
 }

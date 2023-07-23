@@ -4,6 +4,9 @@
 #include <fault_debug.h>
 
 namespace TELEM_const {
+    const String debug_ID = "TELEM";
+    const uint8_t debug_lvl = debugLevel::FULL;
+
     const uint8_t PacketSize = 38;      // Size of the packets to transmit (number of )
 
     const unsigned long FREQ = 433E6;   // Frequency band (This unit is optimized for 433MHz (Low Freq. / LF) and 868MHz (High Freq. / HF))
@@ -19,7 +22,7 @@ struct TELEM_packet {
     float data[TELEM_const::PacketSize];
 };
 
-class TELEM_obj {
+class TELEM_obj : public fault_debug {
     private :
         HardwareSerial TELEM_Serial; // SIM800L Serial channel, max AutoBaud 115200, max baud rate (set manually) 460800.
         long TELEM_baudrate;

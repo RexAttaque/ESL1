@@ -4,7 +4,7 @@
 #include <fault_debug.h>
 
 template <class T>
-class Base_Sensor {
+class Base_Sensor : public fault_debug {
 
     protected :
         T* meas;
@@ -16,7 +16,7 @@ class Base_Sensor {
         void reallocateMemory();
 
     public :
-        Base_Sensor(uint8_t varAmount, uint16_t refreshHz);
+        Base_Sensor(uint8_t varAmount, uint16_t refreshHz, String debug_ID, uint8_t debug_lvl);
 
         virtual bool init();
         virtual bool calibrate();
@@ -35,8 +35,8 @@ class Base_Sensor {
 };
 
 template <class T>
-Base_Sensor<T>::Base_Sensor(uint8_t varAmount, uint16_t refreshHz)
-:_varAmount(varAmount),_refreshHz(refreshHz)
+Base_Sensor<T>::Base_Sensor(uint8_t varAmount, uint16_t refreshHz, String debug_ID, uint8_t debug_lvl)
+:fault_debug(debug_ID,debug_lvl),_varAmount(varAmount),_refreshHz(refreshHz)
 {
     allocateMemory();
 }

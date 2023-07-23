@@ -21,7 +21,6 @@ namespace BNO055_const {
 
 class IMU_BNO055 : public Base_Sensor<double> {
   private :
-    fault_debug debug_BNO055 = fault_debug(BNO055_const::debug_ID, BNO055_const::debug_lvl); //Debug object for the BNO055 module
 
     Adafruit_BNO055 IMU;
 

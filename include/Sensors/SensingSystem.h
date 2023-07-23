@@ -14,10 +14,8 @@ namespace SS_const {
   const uint8_t amount_sensor_arrays = 3;
 };
 
-class SensingSystem {
+class SensingSystem : public fault_debug {
   private :
-    fault_debug debug_SS = fault_debug(SS_const::debug_ID, SS_const::debug_lvl); //Debug object for the SS module
-
     //Make sure all of the sensors within sensors objects of one "group" use the same refresh rate 
     //(all of the sensors that contribute to one set of measurement must have the same refresh rate)
     Sensors<IMU_BNO055,double> IMUs_Avio;
