@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <SD/SolidDisk.h>
 
 namespace faultCodes {
     enum faultCodes {
@@ -10,12 +11,13 @@ namespace faultCodes {
 }
 
 namespace debugLevel {
-    const uint8_t FULL = 3; //All debug logs
-    const uint8_t TRACE = 2; //All debug logs that allow to track progress
-    const uint8_t INFO = 1; //Only information
+    const uint8_t FULL = 4; //All debug logs
+    const uint8_t TRACE = 3; //All debug logs that allow to track progress
+    const uint8_t INFO = 2; //Only information
+    const uint8_t SD = 1; //Limited debug mode for use with SD
     const uint8_t NONE = 0; //Nothing
 
-    const String name[FULL] = {"INFO", "TRACE", "FULL"}; //Name of the debug levels for display
+    const String name[FULL] = {"SD", "INFO", "TRACE", "FULL"}; //Name of the debug levels for display
 }
 
 namespace debug {
@@ -28,6 +30,9 @@ class fault_debug
 {
 private:
     bool chan_rdy = false;
+    bool sd_rdy = false;
+
+    SD_obj SolidDisk;
 
     bool HW_chan = false;
     HardwareSerial Serial_HW; //if a hardware serial needs to be used for debug, to send to telem or something
@@ -40,10 +45,14 @@ public:
     fault_debug(String module_ID, uint8_t level = debugLevel::FULL, HardwareSerial hard_chan = Serial7);
 
     bool begin(bool enableHW_chan = false, unsigned long hard_baud = debug::def_SerialHard_baud);
-    void set_HWbaud(unsigned long baud_hard);
     void end(bool closeHW_chan = false);
 
+    SD_obj* get_SD_obj();
+
+    void set_HWbaud(unsigned long baud_hard);
+    void set_level(uint8_t level);
     void set_subID(String sub_ID);
+
     void print(uint8_t level, String msg, String sub_ID = "", bool skipFormat = false);
     void println(uint8_t level, String msg, String sub_ID = "");
     void skipln(uint8_t level, uint8_t amount = 1);

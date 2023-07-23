@@ -7,6 +7,9 @@ fault_debug::fault_debug(String module_ID, uint8_t level, HardwareSerial hard_ch
 //Starts serial ports (Serial or Serial_HW (at 115200 by def)). The use of the hardware channel is not mandatory but replaces the USB channel. 
 bool fault_debug::begin(bool enableHW_chan, unsigned long baud_hard)
 {
+    //SD Check/Init
+    sd_rdy = SolidDisk.init();
+
     if(!enableHW_chan && !Serial)
     {
         Serial.begin(debug::USB_baud);
@@ -22,18 +25,13 @@ bool fault_debug::begin(bool enableHW_chan, unsigned long baud_hard)
     {
         chan_rdy = true;
         HW_chan = enableHW_chan;
-        println(debugLevel::INFO, "Debug Initialized", "fault_debug::begin");
+        println(debugLevel::INFO, "Debug Initialized Args : " + String(enableHW_chan) + " , " + String(baud_hard), "begin(enableHW_chan, HW_baud)");
         return true;
     }
     else
     {
         return false;
     }
-}
-
-void fault_debug::set_HWbaud(unsigned long baud_hard)
-{
-    HW_baud = baud_hard;
 }
 
 //Simply sets the debug level to 0 (no output), none of the Serial ports are closed to avoid conflicts unless specified for HW channel
@@ -45,6 +43,21 @@ void fault_debug::end(bool closeHW_chan)
     {
         Serial_HW.end();
     }
+}
+
+SD_obj* fault_debug::get_SD_obj()
+{
+    return &SolidDisk;
+}
+
+void fault_debug::set_HWbaud(unsigned long baud_hard)
+{
+    HW_baud = baud_hard;
+}
+
+void fault_debug::set_level(uint8_t level)
+{
+    l = level;
 }
 
 void fault_debug::set_subID(String subID)
@@ -64,6 +77,8 @@ void fault_debug::print(uint8_t level, String msg, String sub_ID, bool skipForma
         {
             compl_msg = msg;
         }
+
+        if(sd_rdy) SolidDisk.writeLog(compl_msg);
         
         if(HW_chan && Serial_HW)
         {
