@@ -6,6 +6,9 @@
 #include <Sensors/GPS_UBX9/InterfaceLibs/ubloxGen9.h>
 
 namespace UBX9_const {
+  const String debug_ID = "GPS_UBX9";
+  const uint8_t debug_lvl = debugLevel::FULL;
+
   const uint16_t Hz = 25; //default GPS refresh rate (Hz)
   const uint8_t varAmount = 5; //time,x,y,z,CEP (ms ; cm)
   const double measFactors[varAmount] = {1.0f,100.0f,100.0f,100.0f,100.0f}; //conversion factors for each measurand
@@ -16,6 +19,8 @@ namespace UBX9_const {
   const unsigned long timeBetweenCalibrations = 60000; //millis of delay between each calibration attemps
   const unsigned long calibrationSettleTime = 300000; //millis of delay after calibration complete to allow settling
 };
+
+fault_debug debug_GPSUBX9 = fault_debug(UBX9_const::debug_ID, UBX9_const::debug_lvl); //Debug object for the GPS_UBX9 module
 
 class GPS_UBX9 : public Base_Sensor<double> {
   private :
