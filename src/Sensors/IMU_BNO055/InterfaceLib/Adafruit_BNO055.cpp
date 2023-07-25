@@ -461,9 +461,9 @@ imu::Vector<3> Adafruit_BNO055::getVector(adafruit_vector_type_t vector_type) {
 double* Adafruit_BNO055::getArray(adafruit_vector_type_t vector_type) {
   imu::Vector<3> xyz = getVector(vector_type);
   double* array = new double(3);
-  array[1] = xyz[1];
-  array[2] = xyz[2]; 
-  array[3] = xyz[3];
+  array[0] = xyz[0];
+  array[1] = xyz[1]; 
+  array[2] = xyz[2];
 
   return array;
 }
