@@ -1,4 +1,4 @@
-#include <TELEM\ModuleLibs\SX1267MB1MAS.h>
+#include <TELEM\ModuleLibs\SX1276MB1MAS.h>
 
 TELEM_obj::TELEM_obj(HardwareSerial HWSerial, long Baud, unsigned long freq, int8_t power, uint8_t spreadfactor, unsigned long bandwidth, uint8_t codingRate):fault_debug(TELEM_const::debug_ID, TELEM_const::debug_lvl),TELEM_Serial(HWSerial),TELEM_baudrate(Baud)
 {}
