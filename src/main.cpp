@@ -4,7 +4,7 @@
 #include <EGI/KalmanPos.h>
 #include <BS/BaroAlt.h>
 #include <GSM/Sim800L.h>
-#include <TELEM/ModuleLibs/SX1267MB1MAS.h>
+#include <TELEM/ModuleLibs/SX1276MB1MAS.h>
 
 using namespace std;
 
@@ -69,6 +69,7 @@ void setup() {
   //Telemetry sent to sleep
 
   //physical hardware Check/Init (parachutes etc.)
+  // ----
   
   //Before calibration and remaining inits, wake sensors
   SensorsSystem.wakeAll();
@@ -82,12 +83,12 @@ void setup() {
   //put sensors back to sleep
   SensorsSystem.sleepAll();
 
-  if(Sensor_calibration && Sensor_init && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0 && TELEM_init) //Check Checks, Init and Check calibration
+  if(Sensor_init && Sensor_calibration && GSM_init && loopTimeMax != 0 && BaroLoopTimeMax !=0 && TELEM_init) //Check Checks, Init and Check calibration
   {
     //Wait for wake call...
     debug_main.d_println(debugLevel::INFO, "Waiting for Main wake call...", "Setup");
     //SensorsSystem.wakeAll();
-
+    
     //May need to run calibrations just before going on the pylon ?
     //Sensor_calibration = SensorsSystem.calibrateAll();
 

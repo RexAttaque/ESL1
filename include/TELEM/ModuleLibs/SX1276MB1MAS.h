@@ -24,7 +24,7 @@ struct TELEM_packet {
 
 class TELEM_obj : public fault_debug {
     private :
-        HardwareSerial TELEM_Serial; // SIM800L Serial channel, max AutoBaud 115200, max baud rate (set manually) 460800.
+        HardwareSerial TELEM_Serial;
         long TELEM_baudrate;
 
         TELEM_packet packet;
